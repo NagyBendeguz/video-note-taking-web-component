@@ -1,0 +1,31 @@
+<div class="video-navbar">
+    <button (click)="onTogglePlay()" class="btn play-pause">
+        <img src="play.svg" alt="Play" [ngClass]="{'hidden': isPlaying}">
+        <img src="pause.svg" alt="Pause" [ngClass]="{'hidden': !isPlaying}">
+    </button>
+    <button (click)="onRewind()" class="btn rewind">
+        <img src="rewind.svg" alt="Rewind">
+    </button>
+    <button (click)="onForward()" class="btn forward">
+        <img src="forward.svg" alt="Forward">
+    </button>
+    <button (click)="onVolume()" class="btn volume">
+        <!--<img src="volume-1.svg" alt="Volume">
+        <img src="volume-2.svg" alt="Volume">
+        <img src="volume-3.svg" alt="Volume">-->
+        <img src="volume-4.svg" alt="Volume">
+    </button>
+    <span>
+        Bar
+    </span>
+    <button (click)="onNote()" class="btn note">
+        <img src="note.svg" alt="Note">
+    </button>
+    <button (click)="onSettings()" class="btn settings">
+        <img src="settings.svg" alt="Settings">
+    </button>
+    <button (click)="onFullscreen()" class="btn fullscreen">
+        <!--<img src="fullscreen-on.svg" alt="Fullscreen">-->
+        <img src="fullscreen-off.svg" alt="Fullscreen">
+    </button>
+</div>
