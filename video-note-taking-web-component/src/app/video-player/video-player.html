@@ -1,0 +1,12 @@
+<div class="video-player">
+    <video #videoElement>
+        <source src="video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <video-navbar-element
+        [isPlaying]="isPlaying" 
+        (togglePlay)="togglePlay()" 
+        (rewind)="rewind()" 
+        (forward)="forward()">
+    </video-navbar-element>
+</div>
