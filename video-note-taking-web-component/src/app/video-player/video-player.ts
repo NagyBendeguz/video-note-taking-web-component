@@ -33,5 +33,9 @@ export class VideoPlayer {
   forward(): void {
     const video = this.videoElement.nativeElement;
     video.currentTime = Math.min(video.currentTime + this.forwardSeconds, video.duration);
+    if (video.currentTime === video.duration) {
+      video.pause();
+      this.isPlaying = false;
+    }
   }
 }
