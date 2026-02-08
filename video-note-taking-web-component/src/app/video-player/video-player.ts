@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Video } from '../services/video';
 
 @Component({
   selector: 'app-video-player',
@@ -9,19 +10,36 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 export class VideoPlayer {
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
   isPlaying: boolean = false;
+  volumePercentage: number = 100;
   rewindSeconds = 10;
   forwardSeconds = 10;
+
+  constructor(private videoService: Video) {}
+
+  ngAfterViewInit(): void {
+    this.videoService.isPlaying$.subscribe(playing => {
+      this.isPlaying = playing;
+    });
+    
+    this.videoService.volume$.subscribe(vol => {
+      this.volumePercentage = vol;
+      this.volume();
+    });
+  }
 
   // Renderer2 ???
 
   togglePlay(): void {
     const video = this.videoElement.nativeElement;
-    if (video.paused) {
+    if (video.paused)
+    {
       video.play();
-      this.isPlaying = true;
-    } else {
+      this.videoService.setPlaying(true);
+    }
+    else
+    {
       video.pause();
-      this.isPlaying = false;
+      this.videoService.setPlaying(false);
     }
   }
 
@@ -33,9 +51,15 @@ export class VideoPlayer {
   forward(): void {
     const video = this.videoElement.nativeElement;
     video.currentTime = Math.min(video.currentTime + this.forwardSeconds, video.duration);
-    if (video.currentTime === video.duration) {
+    if (video.currentTime === video.duration)
+    {
       video.pause();
-      this.isPlaying = false;
+      this.videoService.setPlaying(false);
     }
+  }
+
+  volume(): void {
+    const video = this.videoElement.nativeElement;
+    video.volume = this.volumePercentage / 100;
   }
 }

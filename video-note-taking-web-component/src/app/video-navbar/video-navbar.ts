@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { Video } from '../services/video';
 
 @Component({
   selector: 'app-video-navbar',
@@ -7,10 +8,19 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrl: './video-navbar.sass',
 })
 export class VideoNavbar {
-  @Input() isPlaying: boolean = false;
+  isPlaying: boolean = false;
+  volumePercentage: number = 100;
   @Output() togglePlay = new EventEmitter<void>();
   @Output() rewind = new EventEmitter<void>();
   @Output() forward = new EventEmitter<void>();
+
+  constructor(public videoService: Video) {}
+
+  ngAfterViewInit(): void {
+    this.videoService.isPlaying$.subscribe(playing => {
+      this.isPlaying = playing;
+    });
+  }
 
   onTogglePlay(): void {
     this.togglePlay.emit();
@@ -24,8 +34,9 @@ export class VideoNavbar {
     this.forward.emit();
   }
 
-  onVolume(): void {
-
+  setVolume(value: string): void {
+    this.volumePercentage = Number(value);
+    this.videoService.setVolume(this.volumePercentage);
   }
 
   onNote(): void {
