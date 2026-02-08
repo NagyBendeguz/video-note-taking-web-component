@@ -1,32 +1,48 @@
-<div class="video-navbar">
-    <button (click)="onTogglePlay()" class="btn play-pause">
-        <img src="play.svg" alt="Play" [ngClass]="{'hidden': isPlaying}">
-        <img src="pause.svg" alt="Pause" [ngClass]="{'hidden': !isPlaying}">
-    </button>
-    <button (click)="onRewind()" class="btn rewind">
-        <img src="rewind.svg" alt="Rewind">
-    </button>
-    <button (click)="onForward()" class="btn forward">
-        <img src="forward.svg" alt="Forward">
-    </button>
-    <button class="btn volume">
-        <img src="volume-1.svg" alt="Mute Volume" [ngClass]="{'hidden': !(volumePercentage === 0)}">
-        <img src="volume-2.svg" alt="Low Volume" [ngClass]="{'hidden': !(volumePercentage > 0 && volumePercentage <= 25)}">
-        <img src="volume-3.svg" alt="Medium Volume" [ngClass]="{'hidden': !(volumePercentage > 25 && volumePercentage < 75)}">
-        <img src="volume-4.svg" alt="High Volume" [ngClass]="{'hidden': !(volumePercentage >= 75)}">
-    </button>
-    <input type="range" id="volumeSlider" min="0" max="100" [value]="volumePercentage" (input)="setVolume($event.target.value)">
-    <span>
-        Bar
-    </span>
-    <button (click)="onNote()" class="btn note">
-        <img src="note.svg" alt="Note">
-    </button>
-    <button (click)="onSettings()" class="btn settings">
-        <img src="settings.svg" alt="Settings">
-    </button>
-    <button (click)="onFullscreen()" class="btn fullscreen">
-        <!--<img src="fullscreen-on.svg" alt="Fullscreen">-->
-        <img src="fullscreen-off.svg" alt="Fullscreen">
-    </button>
-</div>
+<ul class="video-navbar">
+    <li>
+        <button (click)="onTogglePlay()" class="btn play-pause">
+            <img src="play.svg" alt="Play" [ngClass]="{'hidden': isPlaying}">
+            <img src="pause.svg" alt="Pause" [ngClass]="{'hidden': !isPlaying}">
+        </button>
+    </li>
+    <li>
+        <button (click)="onRewind()" class="btn rewind">
+            <img src="rewind.svg" alt="Rewind">
+        </button>
+    </li>
+    <li>
+        <button (click)="onForward()" class="btn forward">
+            <img src="forward.svg" alt="Forward">
+        </button>
+    </li>
+    <li>
+        <button class="btn volume">
+            <img src="volume-1.svg" alt="Mute Volume" [ngClass]="{'hidden': !(volumePercentage === 0)}">
+            <img src="volume-2.svg" alt="Low Volume" [ngClass]="{'hidden': !(volumePercentage > 0 && volumePercentage <= 25)}">
+            <img src="volume-3.svg" alt="Medium Volume" [ngClass]="{'hidden': !(volumePercentage > 25 && volumePercentage < 75)}">
+            <img src="volume-4.svg" alt="High Volume" [ngClass]="{'hidden': !(volumePercentage >= 75)}">
+        </button>
+        <input type="range" id="volumeSlider" min="0" max="100" [value]="volumePercentage" (input)="setVolume($event.target.value)">
+    </li>
+    <li>
+        <span>
+            Bar
+        </span>
+    </li>
+    <li>
+        <button (click)="onNote()" class="btn note">
+            <img src="note.svg" alt="Note">
+        </button>
+    </li>
+    <li>
+        <button (click)="onSettings()" class="btn settings">
+            <img src="settings.svg" alt="Settings">
+        </button>
+    </li>
+    <li>
+        <button (click)="setFullscreen()" class="btn fullscreen">
+            <img src="fullscreen-on.svg" alt="Fullscreen On" [ngClass]="{'hidden': isFullscreen}">
+            <img src="fullscreen-off.svg" alt="Fullscreen Off" [ngClass]="{'hidden': !isFullscreen}">
+        </button>
+    </li>
+</ul>

@@ -8,9 +8,11 @@ import { Video } from '../services/video';
   styleUrl: './video-player.sass',
 })
 export class VideoPlayer {
+  @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
   isPlaying: boolean = false;
   volumePercentage: number = 100;
+  isFullscreen: boolean = false;
   rewindSeconds = 10;
   forwardSeconds = 10;
 
@@ -24,6 +26,11 @@ export class VideoPlayer {
     this.videoService.volume$.subscribe(vol => {
       this.volumePercentage = vol;
       this.volume();
+    });
+
+    this.videoService.isFullscreen$.subscribe(fullscreen => {
+      this.isFullscreen = fullscreen;
+      this.fullscreen();
     });
   }
 
@@ -61,5 +68,17 @@ export class VideoPlayer {
   volume(): void {
     const video = this.videoElement.nativeElement;
     video.volume = this.volumePercentage / 100;
+  }
+
+  fullscreen(): void {
+    const player = this.videoPlayer.nativeElement;
+    if (this.isFullscreen)
+    {
+      player.requestFullscreen();
+    }
+    else if (document.fullscreenElement !== null)
+    {
+      document.exitFullscreen();
+    }
   }
 }

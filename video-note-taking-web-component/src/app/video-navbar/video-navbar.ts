@@ -10,6 +10,7 @@ import { Video } from '../services/video';
 export class VideoNavbar {
   isPlaying: boolean = false;
   volumePercentage: number = 100;
+  isFullscreen: boolean = false;
   @Output() togglePlay = new EventEmitter<void>();
   @Output() rewind = new EventEmitter<void>();
   @Output() forward = new EventEmitter<void>();
@@ -19,6 +20,10 @@ export class VideoNavbar {
   ngAfterViewInit(): void {
     this.videoService.isPlaying$.subscribe(playing => {
       this.isPlaying = playing;
+    });
+
+    this.videoService.isFullscreen$.subscribe(fullscreen => {
+      this.isFullscreen = fullscreen;
     });
   }
 
@@ -47,7 +52,8 @@ export class VideoNavbar {
 
   }
 
-  onFullscreen(): void {
-    
+  setFullscreen(): void {
+    this.isFullscreen = !this.isFullscreen;
+    this.videoService.setFullscreen(this.isFullscreen);
   }
 }
