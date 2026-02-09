@@ -73,6 +73,18 @@ export class VideoNavbar {
     this.videoService.setVolume(this.volumePercentage);
   }
 
+  setCurrentTime(event: MouseEvent): void {
+    const progressBar = event.target as HTMLProgressElement;
+    const clickPosition = event.clientX - progressBar.getBoundingClientRect().left;
+    const barWidth = progressBar.clientWidth;
+
+    const newTime = (clickPosition / barWidth) * this.duration;
+
+    this.currentTime = newTime;
+
+    document.dispatchEvent(new CustomEvent('setVideoTime', { detail: this.currentTime }));
+  }
+
   onNote(): void {
 
   }

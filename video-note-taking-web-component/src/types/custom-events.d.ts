@@ -2,6 +2,7 @@
 declare global {
     interface DocumentEventMap {
         videoTimeUpdate: CustomEvent;
+        setVideoTime: CustomEvent;
     }
 }
 

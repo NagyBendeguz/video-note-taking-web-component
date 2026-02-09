@@ -34,7 +34,7 @@
         <input type="range" min="0" max="100" [value]="volumePercentage" (input)="setVolume($event.target.value)">
     </li>
     <li class="progress-item">
-        <progress id="progress" [max]="duration" [value]="currentTime"></progress>
+        <progress id="progress" [max]="duration" [value]="currentTime" (click)="setCurrentTime($event)"></progress>
     </li>
     <li>
         <button (click)="onNote()" class="btn note">

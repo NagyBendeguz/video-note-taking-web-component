@@ -54,8 +54,12 @@ export class VideoPlayer {
     });
 
     video.addEventListener('timeupdate', () => {
-        this.videoService.setCurrentTime(video.currentTime);
-        document.dispatchEvent(new CustomEvent('videoTimeUpdate', { detail: video.currentTime }));
+      this.videoService.setCurrentTime(video.currentTime);
+      document.dispatchEvent(new CustomEvent('videoTimeUpdate', { detail: video.currentTime }));
+    });
+
+    document.addEventListener('setVideoTime', (event: CustomEvent) => {
+      video.currentTime = event.detail;
     });
   }
 
