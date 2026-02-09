@@ -11,8 +11,8 @@ export class Video {
   private volumeSource = new BehaviorSubject<number>(100);
   volume$ = this.volumeSource.asObservable();
 
-  private isFullscreenSource = new BehaviorSubject<boolean>(false);
-  isFullscreen$ = this.isFullscreenSource.asObservable();
+  private fullscreenRequestSource = new BehaviorSubject<boolean>(false);
+  fullscreenRequest$ = this.fullscreenRequestSource.asObservable();
 
   setPlaying(playing: boolean): void {
     this.isPlayingSource.next(playing);
@@ -22,7 +22,7 @@ export class Video {
     this.volumeSource.next(volume);
   }
 
-  setFullscreen(fullscreen: boolean): void {
-    this.isFullscreenSource.next(fullscreen);
+  setFullscreen(fullscreenRequest: boolean): void {
+    this.fullscreenRequestSource.next(fullscreenRequest);
   }
 }

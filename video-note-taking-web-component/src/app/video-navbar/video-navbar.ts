@@ -11,7 +11,7 @@ export class VideoNavbar {
   isPlaying: boolean = false;
   volumePercentage: number = 100;
   tempVolumePercentage: number = 100;
-  isFullscreen: boolean = false;
+  fullscreenRequest: boolean = false;
   @Output() togglePlay = new EventEmitter<void>();
   @Output() rewind = new EventEmitter<void>();
   @Output() forward = new EventEmitter<void>();
@@ -23,8 +23,8 @@ export class VideoNavbar {
       this.isPlaying = playing;
     });
 
-    this.videoService.isFullscreen$.subscribe(fullscreen => {
-      this.isFullscreen = fullscreen;
+    this.videoService.fullscreenRequest$.subscribe(fullscreenRequest => {
+      this.fullscreenRequest = fullscreenRequest;
     });
   }
 
@@ -65,7 +65,7 @@ export class VideoNavbar {
   }
 
   setFullscreen(): void {
-    this.isFullscreen = !this.isFullscreen;
-    this.videoService.setFullscreen(this.isFullscreen);
+    this.fullscreenRequest = !this.fullscreenRequest;
+    this.videoService.setFullscreen(this.fullscreenRequest);
   }
 }

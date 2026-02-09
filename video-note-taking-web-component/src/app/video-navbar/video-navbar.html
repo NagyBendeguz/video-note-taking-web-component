@@ -50,8 +50,8 @@
     </li>
     <li>
         <button (click)="setFullscreen()" class="btn fullscreen">
-            <img src="fullscreen-on.svg" alt="Fullscreen On" [ngClass]="{'hidden': isFullscreen}">
-            <img src="fullscreen-off.svg" alt="Fullscreen Off" [ngClass]="{'hidden': !isFullscreen}">
+            <img src="fullscreen-on.svg" alt="Fullscreen On" [ngClass]="{'hidden': fullscreenRequest}">
+            <img src="fullscreen-off.svg" alt="Fullscreen Off" [ngClass]="{'hidden': !fullscreenRequest}">
         </button>
     </li>
 </ul>
