@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { Video } from '../services/video';
 
 @Component({
@@ -8,15 +8,24 @@ import { Video } from '../services/video';
   styleUrl: './video-navbar.sass',
 })
 export class VideoNavbar {
+  @Output() togglePlay = new EventEmitter<void>();
+  @Output() rewind = new EventEmitter<void>();
+  @Output() forward = new EventEmitter<void>();
   isPlaying: boolean = false;
   volumePercentage: number = 100;
   tempVolumePercentage: number = 100;
   fullscreenRequest: boolean = false;
-  @Output() togglePlay = new EventEmitter<void>();
-  @Output() rewind = new EventEmitter<void>();
-  @Output() forward = new EventEmitter<void>();
+  duration: number = 0;
+  currentTime: number = 0;
 
-  constructor(public videoService: Video) {}
+  constructor(private cdr: ChangeDetectorRef, public videoService: Video) {}
+
+  ngOnInit() {
+    document.addEventListener('videoTimeUpdate', (event: CustomEvent) => {
+      this.currentTime = event.detail;
+      this.cdr.detectChanges();
+    });
+  }
 
   ngAfterViewInit(): void {
     this.videoService.isPlaying$.subscribe(playing => {
@@ -26,6 +35,14 @@ export class VideoNavbar {
     this.videoService.fullscreenRequest$.subscribe(fullscreenRequest => {
       this.fullscreenRequest = fullscreenRequest;
     });
+
+    this.videoService.duration$.subscribe(duration => {
+      this.duration = duration;
+    });
+
+    /*this.videoService.currentTime$.subscribe(currentTime => {
+      this.currentTime = currentTime;
+    });*/
   }
 
   onTogglePlay(): void {

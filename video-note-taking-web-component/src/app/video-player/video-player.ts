@@ -8,11 +8,13 @@ import { Video } from '../services/video';
   styleUrl: './video-player.sass',
 })
 export class VideoPlayer {
-  @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
+  @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLDivElement>;
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
   isPlaying: boolean = false;
   volumePercentage: number = 100;
   fullscreenRequest: boolean = false;
+  //duration: number = 0;
+  //currentTime: number = 0;
   rewindSeconds = 10;
   forwardSeconds = 10;
 
@@ -23,6 +25,8 @@ export class VideoPlayer {
   }
 
   ngAfterViewInit(): void {
+    const video = this.videoElement.nativeElement;
+
     this.videoService.isPlaying$.subscribe(playing => {
       this.isPlaying = playing;
     });
@@ -35,6 +39,23 @@ export class VideoPlayer {
     this.videoService.fullscreenRequest$.subscribe(fullscreenRequest => {
       this.fullscreenRequest = fullscreenRequest;
       this.fullscreen();
+    });
+
+    /*this.videoService.duration$.subscribe(duration => {
+      this.duration = duration;
+    });*/
+
+    /*this.videoService.currentTime$.subscribe(currentTime => {
+      this.currentTime = currentTime;
+    });*/
+
+    video.addEventListener('loadedmetadata', () => {
+      this.videoService.setDuration(video.duration);
+    });
+
+    video.addEventListener('timeupdate', () => {
+        this.videoService.setCurrentTime(video.currentTime);
+        document.dispatchEvent(new CustomEvent('videoTimeUpdate', { detail: video.currentTime }));
     });
   }
 

@@ -14,6 +14,12 @@ export class Video {
   private fullscreenRequestSource = new BehaviorSubject<boolean>(false);
   fullscreenRequest$ = this.fullscreenRequestSource.asObservable();
 
+  private durationSource = new BehaviorSubject<number>(0);
+  duration$ = this.durationSource.asObservable();
+
+  private currentTimeSource = new BehaviorSubject<number>(0);
+  currentTime$ = this.currentTimeSource.asObservable();
+
   setPlaying(playing: boolean): void {
     this.isPlayingSource.next(playing);
   }
@@ -24,5 +30,13 @@ export class Video {
 
   setFullscreen(fullscreenRequest: boolean): void {
     this.fullscreenRequestSource.next(fullscreenRequest);
+  }
+
+  setDuration(duration: number): void {
+    this.durationSource.next(duration);
+  }
+
+  setCurrentTime(currentTime: number): void {
+    this.currentTimeSource.next(currentTime);
   }
 }
