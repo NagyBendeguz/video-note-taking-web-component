@@ -30,16 +30,19 @@ export class VideoNavbar {
 
     this.videoService.duration$.subscribe(duration => {
       this.duration = duration;
+      this.cdr.detectChanges();
     });
   }
 
   ngAfterViewInit(): void {
     this.videoService.isPlaying$.subscribe(playing => {
       this.isPlaying = playing;
+      this.cdr.detectChanges();
     });
 
     this.videoService.fullscreenRequest$.subscribe(fullscreenRequest => {
       this.fullscreenRequest = fullscreenRequest;
+      this.cdr.detectChanges();
     });
   }
 
@@ -105,7 +108,7 @@ export class VideoNavbar {
     document.dispatchEvent(new CustomEvent('setVideoTime', { detail: this.currentTime }));
   }
 
-  onNote(): void {
+  setNote(): void {
 
   }
 

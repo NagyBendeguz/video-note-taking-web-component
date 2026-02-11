@@ -28,38 +28,43 @@ export class VideoPlayer {
 
     this.videoService.isPlaying$.subscribe(playing => {
       this.isPlaying = playing;
+      this.cdr.detectChanges();
     });
     
     this.videoService.volume$.subscribe(vol => {
       this.volumePercentage = vol;
       this.volume();
+      this.cdr.detectChanges();
     });
 
     // A videó idejének lekérése.
     video.addEventListener('loadedmetadata', () => {
       this.videoService.setDuration(video.duration);
+      this.cdr.detectChanges();
     });
 
     // A jelenlegi idő lekérése egy egyedi eseménnyel.
     video.addEventListener('timeupdate', () => {
       this.videoService.setCurrentTime(video.currentTime);
       document.dispatchEvent(new CustomEvent('updateVideoTime', { detail: video.currentTime }));
+      this.cdr.detectChanges();
     });
 
     // A videó jelenlegi idejének beállítása egy egyedi eseménnyel.
     document.addEventListener('setVideoTime', (event: CustomEvent) => {
       video.currentTime = event.detail;
+      this.cdr.detectChanges();
     });
 
     this.videoService.isSettings$.subscribe(settings => {
       this.isSettings = settings;
-      // Detekció szükséges a működéshez.
       this.cdr.detectChanges();
     });
 
     this.videoService.fullscreenRequest$.subscribe(fullscreenRequest => {
       this.fullscreenRequest = fullscreenRequest;
       this.fullscreen();
+      this.cdr.detectChanges();
     });
   }
 
@@ -125,8 +130,6 @@ export class VideoPlayer {
       document.exitFullscreen();
     }
   }
-
-  // TODO - A teljes képernyős módból való kilépésnél az ESC gomb segítségével akkor nem frissül a navbar és azon a fullscreen ikon (csak akkor változik meg ha belekattintunk a navbar-ba vagy megy a progress bar)!
 
   /**
    * Annak érzékelésére ha nem a fullscreen gombra kattintással lép ki a teljes képernyős módból, akkor is váltson át a gomb funkciója.
