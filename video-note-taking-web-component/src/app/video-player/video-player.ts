@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { Video } from '../services/video';
 
 @Component({
@@ -12,11 +12,12 @@ export class VideoPlayer {
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
   isPlaying: boolean = false;
   volumePercentage: number = 100;
+  isSettings: boolean = false;
   fullscreenRequest: boolean = false;
   rewindSeconds = 10;
   forwardSeconds = 10;
 
-  constructor(private videoService: Video) {}
+  constructor(private cdr: ChangeDetectorRef, private videoService: Video) {}
 
   ngOnInit(): void {
     this.checkFullscreen();
@@ -34,11 +35,6 @@ export class VideoPlayer {
       this.volume();
     });
 
-    this.videoService.fullscreenRequest$.subscribe(fullscreenRequest => {
-      this.fullscreenRequest = fullscreenRequest;
-      this.fullscreen();
-    });
-
     // A videó idejének lekérése.
     video.addEventListener('loadedmetadata', () => {
       this.videoService.setDuration(video.duration);
@@ -53,6 +49,17 @@ export class VideoPlayer {
     // A videó jelenlegi idejének beállítása egy egyedi eseménnyel.
     document.addEventListener('setVideoTime', (event: CustomEvent) => {
       video.currentTime = event.detail;
+    });
+
+    this.videoService.isSettings$.subscribe(settings => {
+      this.isSettings = settings;
+      // Detekció szükséges a működéshez.
+      this.cdr.detectChanges();
+    });
+
+    this.videoService.fullscreenRequest$.subscribe(fullscreenRequest => {
+      this.fullscreenRequest = fullscreenRequest;
+      this.fullscreen();
     });
   }
 
@@ -119,7 +126,7 @@ export class VideoPlayer {
     }
   }
 
-  // TODO - A teljes képernyős módból való kilépésnél az ESC gomb segítségével akkor nem frissül a navbar és azon a fullscreen ikon (csak akkor változik meg ha belekattintunk a navbar-ba)!
+  // TODO - A teljes képernyős módból való kilépésnél az ESC gomb segítségével akkor nem frissül a navbar és azon a fullscreen ikon (csak akkor változik meg ha belekattintunk a navbar-ba vagy megy a progress bar)!
 
   /**
    * Annak érzékelésére ha nem a fullscreen gombra kattintással lép ki a teljes képernyős módból, akkor is váltson át a gomb funkciója.

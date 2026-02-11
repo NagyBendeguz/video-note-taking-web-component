@@ -16,6 +16,7 @@ export class VideoNavbar {
   tempVolumePercentage: number = 100;
   duration: number = 0;
   currentTime: number = 0;
+  isSettings: boolean = false;
   fullscreenRequest: boolean = false;
 
   constructor(private cdr: ChangeDetectorRef, public videoService: Video) {}
@@ -26,6 +27,10 @@ export class VideoNavbar {
       this.currentTime = event.detail;
       this.cdr.detectChanges();
     });
+
+    this.videoService.duration$.subscribe(duration => {
+      this.duration = duration;
+    });
   }
 
   ngAfterViewInit(): void {
@@ -35,10 +40,6 @@ export class VideoNavbar {
 
     this.videoService.fullscreenRequest$.subscribe(fullscreenRequest => {
       this.fullscreenRequest = fullscreenRequest;
-    });
-
-    this.videoService.duration$.subscribe(duration => {
-      this.duration = duration;
     });
   }
 
@@ -99,7 +100,6 @@ export class VideoNavbar {
     const barWidth = progressBar.clientWidth;
 
     const newTime = (clickPosition / barWidth) * this.duration;
-
     this.currentTime = newTime;
 
     document.dispatchEvent(new CustomEvent('setVideoTime', { detail: this.currentTime }));
@@ -109,8 +109,9 @@ export class VideoNavbar {
 
   }
 
-  onSettings(): void {
-
+  setSettings(): void {
+    this.isSettings = !this.isSettings;
+    this.videoService.setSettings(this.isSettings);
   }
 
   /**

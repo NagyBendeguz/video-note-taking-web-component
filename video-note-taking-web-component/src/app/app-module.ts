@@ -6,12 +6,14 @@ import { App } from './app';
 import { VideoPlayer } from './video-player/video-player';
 import { VideoNavbar } from './video-navbar/video-navbar';
 import { createCustomElement } from '@angular/elements';
+import { VideoSettings } from './video-settings/video-settings';
 
 @NgModule({
   declarations: [
     App,
     VideoPlayer,
-    VideoNavbar
+    VideoNavbar,
+    VideoSettings
   ],
   imports: [
     BrowserModule,
@@ -29,10 +31,12 @@ export class AppModule {
     // Átalakítani egy egyedi web komponensre.
     const videoPlayerElement = createCustomElement(VideoPlayer, { injector });
     const videoNavbarElement = createCustomElement(VideoNavbar, { injector });
+    const videoSettingsElement = createCustomElement(VideoSettings, { injector });
 
     // Lehessen használni egyedi web komponensként.
     customElements.define('video-player-element', videoPlayerElement);
     customElements.define('video-navbar-element', videoNavbarElement);
+    customElements.define('video-settings-element', videoSettingsElement);
   }
   
   // Manuális bootstrap.

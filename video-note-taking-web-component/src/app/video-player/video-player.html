@@ -8,4 +8,7 @@
         (rewind)="rewind()" 
         (forward)="forward()">
     </video-navbar-element>
+    <video-settings-element
+        [ngClass]="{'hidden': !isSettings}">
+    </video-settings-element>
 </div>
