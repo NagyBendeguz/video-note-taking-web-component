@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { App } from './app';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -11,6 +12,7 @@ describe('App', () => {
       declarations: [
         App
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA], // Használni az egyedi komponenseket.
     }).compileComponents();
   });
 
@@ -20,10 +22,10 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', async () => {
+  it('should render video-player-element', async () => {
     const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, video-note-taking-web-component');
+    fixture.detectChanges();
+    const videoPlayerElement = fixture.nativeElement.querySelector('video-player-element');
+    expect(videoPlayerElement).not.toBeNull();
   });
 });

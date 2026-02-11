@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VideoPlayer } from './video-player';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('VideoPlayer', () => {
   let component: VideoPlayer;
@@ -8,7 +9,8 @@ describe('VideoPlayer', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [VideoPlayer]
+      declarations: [VideoPlayer],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA], // Használni az egyedi komponenseket.
     })
     .compileComponents();
 

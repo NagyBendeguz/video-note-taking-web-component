@@ -13,8 +13,6 @@ export class VideoPlayer {
   isPlaying: boolean = false;
   volumePercentage: number = 100;
   fullscreenRequest: boolean = false;
-  //duration: number = 0;
-  //currentTime: number = 0;
   rewindSeconds = 10;
   forwardSeconds = 10;
 
@@ -41,23 +39,18 @@ export class VideoPlayer {
       this.fullscreen();
     });
 
-    /*this.videoService.duration$.subscribe(duration => {
-      this.duration = duration;
-    });*/
-
-    /*this.videoService.currentTime$.subscribe(currentTime => {
-      this.currentTime = currentTime;
-    });*/
-
+    // A videó idejének lekérése.
     video.addEventListener('loadedmetadata', () => {
       this.videoService.setDuration(video.duration);
     });
 
+    // A jelenlegi idő lekérése egy egyedi eseménnyel.
     video.addEventListener('timeupdate', () => {
       this.videoService.setCurrentTime(video.currentTime);
-      document.dispatchEvent(new CustomEvent('videoTimeUpdate', { detail: video.currentTime }));
+      document.dispatchEvent(new CustomEvent('updateVideoTime', { detail: video.currentTime }));
     });
 
+    // A videó jelenlegi idejének beállítása egy egyedi eseménnyel.
     document.addEventListener('setVideoTime', (event: CustomEvent) => {
       video.currentTime = event.detail;
     });
@@ -65,6 +58,9 @@ export class VideoPlayer {
 
   // TODO - Renderer2 ???
 
+  /**
+   * A videó indítása vagy megállítása.
+   */
   togglePlay(): void {
     const video = this.videoElement.nativeElement;
     if (video.paused)
@@ -79,11 +75,17 @@ export class VideoPlayer {
     }
   }
 
+  /**
+   * A videó hátra tekerése.
+   */
   rewind(): void {
     const video = this.videoElement.nativeElement;
     video.currentTime = Math.max(video.currentTime - this.rewindSeconds, 0);
   }
 
+  /**
+   * A videó előre tekerése.
+   */
   forward(): void {
     const video = this.videoElement.nativeElement;
     video.currentTime = Math.min(video.currentTime + this.forwardSeconds, video.duration);
@@ -94,11 +96,17 @@ export class VideoPlayer {
     }
   }
 
+  /**
+   * A hangerő szabályozása.
+   */
   volume(): void {
     const video = this.videoElement.nativeElement;
     video.volume = this.volumePercentage / 100;
   }
 
+  /**
+   * A teljes képernyős módba való belépés és kilépés.
+   */
   fullscreen(): void {
     const player = this.videoPlayer.nativeElement;
     if (this.fullscreenRequest)
@@ -111,10 +119,10 @@ export class VideoPlayer {
     }
   }
 
-  // TODO - A teljes képernyős módból való kilépésnél az ESC gomb segítségével akkor nem frissül a navbar és azon a fullscreen ikon!
+  // TODO - A teljes képernyős módból való kilépésnél az ESC gomb segítségével akkor nem frissül a navbar és azon a fullscreen ikon (csak akkor változik meg ha belekattintunk a navbar-ba)!
 
   /**
-   * Annak érzékelésére ha nem a fullscreen gombra kattintással lép ki a teljes képernyős módból.
+   * Annak érzékelésére ha nem a fullscreen gombra kattintással lép ki a teljes képernyős módból, akkor is váltson át a gomb funkciója.
    */
   private checkFullscreen(): void {
     document.addEventListener('fullscreenchange', () =>

@@ -21,7 +21,7 @@ import { createCustomElement } from '@angular/elements';
     provideBrowserGlobalErrorListeners(),
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  //bootstrap: [App]
+  //bootstrap: [App] // Alapértelmezett bootstrap kikapcsolása.
 })
 export class AppModule {
 
@@ -35,7 +35,7 @@ export class AppModule {
     customElements.define('video-navbar-element', videoNavbarElement);
   }
   
-  // Manuális Bootstrap.
+  // Manuális bootstrap.
   ngDoBootstrap() {
     const appComponent = this.componentFactoryResolver.resolveComponentFactory(App);
     this.appRef.bootstrap(appComponent);

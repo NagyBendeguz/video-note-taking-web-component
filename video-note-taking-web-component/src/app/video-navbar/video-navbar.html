@@ -25,7 +25,7 @@
         @else
         {
             <button (click)="mute()" class="btn volume">
-                <img src="volume-1.svg" alt="Mute Volume" [ngClass]="{'hidden': !(volumePercentage === 0)}"><!--Csak azért van itt, hogy az ikon betöltődjön és ne legyen egy pillanatnyi villódzás.-->
+                <img src="volume-1.svg" alt="Mute Volume" class="hidden"><!--Csak azért van itt, hogy az ikon betöltődjön és ne legyen egy pillanatnyi villódzás.-->
                 <img src="volume-2.svg" alt="Low Volume" [ngClass]="{'hidden': !(volumePercentage > 0 && volumePercentage < 33)}">
                 <img src="volume-3.svg" alt="Medium Volume" [ngClass]="{'hidden': !(volumePercentage >= 33 && volumePercentage <= 66)}">
                 <img src="volume-4.svg" alt="High Volume" [ngClass]="{'hidden': !(volumePercentage > 66)}">

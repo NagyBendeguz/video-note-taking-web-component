@@ -14,14 +14,15 @@ export class VideoNavbar {
   isPlaying: boolean = false;
   volumePercentage: number = 100;
   tempVolumePercentage: number = 100;
-  fullscreenRequest: boolean = false;
   duration: number = 0;
   currentTime: number = 0;
+  fullscreenRequest: boolean = false;
 
   constructor(private cdr: ChangeDetectorRef, public videoService: Video) {}
 
   ngOnInit() {
-    document.addEventListener('videoTimeUpdate', (event: CustomEvent) => {
+    // Frissíteni a progress bar-t a jelenlegi idővel, de ehhez Angular Elements-ben, manuális bootstrap mellett szükséges manuálisan detektálni (ChangeDetectorRef).
+    document.addEventListener('updateVideoTime', (event: CustomEvent) => {
       this.currentTime = event.detail;
       this.cdr.detectChanges();
     });
@@ -39,40 +40,59 @@ export class VideoNavbar {
     this.videoService.duration$.subscribe(duration => {
       this.duration = duration;
     });
-
-    /*this.videoService.currentTime$.subscribe(currentTime => {
-      this.currentTime = currentTime;
-    });*/
   }
 
+  /**
+   * Indítás és megállítás kibocsátása.
+   */
   onTogglePlay(): void {
     this.togglePlay.emit();
   }
 
+  /**
+   * Hátra tekerés kibocsátása.
+   */
   onRewind(): void {
     this.rewind.emit();
   }
 
+  /**
+   * Előre tekerés kibocsátása.
+   */
   onForward(): void {
     this.forward.emit();
   }
 
+  /**
+   * A videó hangerejének szabályozása.
+   * @param value - Hangerő.
+   */
   setVolume(value: string): void {
     this.volumePercentage = Number(value);
     this.videoService.setVolume(this.volumePercentage);
   }
 
+  /**
+   * A videó némítása.
+   */
   mute(): void {
     this.tempVolumePercentage = this.volumePercentage;
     this.volumePercentage = 0;
     this.videoService.setVolume(this.volumePercentage);
   }
 
+  /**
+   * A videó némításának visszavonása.
+   */
   unMute(): void {
     this.volumePercentage = this.tempVolumePercentage;
     this.videoService.setVolume(this.volumePercentage);
   }
 
+  /**
+   * A videó jelenlegi idejének beállítása a progress bar-ra való kattintással.
+   * @param event - Az egér kattintási eseménye a videó progress bar-ján.
+   */
   setCurrentTime(event: MouseEvent): void {
     const progressBar = event.target as HTMLProgressElement;
     const clickPosition = event.clientX - progressBar.getBoundingClientRect().left;
@@ -93,6 +113,9 @@ export class VideoNavbar {
 
   }
 
+  /**
+   * A teljes képernyős mód ki-be kapcsolása.
+   */
   setFullscreen(): void {
     this.fullscreenRequest = !this.fullscreenRequest;
     this.videoService.setFullscreen(this.fullscreenRequest);

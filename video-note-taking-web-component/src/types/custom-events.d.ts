@@ -1,7 +1,7 @@
-// Egyedi esemény létrehozása a progress bar frissítéséhez.
 declare global {
     interface DocumentEventMap {
-        videoTimeUpdate: CustomEvent;
+        // Egyedi események létrehozása a progress bar frissítéséhez.
+        updateVideoTime: CustomEvent;
         setVideoTime: CustomEvent;
     }
 }
