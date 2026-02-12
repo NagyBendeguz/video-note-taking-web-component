@@ -13,6 +13,7 @@ export class VideoPlayer {
   isPlaying: boolean = false;
   volumePercentage: number = 100;
   isSettings: boolean = false;
+  currentTime: number = 0;
   fullscreenRequest: boolean = false;
   rewindSeconds = 10;
   forwardSeconds = 10;
@@ -43,16 +44,21 @@ export class VideoPlayer {
       this.cdr.detectChanges();
     });
 
-    // A jelenlegi idő lekérése egy egyedi eseménnyel.
+    this.videoService.currentTime$.subscribe(currentTime => {
+      this.currentTime = currentTime;
+      this.cdr.detectChanges();
+    });
+
+    // A jelenlegi idő lekérése.
     video.addEventListener('timeupdate', () => {
       this.videoService.setCurrentTime(video.currentTime);
-      document.dispatchEvent(new CustomEvent('updateVideoTime', { detail: video.currentTime }));
       this.cdr.detectChanges();
     });
 
     // A videó jelenlegi idejének beállítása egy egyedi eseménnyel.
     document.addEventListener('setVideoTime', (event: CustomEvent) => {
-      video.currentTime = event.detail;
+      this.currentTime = event.detail;
+      video.currentTime = this.currentTime;
       this.cdr.detectChanges();
     });
 

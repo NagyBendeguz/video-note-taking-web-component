@@ -1,4 +1,4 @@
-import { ApplicationRef, ComponentFactoryResolver, CUSTOM_ELEMENTS_SCHEMA, Injector, NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationRef, CUSTOM_ELEMENTS_SCHEMA, Injector, NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing-module';
@@ -27,7 +27,7 @@ import { VideoSettings } from './video-settings/video-settings';
 })
 export class AppModule {
 
-  constructor(private injector: Injector, private appRef: ApplicationRef, private componentFactoryResolver: ComponentFactoryResolver) {
+  constructor(private injector: Injector) {
     // Átalakítani egy egyedi web komponensre.
     const videoPlayerElement = createCustomElement(VideoPlayer, { injector });
     const videoNavbarElement = createCustomElement(VideoNavbar, { injector });
@@ -40,8 +40,7 @@ export class AppModule {
   }
   
   // Manuális bootstrap.
-  ngDoBootstrap() {
-    const appComponent = this.componentFactoryResolver.resolveComponentFactory(App);
-    this.appRef.bootstrap(appComponent);
+  ngDoBootstrap(appRef: ApplicationRef) {
+    appRef.bootstrap(App);
   }
 }

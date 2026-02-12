@@ -22,14 +22,13 @@ export class VideoNavbar {
   constructor(private cdr: ChangeDetectorRef, public videoService: Video) {}
 
   ngOnInit() {
-    // Frissíteni a progress bar-t a jelenlegi idővel, de ehhez Angular Elements-ben, manuális bootstrap mellett szükséges manuálisan detektálni (ChangeDetectorRef).
-    document.addEventListener('updateVideoTime', (event: CustomEvent) => {
-      this.currentTime = event.detail;
+    this.videoService.duration$.subscribe(duration => {
+      this.duration = duration;
       this.cdr.detectChanges();
     });
 
-    this.videoService.duration$.subscribe(duration => {
-      this.duration = duration;
+    this.videoService.currentTime$.subscribe(currentTime => {
+      this.currentTime = currentTime;
       this.cdr.detectChanges();
     });
   }
@@ -97,7 +96,7 @@ export class VideoNavbar {
    * A videó jelenlegi idejének beállítása a progress bar-ra való kattintással.
    * @param event - Az egér kattintási eseménye a videó progress bar-ján.
    */
-  setCurrentTime(event: MouseEvent): void {
+  setCurrentTimeByClick(event: MouseEvent): void {
     const progressBar = event.target as HTMLProgressElement;
     const clickPosition = event.clientX - progressBar.getBoundingClientRect().left;
     const barWidth = progressBar.clientWidth;
@@ -106,12 +105,16 @@ export class VideoNavbar {
     this.currentTime = newTime;
 
     document.dispatchEvent(new CustomEvent('setVideoTime', { detail: this.currentTime }));
+    this.videoService.setCurrentTime(this.currentTime);
   }
 
   setNote(): void {
 
   }
 
+  /**
+   * A beállítások oldal ki-be kapcsolása.
+   */
   setSettings(): void {
     this.isSettings = !this.isSettings;
     this.videoService.setSettings(this.isSettings);
