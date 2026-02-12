@@ -10,10 +10,7 @@ import { Video } from '../services/video';
 export class VideoPlayer {
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLDivElement>;
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
-  isPlaying: boolean = false;
-  volumePercentage: number = 100;
   isSettings: boolean = false;
-  currentTime: number = 0;
   fullscreenRequest: boolean = false;
   rewindSeconds = 10;
   forwardSeconds = 10;
@@ -27,25 +24,15 @@ export class VideoPlayer {
   ngAfterViewInit(): void {
     const video = this.videoElement.nativeElement;
 
-    this.videoService.isPlaying$.subscribe(playing => {
-      this.isPlaying = playing;
-      this.cdr.detectChanges();
-    });
-    
-    this.videoService.volume$.subscribe(vol => {
-      this.volumePercentage = vol;
-      this.volume();
+    // A hangerő szabályozása.
+    this.videoService.volume$.subscribe(volume => {
+      video.volume = volume / 100;
       this.cdr.detectChanges();
     });
 
     // A videó idejének lekérése.
     video.addEventListener('loadedmetadata', () => {
       this.videoService.setDuration(video.duration);
-      this.cdr.detectChanges();
-    });
-
-    this.videoService.currentTime$.subscribe(currentTime => {
-      this.currentTime = currentTime;
       this.cdr.detectChanges();
     });
 
@@ -57,8 +44,7 @@ export class VideoPlayer {
 
     // A videó jelenlegi idejének beállítása egy egyedi eseménnyel.
     document.addEventListener('setVideoTime', (event: CustomEvent) => {
-      this.currentTime = event.detail;
-      video.currentTime = this.currentTime;
+      video.currentTime = event.detail;
       this.cdr.detectChanges();
     });
 
@@ -112,14 +98,6 @@ export class VideoPlayer {
       video.pause();
       this.videoService.setPlaying(false);
     }
-  }
-
-  /**
-   * A hangerő szabályozása.
-   */
-  volume(): void {
-    const video = this.videoElement.nativeElement;
-    video.volume = this.volumePercentage / 100;
   }
 
   /**
