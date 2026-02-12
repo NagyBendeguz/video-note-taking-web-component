@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Video } from '../services/video';
 
 @Component({
@@ -12,8 +12,8 @@ export class VideoPlayer {
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
   isSettings: boolean = false;
   fullscreenRequest: boolean = false;
-  rewindSeconds = 10;
-  forwardSeconds = 10;
+  rewindSeconds: number = 10;
+  forwardSeconds: number = 10;
 
   constructor(private cdr: ChangeDetectorRef, private videoService: Video) {}
 
@@ -33,6 +33,7 @@ export class VideoPlayer {
     // A videó idejének lekérése.
     video.addEventListener('loadedmetadata', () => {
       this.videoService.setDuration(video.duration);
+      this.setVideoHeight()
       this.cdr.detectChanges();
     });
 
@@ -60,7 +61,14 @@ export class VideoPlayer {
     });
   }
 
+  @HostListener('window:resize')
+  onResize() {
+    this.setVideoHeight();
+  }
+
   // TODO - Renderer2 ???
+
+  // TODO - html, sass mentésénél inkonzisztens állapot javítása, csak a player és navbar-nál, a settings-nél nem, és sima komponenst használva is jó
 
   /**
    * A videó indítása vagy megállítása.
@@ -126,5 +134,28 @@ export class VideoPlayer {
         this.videoService.setFullscreen(false);
       }
     });
+  }
+
+  /**
+   * A videó eredeti magasságának beállítása.
+   */
+  private setVideoHeight(): void {
+    const video = this.videoElement.nativeElement;
+    if (!this.isSettings)
+    {
+      this.setSassVariable(video.clientHeight);
+    }
+    else
+    {
+      this.setSassVariable(video.clientHeight * 2);
+    }
+  }
+
+  /**
+   * A videó erdeti magasságának beállítása CSS változóként.
+   * @param height - A videó eredeti magassága.
+   */
+  private setSassVariable(height: number) {
+    document.documentElement.style.setProperty('--video-height', `${height}px`);
   }
 }

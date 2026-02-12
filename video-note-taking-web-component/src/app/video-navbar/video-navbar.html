@@ -1,4 +1,4 @@
-<nav>
+<nav [ngClass]="{'full-width': !isSettings, 'half-width': isSettings}">
     <ul class="video-navbar">
         <li>
             <button (click)="onTogglePlay()" class="btn play-pause">
