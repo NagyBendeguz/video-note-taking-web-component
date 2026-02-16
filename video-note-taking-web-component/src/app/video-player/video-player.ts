@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Video } from '../services/video';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-video-player',
@@ -10,7 +11,9 @@ import { Video } from '../services/video';
 export class VideoPlayer {
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLDivElement>;
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
+  isSettings$: Observable<boolean> = new Observable<boolean>();
   isSettings: boolean = false;
+  //fullscreenRequest$: Observable<boolean> = new Observable<boolean>();
   fullscreenRequest: boolean = false;
   rewindSeconds: number = 10;
   forwardSeconds: number = 10;
@@ -49,9 +52,10 @@ export class VideoPlayer {
       this.cdr.detectChanges();
     });
 
+    this.isSettings$ = this.videoService.getSettings();
+
     this.videoService.isSettings$.subscribe(settings => {
       this.isSettings = settings;
-      this.cdr.detectChanges();
     });
 
     this.videoService.fullscreenRequest$.subscribe(fullscreenRequest => {
@@ -68,7 +72,7 @@ export class VideoPlayer {
 
   // TODO - Renderer2 ???
 
-  // TODO - html, sass mentésénél inkonzisztens állapot javítása, csak a player és navbar-nál, a settings-nél nem, és sima komponenst használva is jó
+  // TODO - inkonzisztens állapot javítása (volume és progress bar click) csak a player html és sass mentésénél
 
   /**
    * A videó indítása vagy megállítása.

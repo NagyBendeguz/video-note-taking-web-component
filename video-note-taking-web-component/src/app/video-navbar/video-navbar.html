@@ -1,9 +1,9 @@
-<nav [ngClass]="{'full-width': !isSettings, 'half-width': isSettings}">
+<nav [ngClass]="{'full-width': !(isSettings$ | async), 'half-width': isSettings$ | async}">
     <ul class="video-navbar">
         <li>
             <button (click)="onTogglePlay()" class="btn play-pause">
-                <img src="play.svg" alt="Play" [ngClass]="{'hidden': isPlaying}">
-                <img src="pause.svg" alt="Pause" [ngClass]="{'hidden': !isPlaying}">
+                <img src="play.svg" alt="Play" [ngClass]="{'hidden': isPlaying$ | async}">
+                <img src="pause.svg" alt="Pause" [ngClass]="{'hidden': !(isPlaying$ | async)}">
             </button>
         </li>
         <li>
@@ -17,7 +17,7 @@
             </button>
         </li>
         <li>
-            @if (volumePercentage === 0)
+            @if ((volumePercentage$ | async) === 0)
             {
                 <button (click)="unMute()" class="btn volume">
                     <img src="volume-1.svg" alt="Mute Volume">
@@ -27,15 +27,15 @@
             {
                 <button (click)="mute()" class="btn volume">
                     <img src="volume-1.svg" alt="Mute Volume" class="hidden"><!--Csak azért van itt, hogy az ikon betöltődjön és ne legyen egy pillanatnyi villódzás.-->
-                    <img src="volume-2.svg" alt="Low Volume" [ngClass]="{'hidden': !(volumePercentage > 0 && volumePercentage < 33)}">
-                    <img src="volume-3.svg" alt="Medium Volume" [ngClass]="{'hidden': !(volumePercentage >= 33 && volumePercentage <= 66)}">
-                    <img src="volume-4.svg" alt="High Volume" [ngClass]="{'hidden': !(volumePercentage > 66)}">
+                    <img src="volume-2.svg" alt="Low Volume" [ngClass]="{'hidden': !((volumePercentage$ | async)! > 0 && (volumePercentage$ | async)! < 33)}">
+                    <img src="volume-3.svg" alt="Medium Volume" [ngClass]="{'hidden': !((volumePercentage$ | async)! >= 33 && (volumePercentage$ | async)! <= 66)}">
+                    <img src="volume-4.svg" alt="High Volume" [ngClass]="{'hidden': !((volumePercentage$ | async)! > 66)}">
                 </button>
             }
-            <input type="range" min="0" max="100" [value]="volumePercentage" (input)="setVolume($event.target.value)">
+            <input type="range" min="0" max="100" [value]="(volumePercentage$ | async)" (input)="setVolume($event.target.value)">
         </li>
         <li class="progress-item">
-            <progress id="progress" [max]="duration" [value]="currentTime" (click)="setCurrentTimeByClick($event)"></progress>
+            <progress id="progress" [max]="(duration$ | async)" [value]="(currentTime$ | async)" (click)="setCurrentTimeByClick($event)"></progress>
         </li>
         <li>
             <button (click)="setNote()" class="btn note">
@@ -49,8 +49,8 @@
         </li>
         <li>
             <button (click)="setFullscreen()" class="btn fullscreen">
-                <img src="fullscreen-on.svg" alt="Fullscreen On" [ngClass]="{'hidden': fullscreenRequest}">
-                <img src="fullscreen-off.svg" alt="Fullscreen Off" [ngClass]="{'hidden': !fullscreenRequest}">
+                <img src="fullscreen-on.svg" alt="Fullscreen On" [ngClass]="{'hidden': fullscreenRequest$ | async}">
+                <img src="fullscreen-off.svg" alt="Fullscreen Off" [ngClass]="{'hidden': !(fullscreenRequest$ | async)}">
             </button>
         </li>
     </ul>

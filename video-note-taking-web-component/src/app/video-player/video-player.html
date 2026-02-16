@@ -1,13 +1,13 @@
 <div class="video-player" #videoPlayer>
     <!-- TODO - teljes képernyősőn ez a jó (és ne legyen kettő video tag sem)
-    <div (click)="togglePlay()" class="video-div" [ngClass]="{'open-page': isSettings}">
+    <div (click)="togglePlay()" class="video-div" [ngClass]="{'open-page': isSettings$ | async}">
         <video #videoElement>
             <source src="video.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     </div>
     -->
-    <div class="video-outer-div" [ngClass]="{'open-page video-outer-div-open-page': isSettings}">
+    <div class="video-outer-div" [ngClass]="{'open-page video-outer-div-open-page': isSettings$ | async}">
         <div (click)="togglePlay()" class="video-div">
             <video #videoElement>
                 <source src="video.mp4" type="video/mp4">
@@ -21,6 +21,6 @@
         (forward)="forward()">
     </video-navbar-element>
     <video-settings-element
-        [ngClass]="{'hidden': !isSettings}">
+        [ngClass]="{'hidden': !(isSettings$ | async)}">
     </video-settings-element>
 </div>

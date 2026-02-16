@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Video } from '../services/video';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-video-navbar',
@@ -11,38 +12,44 @@ export class VideoNavbar {
   @Output() togglePlay = new EventEmitter<void>();
   @Output() rewind = new EventEmitter<void>();
   @Output() forward = new EventEmitter<void>();
-  isPlaying: boolean = false;
-  volumePercentage: number = 100;
-  tempVolumePercentage: number = 100;
+  private subscriptions: Subscription = new Subscription();
+  isPlaying$: Observable<boolean> = new Observable<boolean>();
+  volumePercentage$: Observable<number> = new Observable<number>();
+  previousVolume: number = 100;
+  duration$: Observable<number> = new Observable<number>();
   duration: number = 0;
-  currentTime: number = 0;
+  currentTime$: Observable<number> = new Observable<number>();
+  isSettings$: Observable<boolean> = new Observable<boolean>();
   isSettings: boolean = false;
+  fullscreenRequest$: Observable<boolean> = new Observable<boolean>();
   fullscreenRequest: boolean = false;
 
-  constructor(private cdr: ChangeDetectorRef, public videoService: Video) {}
+  constructor(public videoService: Video) {}
 
   ngOnInit() {
-    this.videoService.duration$.subscribe(duration => {
+    this.isPlaying$ = this.videoService.getPlaying();
+
+    this.volumePercentage$ = this.videoService.getVolume();
+
+    this.subscriptions.add(this.volumePercentage$.subscribe(currentVolume => {
+      // Csak akkor mentse le a hangerő változást ha nem nulla a jelenlegi hangerő.
+      if (currentVolume !== 0)
+      {
+        this.previousVolume = currentVolume;
+      }
+    }));
+
+    this.duration$ = this.videoService.getDuration();
+
+    this.subscriptions.add(this.videoService.duration$.subscribe(duration => {
       this.duration = duration;
-      this.cdr.detectChanges();
-    });
+    }));
 
-    this.videoService.currentTime$.subscribe(currentTime => {
-      this.currentTime = currentTime;
-      this.cdr.detectChanges();
-    });
-  }
+    this.currentTime$ = this.videoService.getCurrentTime();
 
-  ngAfterViewInit(): void {
-    this.videoService.isPlaying$.subscribe(playing => {
-      this.isPlaying = playing;
-      this.cdr.detectChanges();
-    });
+    this.isSettings$ = this.videoService.getSettings();
 
-    this.videoService.fullscreenRequest$.subscribe(fullscreenRequest => {
-      this.fullscreenRequest = fullscreenRequest;
-      this.cdr.detectChanges();
-    });
+    this.fullscreenRequest$ = this.videoService.getFullscreen();
   }
 
   /**
@@ -67,29 +74,26 @@ export class VideoNavbar {
   }
 
   /**
-   * A videó hangerejének szabályozása.
+   * A videó hangerejének szabályozása csúszkával.
    * @param value - Hangerő.
    */
   setVolume(value: string): void {
-    this.volumePercentage = Number(value);
-    this.videoService.setVolume(this.volumePercentage);
+    const volume = Number(value);
+    this.videoService.setVolume(volume);
   }
 
   /**
-   * A videó némítása.
+   * A videó némítása gombnyomásra.
    */
   mute(): void {
-    this.tempVolumePercentage = this.volumePercentage;
-    this.volumePercentage = 0;
-    this.videoService.setVolume(this.volumePercentage);
+    this.videoService.setVolume(0);
   }
 
   /**
-   * A videó némításának visszavonása.
+   * A videó hangerejének visszaállítása gombnyomásra az előző hangerőre.
    */
   unMute(): void {
-    this.volumePercentage = this.tempVolumePercentage;
-    this.videoService.setVolume(this.volumePercentage);
+    this.videoService.setVolume(this.previousVolume);
   }
 
   /**
@@ -102,10 +106,10 @@ export class VideoNavbar {
     const barWidth = progressBar.clientWidth;
 
     const newTime = (clickPosition / barWidth) * this.duration;
-    this.currentTime = newTime;
 
-    document.dispatchEvent(new CustomEvent('setVideoTime', { detail: this.currentTime }));
-    this.videoService.setCurrentTime(this.currentTime);
+    this.videoService.setCurrentTime(newTime);
+
+    document.dispatchEvent(new CustomEvent('setVideoTime', { detail: newTime }));
   }
 
   setNote(): void {
@@ -116,15 +120,22 @@ export class VideoNavbar {
    * A beállítások oldal ki-be kapcsolása.
    */
   setSettings(): void {
+    this.videoService.setSettings(!this.isSettings);
     this.isSettings = !this.isSettings;
-    this.videoService.setSettings(this.isSettings);
   }
 
   /**
    * A teljes képernyős mód ki-be kapcsolása.
    */
   setFullscreen(): void {
+    this.videoService.setFullscreen(!this.fullscreenRequest);
     this.fullscreenRequest = !this.fullscreenRequest;
-    this.videoService.setFullscreen(this.fullscreenRequest);
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscriptions)
+    {
+      this.subscriptions.unsubscribe();
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -23,24 +23,48 @@ export class Video {
   private fullscreenRequestSource = new BehaviorSubject<boolean>(false);
   fullscreenRequest$ = this.fullscreenRequestSource.asObservable();
 
+  getPlaying(): Observable<boolean> {
+    return this.isPlaying$;
+  }
+
   setPlaying(playing: boolean): void {
     this.isPlayingSource.next(playing);
+  }
+
+  getVolume(): Observable<number> {
+    return this.volume$;
   }
 
   setVolume(volume: number): void {
     this.volumeSource.next(volume);
   }
 
+  getDuration(): Observable<number> {
+    return this.duration$;
+  }
+
   setDuration(duration: number): void {
     this.durationSource.next(duration);
+  }
+
+  getCurrentTime(): Observable<number> {
+    return this.currentTime$;
   }
 
   setCurrentTime(currentTime: number): void {
     this.currentTimeSource.next(currentTime);
   }
 
+  getSettings(): Observable<boolean> {
+    return this.isSettings$;
+  }
+
   setSettings(isSettings: boolean): void {
     this.isSettingsSource.next(isSettings);
+  }
+
+  getFullscreen(): Observable<boolean> {
+    return this. fullscreenRequest$;
   }
 
   setFullscreen(fullscreenRequest: boolean): void {
