@@ -11,10 +11,10 @@ import { Observable } from 'rxjs';
 export class VideoPlayer {
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLDivElement>;
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
+  volumePercentageLocal: number = 100;
   isSettings$: Observable<boolean> = new Observable<boolean>();
-  isSettings: boolean = false;
-  //fullscreenRequest$: Observable<boolean> = new Observable<boolean>();
-  fullscreenRequest: boolean = false;
+  isSettingsLocal: boolean = false;
+  fullscreenRequestLocal: boolean = false;
   rewindSeconds: number = 10;
   forwardSeconds: number = 10;
 
@@ -25,42 +25,26 @@ export class VideoPlayer {
   }
 
   ngAfterViewInit(): void {
-    const video = this.videoElement.nativeElement;
-
     // A hangerő szabályozása.
-    this.videoService.volume$.subscribe(volume => {
-      video.volume = volume / 100;
-      this.cdr.detectChanges();
-    });
-
-    // A videó idejének lekérése.
-    video.addEventListener('loadedmetadata', () => {
-      this.videoService.setDuration(video.duration);
-      this.setVideoHeight()
-      this.cdr.detectChanges();
-    });
-
-    // A jelenlegi idő lekérése.
-    video.addEventListener('timeupdate', () => {
-      this.videoService.setCurrentTime(video.currentTime);
-      this.cdr.detectChanges();
+    this.videoService.volume$.subscribe(currentVolume => {
+      this.volumePercentageLocal = currentVolume;
+      this.changeVolume();
     });
 
     // A videó jelenlegi idejének beállítása egy egyedi eseménnyel.
     document.addEventListener('setVideoTime', (event: CustomEvent) => {
-      video.currentTime = event.detail;
-      this.cdr.detectChanges();
+      this.setVideoTimeByClick(event);
     });
 
     this.isSettings$ = this.videoService.getSettings();
 
-    this.videoService.isSettings$.subscribe(settings => {
-      this.isSettings = settings;
+    this.videoService.isSettings$.subscribe(currentSettings => {
+      this.isSettingsLocal = currentSettings;
     });
 
-    this.videoService.fullscreenRequest$.subscribe(fullscreenRequest => {
-      this.fullscreenRequest = fullscreenRequest;
-      this.fullscreen();
+    this.videoService.fullscreenRequest$.subscribe(currentFullscreenRequest => {
+      this.fullscreenRequestLocal = currentFullscreenRequest;
+      this.setFullscreen();
       this.cdr.detectChanges();
     });
   }
@@ -72,7 +56,7 @@ export class VideoPlayer {
 
   // TODO - Renderer2 ???
 
-  // TODO - inkonzisztens állapot javítása (volume és progress bar click) csak a player html és sass mentésénél
+  // TODO - progress bar a videó lejátszó html és sass mentésénél az előző állapot marad benne frissítésig
 
   /**
    * A videó indítása vagy megállítása.
@@ -113,11 +97,53 @@ export class VideoPlayer {
   }
 
   /**
+   * A videó hangerejének változtatása.
+   */
+  changeVolume(): void {
+    const video = this.videoElement.nativeElement;
+    video.volume = this.volumePercentageLocal / 100;
+  }
+
+  /**
+   * A videó meta adatainak betöltésekor a videó hosszának és magasságának betöltése.
+   * @param event  - Esemény.
+   */
+  onVideoMetadataLoaded(event: Event): void {
+    this.setDuration();
+    this.setVideoHeight();
+  }
+
+  /**
+   * A videó hosszának beállítása.
+   */
+  setDuration(): void {
+    const video = this.videoElement.nativeElement;
+    this.videoService.setDuration(video.duration);
+  }
+
+  /**
+   * A videó jelenlegi idejének beállítása.
+   */
+  setCurrentTime(): void {
+    const video = this.videoElement.nativeElement;
+    this.videoService.setCurrentTime(video.currentTime);
+  }
+
+  /**
+   * A videó jelenlegi idejének beállítása egér kattintásra a progress bar-on.
+   * @param event - Egyedi esemény a videó jelenlegi idejéről.
+   */
+  setVideoTimeByClick(event: CustomEvent): void {
+    const video = this.videoElement.nativeElement;
+    video.currentTime = event.detail;
+  }
+
+  /**
    * A teljes képernyős módba való belépés és kilépés.
    */
-  fullscreen(): void {
+  setFullscreen(): void {
     const player = this.videoPlayer.nativeElement;
-    if (this.fullscreenRequest)
+    if (this.fullscreenRequestLocal)
     {
       player.requestFullscreen();
     }
@@ -145,7 +171,7 @@ export class VideoPlayer {
    */
   private setVideoHeight(): void {
     const video = this.videoElement.nativeElement;
-    if (!this.isSettings)
+    if (!this.isSettingsLocal)
     {
       this.setSassVariable(video.clientHeight);
     }

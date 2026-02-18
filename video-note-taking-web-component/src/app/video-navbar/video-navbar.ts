@@ -17,12 +17,12 @@ export class VideoNavbar {
   volumePercentage$: Observable<number> = new Observable<number>();
   previousVolume: number = 100;
   duration$: Observable<number> = new Observable<number>();
-  duration: number = 0;
+  durationLocal: number = 0;
   currentTime$: Observable<number> = new Observable<number>();
   isSettings$: Observable<boolean> = new Observable<boolean>();
-  isSettings: boolean = false;
+  isSettingsLocal: boolean = false;
   fullscreenRequest$: Observable<boolean> = new Observable<boolean>();
-  fullscreenRequest: boolean = false;
+  fullscreenRequestLocal: boolean = false;
 
   constructor(public videoService: Video) {}
 
@@ -41,8 +41,8 @@ export class VideoNavbar {
 
     this.duration$ = this.videoService.getDuration();
 
-    this.subscriptions.add(this.videoService.duration$.subscribe(duration => {
-      this.duration = duration;
+    this.subscriptions.add(this.videoService.duration$.subscribe(currentDuration => {
+      this.durationLocal = currentDuration;
     }));
 
     this.currentTime$ = this.videoService.getCurrentTime();
@@ -105,7 +105,7 @@ export class VideoNavbar {
     const clickPosition = event.clientX - progressBar.getBoundingClientRect().left;
     const barWidth = progressBar.clientWidth;
 
-    const newTime = (clickPosition / barWidth) * this.duration;
+    const newTime = (clickPosition / barWidth) * this.durationLocal;
 
     this.videoService.setCurrentTime(newTime);
 
@@ -120,18 +120,21 @@ export class VideoNavbar {
    * A beállítások oldal ki-be kapcsolása.
    */
   setSettings(): void {
-    this.videoService.setSettings(!this.isSettings);
-    this.isSettings = !this.isSettings;
+    this.videoService.setSettings(!this.isSettingsLocal);
+    this.isSettingsLocal = !this.isSettingsLocal;
   }
 
   /**
    * A teljes képernyős mód ki-be kapcsolása.
    */
   setFullscreen(): void {
-    this.videoService.setFullscreen(!this.fullscreenRequest);
-    this.fullscreenRequest = !this.fullscreenRequest;
+    this.videoService.setFullscreen(!this.fullscreenRequestLocal);
+    this.fullscreenRequestLocal = !this.fullscreenRequestLocal;
   }
 
+  /**
+   * Leiratkozás elem megsemmisülésekor.
+   */
   ngOnDestroy(): void {
     if (this.subscriptions)
     {
