@@ -1,5 +1,5 @@
 <div class="video-player" #videoPlayer>
-    <div class="video-outer-div" [ngClass]="{'open-page video-outer-div-open-page': isSettings$ | async}">
+    <div class="video-outer-div" [ngClass]="{'open-page video-outer-div-open-page': (isSettings$ | async) || (isNote$ | async)}">
         <div (click)="togglePlay()" class="video-div">
             <video (loadedmetadata)="onVideoMetadataLoaded($event)" (timeupdate)="setCurrentTime()" #videoElement>
                 <source src="video.mp4" type="video/mp4">
@@ -12,6 +12,9 @@
         (rewind)="rewind()" 
         (forward)="forward()">
     </video-navbar-element>
+    <video-note-element
+        [ngClass]="{'hidden': !(isNote$ | async)}">
+    </video-note-element>
     <video-settings-element
         [ngClass]="{'hidden': !(isSettings$ | async)}">
     </video-settings-element>

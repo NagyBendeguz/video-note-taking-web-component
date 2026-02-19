@@ -19,6 +19,8 @@ export class VideoNavbar {
   duration$: Observable<number> = new Observable<number>();
   durationLocal: number = 0;
   currentTime$: Observable<number> = new Observable<number>();
+  isNote$: Observable<boolean> = new Observable<boolean>();
+  isNoteLocal: boolean = false;
   isSettings$: Observable<boolean> = new Observable<boolean>();
   isSettingsLocal: boolean = false;
   fullscreenRequest$: Observable<boolean> = new Observable<boolean>();
@@ -46,6 +48,8 @@ export class VideoNavbar {
     }));
 
     this.currentTime$ = this.videoService.getCurrentTime();
+
+    this.isNote$ = this.videoService.getNote();
 
     this.isSettings$ = this.videoService.getSettings();
 
@@ -112,8 +116,12 @@ export class VideoNavbar {
     document.dispatchEvent(new CustomEvent('setVideoTime', { detail: newTime }));
   }
 
+  /**
+   * A jegyzetelés oldal ki-be kapcsolása.
+   */
   setNote(): void {
-
+    this.videoService.setNote(!this.isNoteLocal);
+    this.isNoteLocal = !this.isNoteLocal;
   }
 
   /**

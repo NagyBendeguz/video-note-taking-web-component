@@ -17,6 +17,9 @@ export class Video {
   private currentTimeSource = new BehaviorSubject<number>(0);
   currentTime$ = this.currentTimeSource.asObservable();
 
+  private isNoteSource = new BehaviorSubject<boolean>(false);
+  isNote$ = this.isNoteSource.asObservable();
+
   private isSettingsSource = new BehaviorSubject<boolean>(false);
   isSettings$ = this.isSettingsSource.asObservable();
 
@@ -53,6 +56,14 @@ export class Video {
 
   setCurrentTime(currentTime: number): void {
     this.currentTimeSource.next(currentTime);
+  }
+
+  getNote(): Observable<boolean> {
+    return this.isNote$;
+  }
+
+  setNote(isNote: boolean): void {
+    this.isNoteSource.next(isNote);
   }
 
   getSettings(): Observable<boolean> {

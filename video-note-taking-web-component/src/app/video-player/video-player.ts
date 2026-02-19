@@ -12,6 +12,8 @@ export class VideoPlayer {
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLDivElement>;
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
   volumePercentageLocal: number = 100;
+  isNote$: Observable<boolean> = new Observable<boolean>();
+  isNoteLocal: boolean = false;
   isSettings$: Observable<boolean> = new Observable<boolean>();
   isSettingsLocal: boolean = false;
   fullscreenRequestLocal: boolean = false;
@@ -36,6 +38,12 @@ export class VideoPlayer {
       this.setVideoTimeByClick(event);
     });
 
+    this.isNote$ = this.videoService.getNote();
+
+    this.videoService.isNote$.subscribe(currentNote => {
+      this.isNoteLocal = currentNote;
+    });
+
     this.isSettings$ = this.videoService.getSettings();
 
     this.videoService.isSettings$.subscribe(currentSettings => {
@@ -55,8 +63,6 @@ export class VideoPlayer {
   }
 
   // TODO - Renderer2 ???
-
-  // TODO - progress bar a videó lejátszó html és sass mentésénél az előző állapot marad benne frissítésig
 
   /**
    * A videó indítása vagy megállítása.
@@ -172,7 +178,7 @@ export class VideoPlayer {
   private setVideoHeight(): void {
     const video = this.videoElement.nativeElement;
     // (Az alsó margó miatt plusz 5 pixel.)
-    if (!this.isSettingsLocal)
+    if (!this.isSettingsLocal && !this.isNoteLocal)
     {
       this.setSassVariable(video.clientHeight + 5);
     }

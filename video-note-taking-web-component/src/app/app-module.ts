@@ -3,9 +3,10 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
+import { createCustomElement } from '@angular/elements';
 import { VideoPlayer } from './video-player/video-player';
 import { VideoNavbar } from './video-navbar/video-navbar';
-import { createCustomElement } from '@angular/elements';
+import { VideoNote } from './video-note/video-note';
 import { VideoSettings } from './video-settings/video-settings';
 
 @NgModule({
@@ -13,7 +14,9 @@ import { VideoSettings } from './video-settings/video-settings';
     App,
     VideoPlayer,
     VideoNavbar,
+    VideoNote,
     VideoSettings
+
   ],
   imports: [
     BrowserModule,
@@ -31,11 +34,13 @@ export class AppModule {
     // Átalakítani egy egyedi web komponensre.
     const videoPlayerElement = createCustomElement(VideoPlayer, { injector });
     const videoNavbarElement = createCustomElement(VideoNavbar, { injector });
+    const videoNoteElement = createCustomElement(VideoNote, { injector });
     const videoSettingsElement = createCustomElement(VideoSettings, { injector });
 
     // Lehessen használni egyedi web komponensként.
     customElements.define('video-player-element', videoPlayerElement);
     customElements.define('video-navbar-element', videoNavbarElement);
+    customElements.define('video-note-element', videoNoteElement);
     customElements.define('video-settings-element', videoSettingsElement);
   }
   
