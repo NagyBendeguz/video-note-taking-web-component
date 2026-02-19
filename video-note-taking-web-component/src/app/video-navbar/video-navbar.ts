@@ -120,6 +120,11 @@ export class VideoNavbar {
    * A jegyzetelés oldal ki-be kapcsolása.
    */
   setNote(): void {
+    // Ha nyitva van a másik oldal akkor először bezárja azt.
+    if (this.isSettingsLocal)
+    {
+      this.setSettings();
+    }
     this.videoService.setNote(!this.isNoteLocal);
     this.isNoteLocal = !this.isNoteLocal;
   }
@@ -128,6 +133,11 @@ export class VideoNavbar {
    * A beállítások oldal ki-be kapcsolása.
    */
   setSettings(): void {
+    // Ha nyitva van a másik oldal akkor először bezárja azt.
+    if (this.isNoteLocal)
+    {
+      this.setNote();
+    }
     this.videoService.setSettings(!this.isSettingsLocal);
     this.isSettingsLocal = !this.isSettingsLocal;
   }
