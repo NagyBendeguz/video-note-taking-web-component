@@ -8,6 +8,9 @@ import { VideoPlayer } from './video-player/video-player';
 import { VideoNavbar } from './video-navbar/video-navbar';
 import { VideoNote } from './video-note/video-note';
 import { VideoSettings } from './video-settings/video-settings';
+import { CompressedView } from './compressed-view/compressed-view';
+import { ExtendedView } from './extended-view/extended-view';
+import { EditingView } from './editing-view/editing-view';
 
 @NgModule({
   declarations: [
@@ -15,7 +18,10 @@ import { VideoSettings } from './video-settings/video-settings';
     VideoPlayer,
     VideoNavbar,
     VideoNote,
-    VideoSettings
+    VideoSettings,
+    CompressedView,
+    ExtendedView,
+    EditingView
 
   ],
   imports: [
@@ -36,12 +42,18 @@ export class AppModule {
     const videoNavbarElement = createCustomElement(VideoNavbar, { injector });
     const videoNoteElement = createCustomElement(VideoNote, { injector });
     const videoSettingsElement = createCustomElement(VideoSettings, { injector });
+    const compressedViewElement = createCustomElement(CompressedView, { injector });
+    const extendedViewElement = createCustomElement(ExtendedView, { injector });
+    const editingViewElement = createCustomElement(EditingView, { injector });
 
     // Lehessen használni egyedi web komponensként.
     customElements.define('video-player-element', videoPlayerElement);
     customElements.define('video-navbar-element', videoNavbarElement);
     customElements.define('video-note-element', videoNoteElement);
     customElements.define('video-settings-element', videoSettingsElement);
+    customElements.define('compressed-view-element', compressedViewElement);
+    customElements.define('extended-view-element', extendedViewElement);
+    customElements.define('editing-view-element', editingViewElement);
   }
   
   // Manuális bootstrap.
