@@ -1,4 +1,4 @@
-$page-padding: 20px
+@use 'variables' as *
 
 @mixin page
     position: absolute
@@ -8,4 +8,3 @@ $page-padding: 20px
     width: calc(50% - ($page-padding * 2))
     background-color: lightgrey
     padding: $page-padding
-    overflow: auto
