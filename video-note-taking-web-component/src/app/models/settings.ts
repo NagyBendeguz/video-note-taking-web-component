@@ -1,3 +1,5 @@
+import { Shortcuts } from "./shortcuts";
+
 export class Settings {
     language: string = "";
     thumbnailResolution: string = "";
@@ -10,4 +12,5 @@ export class Settings {
     thumbnailMoveRate: number = 0;
     autoSave: boolean = false;
     fontSize: number = 0;
+    shortcuts: Shortcuts = new Shortcuts();
 }
