@@ -1,21 +1,13 @@
 .video-player
     position: relative
-    min-height: var(--video-height)
 
     video
         width: 100%
-        height: auto
 
-.video-player:fullscreen .video-div
+.video-player:fullscreen
     display: flex
     flex-direction: column
-    justify-content: space-between
-    max-width: 100%
-    height: 100%
-
-    video
-        margin-top: auto
-        margin-bottom: auto
+    justify-content: center
 
 .video-div
     cursor: pointer
@@ -27,4 +19,3 @@
     display: flex
     flex-direction: column
     justify-content: center
-    position: relative

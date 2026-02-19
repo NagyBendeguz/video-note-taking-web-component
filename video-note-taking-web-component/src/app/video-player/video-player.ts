@@ -171,13 +171,14 @@ export class VideoPlayer {
    */
   private setVideoHeight(): void {
     const video = this.videoElement.nativeElement;
+    // (Az alsó margó miatt plusz 5 pixel.)
     if (!this.isSettingsLocal)
     {
-      this.setSassVariable(video.clientHeight);
+      this.setSassVariable(video.clientHeight + 5);
     }
     else
     {
-      this.setSassVariable(video.clientHeight * 2);
+      this.setSassVariable(video.clientHeight * 2 + 5);
     }
   }
 
