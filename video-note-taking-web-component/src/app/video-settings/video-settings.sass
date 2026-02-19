@@ -1,7 +1,18 @@
+$settings-page-padding: 20px
+
 .settings-div
     position: absolute
     right: 0
     top: 0
-    height: 100%
-    width: 50%
+    height: calc(100% - 5px - ($settings-page-padding * 2))
+    width: calc(50% - ($settings-page-padding * 2))
     background-color: lightgrey
+    padding: $settings-page-padding
+    overflow: auto
+
+h2
+    text-align: center
+    margin: 0
+
+ul
+    list-style-type: none
