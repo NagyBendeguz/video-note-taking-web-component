@@ -1,0 +1,11 @@
+$page-padding: 20px
+
+@mixin page
+    position: absolute
+    right: 0
+    top: 0
+    height: calc(100% - 5px - ($page-padding * 2))
+    width: calc(50% - ($page-padding * 2))
+    background-color: lightgrey
+    padding: $page-padding
+    overflow: auto
