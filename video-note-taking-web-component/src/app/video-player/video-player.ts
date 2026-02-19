@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
-import { Video } from '../services/video';
+import { VideoService } from '../services/video';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -20,7 +20,7 @@ export class VideoPlayer {
   rewindSeconds: number = 10;
   forwardSeconds: number = 10;
 
-  constructor(private cdr: ChangeDetectorRef, private videoService: Video) {}
+  constructor(private cdr: ChangeDetectorRef, private videoService: VideoService) {}
 
   ngOnInit(): void {
     this.checkFullscreen();

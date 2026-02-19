@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Video } from '../services/video';
+import { VideoService } from '../services/video';
 import { Observable, Subscription } from 'rxjs';
 
 @Component({
@@ -26,7 +26,7 @@ export class VideoNavbar {
   fullscreenRequest$: Observable<boolean> = new Observable<boolean>();
   fullscreenRequestLocal: boolean = false;
 
-  constructor(public videoService: Video) {}
+  constructor(public videoService: VideoService) {}
 
   ngOnInit() {
     this.isPlaying$ = this.videoService.getPlaying();
