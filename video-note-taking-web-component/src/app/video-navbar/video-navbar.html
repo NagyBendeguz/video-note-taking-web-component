@@ -1,6 +1,7 @@
 <nav [ngClass]="{
     'full-width': !(isSettings$ | async) || !(isNote$ | async),
-    'half-width': (isSettings$ | async) || (isNote$ | async)}">
+    'half-width': (isSettings$ | async) || (isNote$ | async)
+    }">
     <ul class="video-navbar">
         <li>
             <button (click)="onTogglePlay()" class="btn play-pause">
