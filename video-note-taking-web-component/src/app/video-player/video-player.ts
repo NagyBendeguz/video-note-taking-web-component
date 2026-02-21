@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 export class VideoPlayer {
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLDivElement>;
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
+  @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
   volumePercentageLocal: number = 100;
   isNote$: Observable<boolean> = new Observable<boolean>();
   isNoteLocal: boolean = false;
@@ -42,6 +43,10 @@ export class VideoPlayer {
 
     this.videoService.isNote$.subscribe(currentNote => {
       this.isNoteLocal = currentNote;
+      if (currentNote)
+      {
+        this.createCurrentThumbnail();
+      }
     });
 
     this.isSettings$ = this.videoService.getSettings();
@@ -112,7 +117,7 @@ export class VideoPlayer {
 
   /**
    * A videó meta adatainak betöltésekor a videó hosszának és magasságának betöltése.
-   * @param event  - Esemény.
+   * @param event - Esemény.
    */
   onVideoMetadataLoaded(event: Event): void {
     this.setDuration();
@@ -192,7 +197,30 @@ export class VideoPlayer {
    * A videó erdeti magasságának beállítása CSS változóként.
    * @param height - A videó eredeti magassága.
    */
-  private setSassVariable(height: number) {
+  private setSassVariable(height: number): void {
     document.documentElement.style.setProperty('--video-height', `${height}px`);
+  }
+
+  /**
+   * A videó jelenlegi képkockájáról elkészíteni egy képernyőképet.
+   */
+  private createCurrentThumbnail(): void {
+    const video = this.videoElement.nativeElement;
+    const canvas = this.canvasElement.nativeElement;
+    const context = canvas.getContext("2d");
+
+    if (context)
+    {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      // Jelenlegi videó frame-je.
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Átalakítani a videó frame-t base64-re.
+      const dataURL = canvas.toDataURL("image/png");
+
+      this.videoService.setThumbnail(dataURL);
+    }
   }
 }
