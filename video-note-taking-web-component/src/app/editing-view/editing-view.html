@@ -1,1 +1,56 @@
-<p>editing-view works!</p>
+<div>
+    <div>
+        <div>
+            <img [src]="(entry$ | async)?.thumbnail" [alt]="(entry$ | async)?.title">
+        </div>
+        <div>
+            <button (click)="editingRewind()">
+                <img src="rewind.svg" alt="Rewind">
+            </button>
+            <span>{{ (entry$ | async)?.timestamp }}</span>
+            <button (click)="editingForward()">
+                <img src="forward.svg" alt="Forward">
+            </button>
+            <label for="title">Title</label>
+            <input type="text" name="title" id="title" placeholder="Title" [value]="(entry$ | async)?.title" (input)="addTitle($event)" required>
+        </div>
+        <div>
+            <button (click)="cancelEntry()">Cancel Entry</button>
+            <button (click)="saveEntry()">Save Entry</button>
+        </div>
+    </div>
+    <div>
+        <div>
+            <div>
+                <button (click)="bold()">
+                    <img src="bold.svg" alt="Bold">
+                </button>
+                <button (click)="italic()">
+                    <img src="italic.svg" alt="Italic">
+                </button>
+                <button (click)="underline()">
+                    <img src="underline.svg" alt="Underline">
+                </button>
+                <button (click)="strikethrough()">
+                    <img src="strikethrough.svg" alt="Strikethrough">
+                </button>
+                <button (click)="orderedList()">
+                    <img src="ordered-list.svg" alt="Ordered List">
+                </button>
+                <button (click)="unorderedList()">
+                    <img src="unordered-list.svg" alt="Unordered List">
+                </button>
+                <button (click)="table()">
+                    <img src="table.svg" alt="Table">
+                </button>
+            </div>
+            <div>
+                <button (click)="saveNote()">Save Note</button>
+                <button (click)="exportNote()">Export Note</button>
+            </div>
+        </div>
+        <div>
+            <textarea name="note" id="note" [value]="(entry$ | async)?.note" (input)="addNote($event)" required></textarea>
+        </div>
+    </div>
+</div>

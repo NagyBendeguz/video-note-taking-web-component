@@ -26,6 +26,9 @@ export class VideoService {
   private fullscreenRequestSource = new BehaviorSubject<boolean>(false);
   fullscreenRequest$ = this.fullscreenRequestSource.asObservable();
 
+  private thumbnailSource = new BehaviorSubject<string>("");
+  thumbnail$ = this.thumbnailSource.asObservable();
+
   getPlaying(): Observable<boolean> {
     return this.isPlaying$;
   }
@@ -75,10 +78,18 @@ export class VideoService {
   }
 
   getFullscreen(): Observable<boolean> {
-    return this. fullscreenRequest$;
+    return this.fullscreenRequest$;
   }
 
   setFullscreen(fullscreenRequest: boolean): void {
     this.fullscreenRequestSource.next(fullscreenRequest);
+  }
+
+  getThumbnail(): Observable<string> {
+    return this.thumbnail$;
+  }
+
+  setThumbnail(thumbnail: string): void {
+    this.thumbnailSource.next(thumbnail);
   }
 }
