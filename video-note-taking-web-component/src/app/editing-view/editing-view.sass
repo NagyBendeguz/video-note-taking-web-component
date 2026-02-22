@@ -1,0 +1,100 @@
+.editing-view
+    display: flex
+    position: absolute
+    width: calc(100% - 40px)
+    bottom: 15px
+    height: 250px
+
+.data
+    width: 250px
+    border: 2px solid black
+
+    .thumbnail
+        width: 250px
+        height: 105px
+
+    .time
+        display: flex
+        justify-content: space-between
+        align-items: center
+        padding: 5px 10px 0px 10px
+
+        button
+            padding: 8px 16px
+            border: none
+            background-color: #96c3ed
+            color: white
+            font-size: 16px
+            cursor: pointer
+
+        button:hover
+            background-color: #b1d7f5
+
+    .title
+        padding: 10px
+        display: flex
+        justify-content: center
+        align-items: center
+
+        label
+            margin-right: 10px
+
+        input[type="text"]
+            padding: 7px
+            border: 1px solid #ccc
+            border-radius: 4px
+            font-size: 16px
+            outline: none
+            transition: border-color 0.3s
+            width: 180px
+
+        input[type="text"]:focus
+            border-color: #66afe9
+            box-shadow: 0 0 5px rgba(102, 175, 233, .5)
+
+        input[type="text"]::placeholder
+            color: #aaa
+            opacity: 1
+
+    .save-cancel
+        display: flex
+        justify-content: space-between
+        align-items: center
+
+        button
+            padding: 4px 8px
+            margin: 0px 2px
+            width: 100%
+            cursor: pointer
+
+.note
+    width: 100%
+    border: 2px solid black
+
+    .edit-note
+        display: flex
+        justify-content: space-between
+        align-items: center
+        border: 2px solid black
+
+        button
+            padding: 5px
+            margin: 1px
+
+    .type-note
+        display: flex
+        height: 195px
+        margin: 5px
+
+        textarea
+            flex: 1
+            border: 1px solid #ccc
+            border-radius: 4px
+            padding: 10px
+            resize: none
+            outline: none
+            font-size: 16px
+
+        textarea:focus
+            border-color: #66afe9
+            box-shadow: 0 0 5px rgba(102, 175, 233, .5)
