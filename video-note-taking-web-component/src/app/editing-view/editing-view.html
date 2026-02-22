@@ -52,7 +52,7 @@
             </div>
         </div>
         <div class="type-note">
-            <textarea name="note" id="note" [value]="(entry$ | async)?.note" (input)="addNote($event)" required></textarea>
+            <textarea name="note" id="note" [value]="(entry$ | async)?.note" (input)="addNote($event)" placeholder="Note" required></textarea>
         </div>
     </div>
 </div>

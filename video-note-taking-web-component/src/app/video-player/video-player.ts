@@ -67,8 +67,6 @@ export class VideoPlayer {
     this.setVideoHeight();
   }
 
-  // TODO - Renderer2 ???
-
   /**
    * A videó indítása vagy megállítása.
    */
@@ -138,6 +136,10 @@ export class VideoPlayer {
   setCurrentTime(): void {
     const video = this.videoElement.nativeElement;
     this.videoService.setCurrentTime(video.currentTime);
+    if (this.isNoteLocal)
+    {
+      this.createCurrentThumbnail();
+    }
   }
 
   /**

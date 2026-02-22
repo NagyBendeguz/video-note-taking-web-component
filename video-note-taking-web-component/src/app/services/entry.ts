@@ -27,4 +27,10 @@ export class EntryService {
   setArrayEntry(arrayEntry: Array<Entry>): void {
     this.arrayEntrySource.next(arrayEntry);
   }
+
+  /*pushArrayEntry(newEntry: Entry): void {
+    const currentArray = this.arrayEntrySource.getValue();
+    currentArray.push(newEntry);
+    this.arrayEntrySource.next(currentArray);
+  }*/
 }
