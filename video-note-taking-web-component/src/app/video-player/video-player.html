@@ -8,11 +8,7 @@
         </div>
     </div>
     <canvas id="canvas" class="hidden" #canvasElement></canvas>
-    <video-navbar-element
-        (togglePlay)="togglePlay()" 
-        (rewind)="rewind()" 
-        (forward)="forward()">
-    </video-navbar-element>
+    <video-navbar-element></video-navbar-element>
     <video-note-element
         [ngClass]="{'hidden': !(isNote$ | async)}">
     </video-note-element>

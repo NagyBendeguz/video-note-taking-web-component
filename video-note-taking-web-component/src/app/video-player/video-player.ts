@@ -28,6 +28,10 @@ export class VideoPlayer {
   }
 
   ngAfterViewInit(): void {
+    this.videoService.togglePlay.subscribe(() => this.togglePlay());
+    this.videoService.rewind.subscribe(() => this.rewind());
+    this.videoService.forward.subscribe(() => this.forward());
+
     // A hangerő szabályozása.
     this.videoService.volume$.subscribe(currentVolume => {
       this.volumePercentageLocal = currentVolume;

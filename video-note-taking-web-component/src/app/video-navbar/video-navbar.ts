@@ -9,9 +9,6 @@ import { Observable, Subscription } from 'rxjs';
   styleUrl: './video-navbar.sass',
 })
 export class VideoNavbar {
-  @Output() togglePlay = new EventEmitter<void>();
-  @Output() rewind = new EventEmitter<void>();
-  @Output() forward = new EventEmitter<void>();
   private subscriptions: Subscription = new Subscription();
   isPlaying$: Observable<boolean> = new Observable<boolean>();
   volumePercentage$: Observable<number> = new Observable<number>();
@@ -60,21 +57,21 @@ export class VideoNavbar {
    * Indítás és megállítás kibocsátása.
    */
   onTogglePlay(): void {
-    this.togglePlay.emit();
+    this.videoService.emitTogglePlay();
   }
 
   /**
    * Hátra tekerés kibocsátása.
    */
   onRewind(): void {
-    this.rewind.emit();
+    this.videoService.emitRewind();
   }
 
   /**
    * Előre tekerés kibocsátása.
    */
   onForward(): void {
-    this.forward.emit();
+    this.videoService.emitForward();
   }
 
   /**

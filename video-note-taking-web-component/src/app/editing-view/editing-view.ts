@@ -44,11 +44,11 @@ export class EditingView {
   }
 
   editingRewind(): void {
-
+    this.videoService.emitRewind();
   }
 
   editingForward(): void {
-
+    this.videoService.emitForward();
   }
 
   addTitle(event: Event): void {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
@@ -8,6 +8,13 @@ export class VideoService {
   private isPlayingSource = new BehaviorSubject<boolean>(false);
   isPlaying$ = this.isPlayingSource.asObservable();
 
+  private rewindSeconds: number = 10;
+  private forwardSeconds: number = 10;
+
+  togglePlay = new EventEmitter<void>();
+  rewind = new EventEmitter<void>();
+  forward = new EventEmitter<void>();
+  
   private volumeSource = new BehaviorSubject<number>(100);
   volume$ = this.volumeSource.asObservable();
 
@@ -35,6 +42,34 @@ export class VideoService {
 
   setPlaying(playing: boolean): void {
     this.isPlayingSource.next(playing);
+  }
+
+  emitTogglePlay(): void {
+    this.togglePlay.emit();
+  }
+
+  emitRewind(): void {
+    this.rewind.emit();
+  }
+
+  emitForward(): void {
+    this.forward.emit();
+  }
+
+  getRewindSeconds(): number {
+    return this.rewindSeconds;
+  }
+
+  getForwardSeconds(): number {
+    return this.forwardSeconds;
+  }
+
+  setRewindSeconds(seconds: number): void {
+    this.rewindSeconds = seconds;
+  }
+
+  setForwardSeconds(seconds: number): void {
+    this.forwardSeconds = seconds;
   }
 
   getVolume(): Observable<number> {
