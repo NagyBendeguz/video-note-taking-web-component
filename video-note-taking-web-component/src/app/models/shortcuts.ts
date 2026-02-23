@@ -13,6 +13,6 @@ export class Shortcuts {
     underline: string = "";
     strikethrough: string = "";
     orderedList: string = "";
-    unOrderedList: string = "";
+    unorderedList: string = "";
     table: string = "";
 }
