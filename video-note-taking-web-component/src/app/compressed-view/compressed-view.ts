@@ -9,4 +9,9 @@ import { Entry } from '../models/entry';
 })
 export class CompressedView {
   @Input() entry: Entry = new Entry();
+  @Input() isExtendedView: boolean = false;
+
+  openExtendedView(): void {
+    this.isExtendedView = !this.isExtendedView;
+  }
 }

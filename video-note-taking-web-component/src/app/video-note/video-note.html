@@ -3,7 +3,8 @@
         @for (currentEntry of arrayEntry$ | async; track $index)
         {
             <compressed-view-element
-                [entry]="currentEntry">
+                [entry]="currentEntry"
+                [isExtendedView]="false">
             </compressed-view-element>
         }
     </div>

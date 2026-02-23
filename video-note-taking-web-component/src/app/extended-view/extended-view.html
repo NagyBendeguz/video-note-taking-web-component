@@ -1,16 +1,27 @@
-<div>
+@if (isExtendedView) {
     <div>
         <div>
-            <img [src]="(entry$ | async)?.thumbnail" [alt]="(entry$ | async)?.title">
+            <div>
+                <img [src]="entry.thumbnail" [alt]="entry.title">
+            </div>
+            <div>
+                <h4>{{ entry.title }}</h4>
+                <p>{{ entry.timestamp }}</p>
+                <button (click)="editEntry()">Edit</button>
+                <button (click)="deleteEntry()">Delete</button>
+            </div>
         </div>
         <div>
-            <h4>{{ (entry$ | async)?.title }}</h4>
-            <p>{{ (entry$ | async)?.timestamp }}</p>
-            <button (click)="editEntry()">Edit</button>
-            <button (click)="deleteEntry()">Delete</button>
+            <p>{{ entry.note }}</p>
         </div>
+        <button (click)="closeExtendedView()" class="up-button">
+            <img src="chevron-up.svg" alt="Close Extended View" class="up">
+        </button>
     </div>
-    <div>
-        <p>{{ (entry$ | async)?.note }}</p>
-    </div>
-</div>
+}
+@else {
+    <compressed-view-element
+        [entry]="entry"
+        [isExtendedView]="isExtendedView">
+    </compressed-view-element>
+}

@@ -1,7 +1,5 @@
-import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, Input } from '@angular/core';
 import { Entry } from '../models/entry';
-import { EntryService } from '../services/entry';
 
 @Component({
   selector: 'app-extended-view',
@@ -10,18 +8,8 @@ import { EntryService } from '../services/entry';
   styleUrl: './extended-view.sass',
 })
 export class ExtendedView {
-  entry$: Observable<Entry> = new Observable<Entry>();
-  entryLocal: Entry = new Entry();
-
-  constructor(private entryService: EntryService) {}
-
-  ngAfterViewInit(): void {
-    this.entry$ = this.entryService.getEntry();
-
-    this.entryService.entry$.subscribe(currentEntry => {
-      this.entryLocal = currentEntry;
-    });
-  }
+  @Input() entry: Entry = new Entry();
+  @Input() isExtendedView: boolean = false;
 
   editEntry(): void {
     
@@ -29,5 +17,9 @@ export class ExtendedView {
 
   deleteEntry(): void {
 
+  }
+
+  closeExtendedView(): void {
+    this.isExtendedView = !this.isExtendedView;
   }
 }

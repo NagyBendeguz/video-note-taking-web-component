@@ -1,12 +1,23 @@
-<div class="compressed-view">
-    <div class="thumbnail-div">
-        <img [src]="entry.thumbnail" [alt]="entry.title" class="thumbnail">
+@if (!isExtendedView) {
+    <div class="compressed-view">
+        <div class="thumbnail-div">
+            <img [src]="entry.thumbnail" [alt]="entry.title" class="thumbnail">
+        </div>
+        <div class="data-div">
+            <h4>{{ entry.title }}</h4>
+            <p>{{ entry.timestamp }}</p>
+        </div>
+        <div class="note-div">
+            <p class="note">{{ entry.note }}</p>
+        </div>
+        <button (click)="openExtendedView()" class="down-button">
+            <img src="chevron-down.svg" alt="Open Extended View" class="down">
+        </button>
     </div>
-    <div class="data-div">
-        <h4>{{ entry.title }}</h4>
-        <p>{{ entry.timestamp }}</p>
-    </div>
-    <div class="note-div">
-        <p class="note">{{ entry.note }}</p>
-    </div>
-</div>
+}
+@else {
+    <extended-view-element
+        [entry]="entry"
+        [isExtendedView]="isExtendedView">
+    </extended-view-element>
+}
