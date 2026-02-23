@@ -14,7 +14,7 @@ export class VideoNote {
 
   constructor(private entryService: EntryService) {}
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.arrayEntry$ = this.entryService.getArrayEntry();
   }
 }

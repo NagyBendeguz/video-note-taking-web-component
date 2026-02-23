@@ -1,7 +1,11 @@
 <div class="note-div">
-    @for (entry of arrayEntry$ | async; track $index)
-    {
-        <compressed-view-element></compressed-view-element>
-    }
+    <div class="note-view">
+        @for (currentEntry of arrayEntry$ | async; track $index)
+        {
+            <compressed-view-element
+                [entry]="currentEntry">
+            </compressed-view-element>
+        }
+    </div>
     <editing-view-element></editing-view-element>
 </div>

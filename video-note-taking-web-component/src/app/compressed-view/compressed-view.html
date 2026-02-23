@@ -1,12 +1,12 @@
-<div>
-    <div>
-        <img [src]="(entry$ | async)?.thumbnail" [alt]="(entry$ | async)?.title">
+<div class="compressed-view">
+    <div class="thumbnail-div">
+        <img [src]="entry.thumbnail" [alt]="entry.title" class="thumbnail">
     </div>
-    <div>
-        <h4>{{ (entry$ | async)?.title }}</h4>
-        <p>{{ (entry$ | async)?.timestamp }}</p>
+    <div class="data-div">
+        <h4>{{ entry.title }}</h4>
+        <p>{{ entry.timestamp }}</p>
     </div>
-    <div>
-        <p>{{ (entry$ | async)?.note }}</p>
+    <div class="note-div">
+        <p class="note">{{ entry.note }}</p>
     </div>
 </div>

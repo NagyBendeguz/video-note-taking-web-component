@@ -20,6 +20,10 @@ export class EntryService {
     this.entrySource.next(entry);
   }
 
+  resetEntry(): void {
+    this.entrySource.next(new Entry());
+  }
+
   getArrayEntry(): Observable<Array<Entry>> {
     return this.arrayEntry$;
   }
@@ -28,9 +32,9 @@ export class EntryService {
     this.arrayEntrySource.next(arrayEntry);
   }
 
-  /*pushArrayEntry(newEntry: Entry): void {
+  pushArrayEntry(newEntry: Entry): void {
     const currentArray = this.arrayEntrySource.getValue();
     currentArray.push(newEntry);
     this.arrayEntrySource.next(currentArray);
-  }*/
+  }
 }

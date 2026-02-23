@@ -14,8 +14,6 @@ export class EditingView {
   entry$: Observable<Entry> = new Observable<Entry>();
   entryLocal: Entry = new Entry();
   currentEntryId: number = 0;
-  arrayEntry$: Observable<Array<Entry>> = new Observable<Array<Entry>>();
-  arrayEntryLocal: Array<Entry> = new Array<Entry>();
 
   constructor(private entryService: EntryService, private videoService: VideoService) {}
 
@@ -24,12 +22,6 @@ export class EditingView {
 
     this.entryService.entry$.subscribe(currentEntry => {
       this.entryLocal = currentEntry;
-    });
-
-    this.arrayEntry$ = this.entryService.getArrayEntry();
-
-    this.entryService.arrayEntry$.subscribe(currentArrayEntry => {
-      this.arrayEntryLocal = currentArrayEntry;
     });
 
     this.videoService.currentTime$.subscribe(currentTime => {
@@ -64,10 +56,8 @@ export class EditingView {
   saveEntry(): void {
     this.currentEntryId++;
     this.entryLocal.entryId = this.currentEntryId;
-    //this.arrayEntryLocal.push(this.entryLocal);
-    this.entryService.setEntry(this.entryLocal);
-    //this.entryService.setArrayEntry(this.arrayEntryLocal);
-    //this.entryService.pushArrayEntry(this.entryLocal);
+    this.entryService.pushArrayEntry(this.entryLocal);
+    this.entryService.resetEntry();
   }
 
   cancelEntry(): void {
@@ -119,7 +109,7 @@ export class EditingView {
     this.entryLocal.thumbnail = "image.svg";
     this.entryLocal.timestamp = "00:00:00.000";
     this.entryLocal.note = "";
-    this.entryService.setEntry(this.entryLocal);
+    this.entryService.resetEntry();
   }
 
   /**
