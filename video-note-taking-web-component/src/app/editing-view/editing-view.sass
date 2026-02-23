@@ -1,55 +1,53 @@
+@use '../../mixins/variables' as *
+@use '../../mixins/mixins' as *
+
 .editing-view
     display: flex
     position: absolute
     width: calc(100% - 40px)
-    bottom: 15px
-    height: 250px
+    height: $editing-view-height
+    bottom: 0
+    margin-bottom: 15px
+    @include border(true, true, true, true)
 
 .data
     width: 250px
-    border: 2px solid black
+    @include border(false, true, false, false)
 
     .thumbnail
         width: 250px
         height: 105px
 
     .time
-        display: flex
-        justify-content: space-between
-        align-items: center
+        @include flex(space-between, center)
         padding: 5px 10px 0px 10px
 
         button
+            @include flex(space-between, center)
+            @include button
             padding: 8px 16px
-            border: none
-            background-color: #96c3ed
-            color: white
-            font-size: 16px
-            cursor: pointer
 
-        button:hover
-            background-color: #b1d7f5
+            img
+                width: 25px
 
     .title
         padding: 10px
-        display: flex
-        justify-content: center
-        align-items: center
+        @include flex(center, center)
 
         label
             margin-right: 10px
 
         input[type="text"]
+            width: 180px
             padding: 7px
             border: 1px solid #ccc
             border-radius: 4px
             font-size: 16px
             outline: none
             transition: border-color 0.3s
-            width: 180px
 
         input[type="text"]:focus
-            border-color: #66afe9
+            border-color: $input-focus-color
             box-shadow: 0 0 5px rgba(102, 175, 233, .5)
 
         input[type="text"]::placeholder
@@ -57,30 +55,30 @@
             opacity: 1
 
     .save-cancel
-        display: flex
-        justify-content: space-between
-        align-items: center
+        @include flex(space-between, center)
 
         button
-            padding: 4px 8px
-            margin: 0px 2px
             width: 100%
-            cursor: pointer
+            margin: 0px 2px
+            padding: 4px 8px
+            font-size: 14px
 
 .note
     width: 100%
-    border: 2px solid black
 
     .edit-note
-        display: flex
-        justify-content: space-between
-        align-items: center
-        border: 2px solid black
+        @include flex(space-between, center)
+        @include border(false, false, true, false)
+
+        .style-buttons
+            button
+                @include button
+                padding: 7px
+                margin: 0px 1px
 
         button
-            padding: 5px
+            padding: 8px
             margin: 1px
-            cursor: pointer
 
     .type-note
         display: flex
@@ -89,13 +87,25 @@
 
         textarea
             flex: 1
-            border: 1px solid #ccc
-            border-radius: 4px
             padding: 10px
+            font-size: 16px
             resize: none
             outline: none
-            font-size: 16px
+            border: 1px solid #ccc
+            border-radius: 4px
 
         textarea:focus
-            border-color: #66afe9
+            border-color: $input-focus-color
             box-shadow: 0 0 5px rgba(102, 175, 233, .5)
+
+.export
+    @include button
+    @include export-button
+
+.save
+    @include button
+    @include save-button
+
+.cancel
+    @include button
+    @include cancel-button

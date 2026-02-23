@@ -1,8 +1,9 @@
+@use '../../mixins/variables' as *
 @use '../../mixins/mixins' as *
-    
+
 .note-div
     @include page
 
 .note-view
-    height: calc(100% - 250px)
+    height: calc(100% - $editing-view-height)
     overflow: scroll

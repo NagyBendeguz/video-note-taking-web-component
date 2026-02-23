@@ -8,3 +8,56 @@
     width: calc(50% - ($page-padding * 2))
     background-color: lightgrey
     padding: $page-padding
+
+@mixin flex($justify: center, $align: center)
+    display: flex
+    justify-content: $justify
+    align-items: $align
+
+@mixin button
+    border: none
+    background-color: transparent
+    cursor: pointer
+
+    &:hover
+        background-color: $button-hover-background-color
+
+@mixin export-button
+    background-color: $button-export-background-color
+
+    &:hover
+        color: white
+        background-color: $button-export-hover-background-color
+
+
+@mixin save-button
+    background-color: $button-save-background-color
+
+    &:hover
+        color: white
+        background-color: $button-save-hover-background-color
+
+@mixin cancel-button
+    background-color: $button-cancel-background-color
+
+    &:hover
+        color: white
+        background-color: $button-cancel-hover-background-color
+
+@mixin border($top: false, $right: false, $bottom: false, $left: false)
+    @if $top
+        border-top: $border-width solid $border-color
+    @if $right
+        border-right: $border-width solid $border-color
+    @if $bottom
+        border-bottom: $border-width solid $border-color
+    @if $left
+        border-left: $border-width solid $border-color
+
+@mixin truncated-text($max-lines)
+    overflow: hidden
+    display: -webkit-box
+    -webkit-box-orient: vertical
+    -webkit-line-clamp: $max-lines
+    height: calc($max-lines * $line-height)
+    margin: 10px 0

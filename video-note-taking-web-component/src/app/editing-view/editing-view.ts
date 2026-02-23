@@ -53,6 +53,8 @@ export class EditingView {
     this.entryService.setEntry(this.entryLocal);
   }
 
+  // TODO - inkonzisztens állapot a video-note.html mentésénél éppen a mentés után a reset alap állapotban van
+
   saveEntry(): void {
     this.currentEntryId++;
     this.entryLocal.entryId = this.currentEntryId;

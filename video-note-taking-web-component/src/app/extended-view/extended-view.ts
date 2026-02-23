@@ -9,10 +9,10 @@ import { Entry } from '../models/entry';
 })
 export class ExtendedView {
   @Input() entry: Entry = new Entry();
-  @Input() isExtendedView: boolean = false;
+  @Input() isExtendedView: boolean = true;
 
   editEntry(): void {
-    
+
   }
 
   deleteEntry(): void {

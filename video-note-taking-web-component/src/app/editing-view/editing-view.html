@@ -5,11 +5,11 @@
         </div>
         <div class="time">
             <button (click)="editingRewind()">
-                <img src="rewind.svg" alt="Rewind">
+                <img src="chevron-double-left.svg" alt="Rewind">
             </button>
             <span>{{ (entry$ | async)?.timestamp }}</span>
             <button (click)="editingForward()">
-                <img src="forward.svg" alt="Forward">
+                <img src="chevron-double-right.svg" alt="Forward">
             </button>
         </div>
         <div class="title">
@@ -17,38 +17,38 @@
             <input type="text" name="title" id="title" placeholder="Title" [value]="(entry$ | async)?.title" (input)="addTitle($event)" required>
         </div>
         <div class="save-cancel">
-            <button (click)="cancelEntry()">Cancel Entry</button>
-            <button (click)="saveEntry()">Save Entry</button>
+            <button (click)="cancelEntry()" class="cancel">Cancel Entry</button>
+            <button (click)="saveEntry()" class="save">Save Entry</button>
         </div>
     </div>
     <div class="note">
         <div class="edit-note">
-            <div>
+            <div class="style-buttons">
                 <button (click)="bold()">
-                    <img src="bold.svg" alt="Bold">
+                    <img src="bold.svg" alt="Bold" title="Bold">
                 </button>
                 <button (click)="italic()">
-                    <img src="italic.svg" alt="Italic">
+                    <img src="italic.svg" alt="Italic" title="Italic">
                 </button>
                 <button (click)="underline()">
-                    <img src="underline.svg" alt="Underline">
+                    <img src="underline.svg" alt="Underline" title="Underline">
                 </button>
                 <button (click)="strikethrough()">
-                    <img src="strikethrough.svg" alt="Strikethrough">
+                    <img src="strikethrough.svg" alt="Strikethrough" title="Strikethrough">
                 </button>
                 <button (click)="orderedList()">
-                    <img src="ordered-list.svg" alt="Ordered List">
+                    <img src="ordered-list.svg" alt="Ordered List" title="Ordered List">
                 </button>
                 <button (click)="unorderedList()">
-                    <img src="unordered-list.svg" alt="Unordered List">
+                    <img src="unordered-list.svg" alt="Unordered List" title="Unordered List">
                 </button>
                 <button (click)="table()">
-                    <img src="table.svg" alt="Table">
+                    <img src="table.svg" alt="Table" title="Table">
                 </button>
             </div>
             <div>
-                <button (click)="saveNote()">Save Note</button>
-                <button (click)="exportNote()">Export Note</button>
+                <button (click)="saveNote()" class="save">Save Note</button>
+                <button (click)="exportNote()" class="export">Export Note</button>
             </div>
         </div>
         <div class="type-note">

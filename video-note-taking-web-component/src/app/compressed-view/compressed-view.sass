@@ -1,47 +1,37 @@
+@use '../../mixins/mixins' as *
+
 .compressed-view
     display: flex
     height: 100px
-    border: solid 2px black
+    @include border(true, true, true, true)
 
 .thumbnail-div
-    display: flex
-    align-items: center
+    @include flex(space-between, center)
 
 .thumbnail
     max-width: 200px
     max-height: 100px
 
 .data-div
-    text-align: center
     width: 100px
     margin: 0px 10px
+    text-align: center
 
     h4, p
-        margin: 10px 0px
-        overflow: hidden
-        -webkit-line-clamp: 2
-        display: -webkit-box
-        -webkit-box-orient: vertical
-        height: calc(2 * 1.5em)
+        @include truncated-text(2)
 
 .note-div
     width: 100%
-    margin: 15px 0px 15px 0px
-    overflow: hidden
-    -webkit-line-clamp: 3
-    display: -webkit-box
-    -webkit-box-orient: vertical
-    height: calc(3 * 1.5em)
+    margin: 15px 0px
+    @include truncated-text(3)
 
     .note
         margin: 0px
 
 .down-button
+    @include button
     padding: 0px
-    border: none
-    background-color: transparent
-    cursor: pointer
 
 .down
     width: 20px
-    margin-right: 10px
+    margin: 0px 5px
