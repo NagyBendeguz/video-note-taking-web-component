@@ -8,13 +8,6 @@ export class VideoService {
   private isPlayingSource = new BehaviorSubject<boolean>(false);
   isPlaying$ = this.isPlayingSource.asObservable();
 
-  private rewindSeconds: number = 10;
-  private forwardSeconds: number = 10;
-
-  togglePlay = new EventEmitter<void>();
-  rewind = new EventEmitter<void>();
-  forward = new EventEmitter<void>();
-  
   private volumeSource = new BehaviorSubject<number>(100);
   volume$ = this.volumeSource.asObservable();
 
@@ -36,40 +29,22 @@ export class VideoService {
   private thumbnailSource = new BehaviorSubject<string>("");
   thumbnail$ = this.thumbnailSource.asObservable();
 
+  private rewindSeconds: number = 10;
+  private forwardSeconds: number = 10;
+  private timestampSource = new BehaviorSubject<string>("00:00:00.000");
+  timestamp$ = this.timestampSource.asObservable();
+
+  togglePlay = new EventEmitter<void>();
+  rewind = new EventEmitter<void>();
+  forward = new EventEmitter<void>();
+  jumpToTimestamp = new EventEmitter<void>();
+
   getPlaying(): Observable<boolean> {
     return this.isPlaying$;
   }
 
   setPlaying(playing: boolean): void {
     this.isPlayingSource.next(playing);
-  }
-
-  emitTogglePlay(): void {
-    this.togglePlay.emit();
-  }
-
-  emitRewind(): void {
-    this.rewind.emit();
-  }
-
-  emitForward(): void {
-    this.forward.emit();
-  }
-
-  getRewindSeconds(): number {
-    return this.rewindSeconds;
-  }
-
-  getForwardSeconds(): number {
-    return this.forwardSeconds;
-  }
-
-  setRewindSeconds(seconds: number): void {
-    this.rewindSeconds = seconds;
-  }
-
-  setForwardSeconds(seconds: number): void {
-    this.forwardSeconds = seconds;
   }
 
   getVolume(): Observable<number> {
@@ -126,5 +101,45 @@ export class VideoService {
 
   setThumbnail(thumbnail: string): void {
     this.thumbnailSource.next(thumbnail);
+  }
+
+  emitTogglePlay(): void {
+    this.togglePlay.emit();
+  }
+
+  emitRewind(): void {
+    this.rewind.emit();
+  }
+
+  emitForward(): void {
+    this.forward.emit();
+  }
+
+  emitJumpToTimestamp(): void {
+    this.jumpToTimestamp.emit();
+  }
+
+  getRewindSeconds(): number {
+    return this.rewindSeconds;
+  }
+
+  setRewindSeconds(seconds: number): void {
+    this.rewindSeconds = seconds;
+  }
+
+  getForwardSeconds(): number {
+    return this.forwardSeconds;
+  }
+
+  setForwardSeconds(seconds: number): void {
+    this.forwardSeconds = seconds;
+  }
+
+  getTimestamp(): Observable<string> {
+    return this.timestamp$;
+  }
+
+  setTimestamp(timestamp: string): void {
+    this.timestampSource.next(timestamp);
   }
 }

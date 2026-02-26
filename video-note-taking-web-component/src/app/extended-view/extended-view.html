@@ -6,7 +6,9 @@
             </div>
             <div>
                 <h4>{{ entry.title }}</h4>
-                <p>{{ entry.timestamp }}</p>
+                <p (click)="jumpToTimestamp()">
+                    {{ entry.timestamp }}
+                </p>
                 <button (click)="editEntry()">Edit</button>
                 <button (click)="deleteEntry()">Delete</button>
             </div>

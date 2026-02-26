@@ -20,6 +20,7 @@ export class VideoPlayer {
   fullscreenRequestLocal: boolean = false;
   rewindSeconds: number = 10;
   forwardSeconds: number = 10;
+  timestamp: string = "00:00:00.000";
 
   constructor(private cdr: ChangeDetectorRef, private videoService: VideoService) {}
 
@@ -31,6 +32,10 @@ export class VideoPlayer {
     this.videoService.togglePlay.subscribe(() => this.togglePlay());
     this.videoService.rewind.subscribe(() => this.rewind());
     this.videoService.forward.subscribe(() => this.forward());
+    this.videoService.timestamp$.subscribe(timestamp => {
+      this.timestamp = timestamp;
+    });
+    this.videoService.jumpToTimestamp.subscribe(() => this.jumpToTimestamp());
 
     // A hangerő szabályozása.
     this.videoService.volume$.subscribe(currentVolume => {
@@ -228,5 +233,18 @@ export class VideoPlayer {
 
       this.videoService.setThumbnail(dataURL);
     }
+  }
+
+  /**
+   * A tömörített vagy bővített nézetben a időbélyegre kattintva ugorjon a videó a megfelelő pillanatára.
+   */
+  private jumpToTimestamp(): void {
+    const video = this.videoElement.nativeElement;
+    
+    // Másodpercekké alakítás.
+    const timeParts = this.timestamp.split(/[:.]+/).map(Number);
+    const seconds = timeParts[0] * 3600 + timeParts[1] * 60 + timeParts[2] + timeParts[3] / 1000;
+
+    video.currentTime = seconds;
   }
 }
