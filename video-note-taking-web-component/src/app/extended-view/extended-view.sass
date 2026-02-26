@@ -1,5 +1,67 @@
-//.up-button
-    
+@use '../../mixins/variables' as *
+@use '../../mixins/mixins' as *
 
-//.up
-    
+.extended-view
+    display: flex
+    height: 210px
+    @include border(true, true, true, true)
+
+.control-div
+    max-width: 300px
+    max-height: 150px
+
+.thumbnail-div
+    @include flex(space-between, center)
+
+.thumbnail
+    max-width: 300px
+    max-height: 150px
+
+.data-div
+    display: grid
+    grid-template-columns: 1fr 1fr
+    grid-template-rows: auto auto
+    gap: 10px
+    padding: 10px
+    border-radius: 5px
+    text-align: center
+
+    .title
+        grid-column: 1
+        margin: 0
+        @include truncated-text(1)
+
+    .timestamp
+        grid-column: 2
+        margin: 0
+        color: $link-color
+        cursor: pointer
+
+    .timestamp:hover
+        color: $link-hover-color
+
+.note-div
+    width: 100%
+    margin: 15px 0px
+    overflow: auto
+
+    .note
+        margin: 0px 0px 0px 15px
+
+.edit
+    grid-column: 2
+    @include button
+    @include save-button
+
+.delete
+    grid-column: 1
+    @include button
+    @include cancel-button
+
+.up-button
+    @include button
+    padding: 0px
+
+.up
+    width: 20px
+    margin: 0px 5px

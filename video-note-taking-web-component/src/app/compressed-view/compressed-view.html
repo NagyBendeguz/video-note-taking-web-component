@@ -4,8 +4,8 @@
             <img [src]="entry.thumbnail" [alt]="entry.title" class="thumbnail">
         </div>
         <div class="data-div">
-            <h4>{{ entry.title }}</h4>
-            <p (click)="jumpToTimestamp()">
+            <h4 [title]="entry.title">{{ entry.title }}</h4>
+            <p (click)="jumpToTimestamp()" class="timestamp">
                 {{ entry.timestamp }}
             </p>
         </div>

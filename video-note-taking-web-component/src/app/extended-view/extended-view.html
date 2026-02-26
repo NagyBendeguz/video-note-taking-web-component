@@ -1,20 +1,20 @@
 @if (isExtendedView) {
-    <div>
-        <div>
-            <div>
-                <img [src]="entry.thumbnail" [alt]="entry.title">
+    <div class="extended-view">
+        <div class="control-div">
+            <div class="thumbnail-div">
+                <img [src]="entry.thumbnail" [alt]="entry.title" class="thumbnail">
             </div>
-            <div>
-                <h4>{{ entry.title }}</h4>
-                <p (click)="jumpToTimestamp()">
+            <div class="data-div">
+                <h4 class="title" [title]="entry.title">{{ entry.title }}</h4>
+                <p (click)="jumpToTimestamp()" class="timestamp">
                     {{ entry.timestamp }}
                 </p>
-                <button (click)="editEntry()">Edit</button>
-                <button (click)="deleteEntry()">Delete</button>
+                <button (click)="deleteEntry()" class="delete">Delete</button>
+                <button (click)="editEntry()" class="edit">Edit</button>
             </div>
         </div>
-        <div>
-            <p>{{ entry.note }}</p>
+        <div class="note-div">
+            <p class="note">{{ entry.note }}</p>
         </div>
         <button (click)="closeExtendedView()" class="up-button">
             <img src="chevron-up.svg" alt="Close Extended View" class="up">
