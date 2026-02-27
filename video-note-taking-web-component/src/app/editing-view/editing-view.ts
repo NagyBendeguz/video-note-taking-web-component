@@ -15,6 +15,7 @@ export class EditingView {
   entryLocal: Entry = new Entry();
   currentEntryId: number = 0;
   editMode: boolean = false;
+  private note: any[] = [];
   private unsubscribe$ = new Subject<void>();
 
   constructor(private entryService: EntryService, private videoService: VideoService) {}
@@ -35,14 +36,18 @@ export class EditingView {
       }
     });
 
-    this.videoService.currentTime$.subscribe(currentTime => {
+    this.videoService.currentTime$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentTime => {
       this.entryLocal.timestamp = this.formatVideoTimestamp(currentTime);
       this.entryService.setEntry(this.entryLocal);
     });
 
-    this.videoService.thumbnail$.subscribe(currentThumbnail => {
+    this.videoService.thumbnail$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentThumbnail => {
       this.entryLocal.thumbnail = currentThumbnail;
       this.entryService.setEntry(this.entryLocal);
+    });
+
+    this.entryService.getArrayEntry().pipe(takeUntil(this.unsubscribe$)).subscribe(currentNote => {
+      this.note = currentNote;
     });
   }
 
@@ -89,7 +94,7 @@ export class EditingView {
   }
 
   saveNote(): void {
-
+    this.downloadJSON(this.note);
   }
 
   exportNote(): void {
@@ -153,5 +158,21 @@ export class EditingView {
     const formattedMilliseconds = String(milliseconds).padStart(3, '0');
 
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}.${formattedMilliseconds}`;
+  }
+
+  /**
+   * A jegyzet mentése JSON fájlba.
+   * @param data - A jelenlegi mentésre kerülő jegyzet.
+   */
+  private downloadJSON(data: any): void {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = "note.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
   }
 }
