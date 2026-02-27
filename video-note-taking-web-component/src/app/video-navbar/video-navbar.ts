@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { VideoService } from '../services/video';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-video-navbar',
@@ -9,19 +9,19 @@ import { Observable, Subscription } from 'rxjs';
   styleUrl: './video-navbar.sass',
 })
 export class VideoNavbar {
-  private subscriptions: Subscription = new Subscription();
-  isPlaying$: Observable<boolean> = new Observable<boolean>();
-  volumePercentage$: Observable<number> = new Observable<number>();
+  isPlaying$!: Observable<boolean>;
+  volumePercentage$!: Observable<number>;
   previousVolume: number = 100;
-  duration$: Observable<number> = new Observable<number>();
+  duration$!: Observable<number>;
   durationLocal: number = 0;
-  currentTime$: Observable<number> = new Observable<number>();
-  isNote$: Observable<boolean> = new Observable<boolean>();
+  currentTime$!: Observable<number>;
+  isNote$!: Observable<boolean>;
   isNoteLocal: boolean = false;
-  isSettings$: Observable<boolean> = new Observable<boolean>();
+  isSettings$!: Observable<boolean>;
   isSettingsLocal: boolean = false;
-  fullscreenRequest$: Observable<boolean> = new Observable<boolean>();
+  fullscreenRequest$!: Observable<boolean>;
   fullscreenRequestLocal: boolean = false;
+  private unsubscribe$ = new Subject<void>();
 
   constructor(public videoService: VideoService) {}
 
@@ -30,19 +30,19 @@ export class VideoNavbar {
 
     this.volumePercentage$ = this.videoService.getVolume();
 
-    this.subscriptions.add(this.volumePercentage$.subscribe(currentVolume => {
+    this.volumePercentage$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentVolume => {
       // Csak akkor mentse le a hangerő változást ha nem nulla a jelenlegi hangerő.
       if (currentVolume !== 0)
       {
         this.previousVolume = currentVolume;
       }
-    }));
+    });
 
     this.duration$ = this.videoService.getDuration();
 
-    this.subscriptions.add(this.videoService.duration$.subscribe(currentDuration => {
+    this.videoService.duration$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentDuration => {
       this.durationLocal = currentDuration;
-    }));
+    });
 
     this.currentTime$ = this.videoService.getCurrentTime();
 
@@ -51,6 +51,11 @@ export class VideoNavbar {
     this.isSettings$ = this.videoService.getSettings();
 
     this.fullscreenRequest$ = this.videoService.getFullscreen();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   /**
@@ -145,15 +150,5 @@ export class VideoNavbar {
   setFullscreen(): void {
     this.videoService.setFullscreen(!this.fullscreenRequestLocal);
     this.fullscreenRequestLocal = !this.fullscreenRequestLocal;
-  }
-
-  /**
-   * Leiratkozás elem megsemmisülésekor.
-   */
-  ngOnDestroy(): void {
-    if (this.subscriptions)
-    {
-      this.subscriptions.unsubscribe();
-    }
   }
 }

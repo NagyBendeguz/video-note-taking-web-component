@@ -22,15 +22,11 @@ export class EditingView {
   ngOnInit(): void {
     this.entry$ = this.entryService.getEntry();
 
-    this.entryService.entry$.pipe(
-      takeUntil(this.unsubscribe$)
-    ).subscribe(currentEntry => {
+    this.entryService.entry$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentEntry => {
       this.entryLocal = currentEntry;
     });
 
-    this.entryService.editEntry$.pipe(
-      takeUntil(this.unsubscribe$)
-    ).subscribe(currentEditEntry => {
+    this.entryService.editEntry$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentEditEntry => {
       if (currentEditEntry.entryId !== 0)
       {
         this.editMode = true;

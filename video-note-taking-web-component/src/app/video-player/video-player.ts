@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { VideoService } from '../services/video';
-import { Observable } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-video-player',
@@ -13,14 +13,15 @@ export class VideoPlayer {
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
   volumePercentageLocal: number = 100;
-  isNote$: Observable<boolean> = new Observable<boolean>();
+  isNote$!: Observable<boolean>;
   isNoteLocal: boolean = false;
-  isSettings$: Observable<boolean> = new Observable<boolean>();
+  isSettings$!: Observable<boolean>;
   isSettingsLocal: boolean = false;
   fullscreenRequestLocal: boolean = false;
   rewindSeconds: number = 10;
   forwardSeconds: number = 10;
   timestamp: string = "00:00:00.000";
+  private unsubscribe$ = new Subject<void>();
 
   constructor(private cdr: ChangeDetectorRef, private videoService: VideoService) {}
 
@@ -29,16 +30,16 @@ export class VideoPlayer {
   }
 
   ngAfterViewInit(): void {
-    this.videoService.togglePlay.subscribe(() => this.togglePlay());
-    this.videoService.rewind.subscribe(() => this.rewind());
-    this.videoService.forward.subscribe(() => this.forward());
-    this.videoService.timestamp$.subscribe(timestamp => {
+    this.videoService.togglePlay.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.togglePlay());
+    this.videoService.rewind.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.rewind());
+    this.videoService.forward.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.forward());
+    this.videoService.timestamp$.pipe(takeUntil(this.unsubscribe$)).subscribe(timestamp => {
       this.timestamp = timestamp;
     });
-    this.videoService.jumpToTimestamp.subscribe(() => this.jumpToTimestamp());
+    this.videoService.jumpToTimestamp.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.jumpToTimestamp());
 
     // A hangerő szabályozása.
-    this.videoService.volume$.subscribe(currentVolume => {
+    this.videoService.volume$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentVolume => {
       this.volumePercentageLocal = currentVolume;
       this.changeVolume();
     });
@@ -50,7 +51,8 @@ export class VideoPlayer {
 
     this.isNote$ = this.videoService.getNote();
 
-    this.videoService.isNote$.subscribe(currentNote => {
+    // A jegyzetelő felület megnyitásakor és amikor nyitva van folyamatosan készítsen képernyőképeket a videó adott képkockájáról.
+    this.videoService.isNote$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentNote => {
       this.isNoteLocal = currentNote;
       if (currentNote)
       {
@@ -60,15 +62,21 @@ export class VideoPlayer {
 
     this.isSettings$ = this.videoService.getSettings();
 
-    this.videoService.isSettings$.subscribe(currentSettings => {
+    this.videoService.isSettings$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentSettings => {
       this.isSettingsLocal = currentSettings;
     });
 
-    this.videoService.fullscreenRequest$.subscribe(currentFullscreenRequest => {
+    this.videoService.fullscreenRequest$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentFullscreenRequest => {
       this.fullscreenRequestLocal = currentFullscreenRequest;
       this.setFullscreen();
       this.cdr.detectChanges();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+    document.removeEventListener('setVideoTime', this.setVideoTimeByClick);
   }
 
   @HostListener('window:resize')

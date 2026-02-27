@@ -10,7 +10,7 @@ import { EntryService } from '../services/entry';
   styleUrl: './video-note.sass',
 })
 export class VideoNote {
-  arrayEntry$: Observable<Array<Entry>> = new Observable<Array<Entry>>();
+  arrayEntry$!: Observable<Array<Entry>>;
 
   constructor(private entryService: EntryService) {}
 
