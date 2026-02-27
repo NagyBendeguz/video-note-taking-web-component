@@ -75,6 +75,7 @@ export class EntryService {
     else
     {
       this.arrayEntrySource.next(filteredArray);
+      this.resetEntry();
     }
   }
 }
