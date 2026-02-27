@@ -20,7 +20,7 @@ export class ExtendedView {
   }
 
   deleteEntry(): void {
-
+    this.entryService.deleteById(this.entry.entryId);
   }
 
   closeExtendedView(): void {

@@ -63,4 +63,18 @@ export class EntryService {
       console.error(`Entry with ID ${updatedEntry.entryId} not found.`);
     }
   }
+
+  deleteById(entryId: number): void {
+    const currentArray = this.arrayEntrySource.getValue();
+    const filteredArray = currentArray.filter(entry => entry.entryId !== entryId);
+
+    if (filteredArray.length === currentArray.length)
+    {
+      console.error(`Entry with ID ${entryId} not found for deletion.`);
+    }
+    else
+    {
+      this.arrayEntrySource.next(filteredArray);
+    }
+  }
 }
