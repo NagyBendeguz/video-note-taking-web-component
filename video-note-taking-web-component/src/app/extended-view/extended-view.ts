@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Entry } from '../models/entry';
 import { VideoService } from '../services/video';
+import { EntryService } from '../services/entry';
 
 @Component({
   selector: 'app-extended-view',
@@ -12,10 +13,10 @@ export class ExtendedView {
   @Input() entry: Entry = new Entry();
   @Input() isExtendedView: boolean = true;
 
-  constructor(public videoService: VideoService) {}
+  constructor(public videoService: VideoService, private entryService: EntryService) {}
 
   editEntry(): void {
-
+    this.entryService.setEditEntry(this.entry);
   }
 
   deleteEntry(): void {

@@ -9,6 +9,9 @@ export class EntryService {
   private entrySource = new BehaviorSubject<Entry>(new Entry());
   entry$ = this.entrySource.asObservable();
 
+  private editEntrySource = new BehaviorSubject<Entry>(new Entry());
+  editEntry$ = this.editEntrySource.asObservable();
+
   private arrayEntrySource = new BehaviorSubject<Array<Entry>>(new Array<Entry>());
   arrayEntry$ = this.arrayEntrySource.asObservable();
 
@@ -24,6 +27,14 @@ export class EntryService {
     this.entrySource.next(new Entry());
   }
 
+  getEditEntry(): Observable<Entry> {
+    return this.editEntry$;
+  }
+
+  setEditEntry(editEntry: Entry): void {
+    this.editEntrySource.next(editEntry);
+  }
+
   getArrayEntry(): Observable<Array<Entry>> {
     return this.arrayEntry$;
   }
@@ -36,5 +47,20 @@ export class EntryService {
     const currentArray = this.arrayEntrySource.getValue();
     currentArray.push(newEntry);
     this.arrayEntrySource.next(currentArray);
+  }
+
+  setArrayEntryById(updatedEntry: Entry): void {
+    const currentArray = this.arrayEntrySource.getValue();
+    const entryIndex = currentArray.findIndex(entry => entry.entryId === updatedEntry.entryId);
+
+    if (entryIndex !== -1)
+    {
+      currentArray[entryIndex] = updatedEntry;
+      this.arrayEntrySource.next(currentArray);
+    }
+    else
+    {
+      console.error(`Entry with ID ${updatedEntry.entryId} not found.`);
+    }
   }
 }

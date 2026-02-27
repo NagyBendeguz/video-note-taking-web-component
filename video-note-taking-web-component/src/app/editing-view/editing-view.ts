@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { Entry } from '../models/entry';
 import { EntryService } from '../services/entry';
 import { VideoService } from '../services/video';
@@ -11,17 +11,32 @@ import { VideoService } from '../services/video';
   styleUrl: './editing-view.sass',
 })
 export class EditingView {
-  entry$: Observable<Entry> = new Observable<Entry>();
+  entry$!: Observable<Entry>;
   entryLocal: Entry = new Entry();
   currentEntryId: number = 0;
+  editMode: boolean = false;
+  private unsubscribe$ = new Subject<void>();
 
   constructor(private entryService: EntryService, private videoService: VideoService) {}
 
   ngOnInit(): void {
     this.entry$ = this.entryService.getEntry();
 
-    this.entryService.entry$.subscribe(currentEntry => {
+    this.entryService.entry$.pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe(currentEntry => {
       this.entryLocal = currentEntry;
+    });
+
+    this.entryService.editEntry$.pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe(currentEditEntry => {
+      if (currentEditEntry.entryId !== 0)
+      {
+        this.editMode = true;
+        this.entryLocal = {...currentEditEntry};
+        this.entryService.setEntry(this.entryLocal);
+      }
     });
 
     this.videoService.currentTime$.subscribe(currentTime => {
@@ -35,6 +50,11 @@ export class EditingView {
     });
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   editingRewind(): void {
     this.videoService.emitRewind();
   }
@@ -45,20 +65,26 @@ export class EditingView {
 
   addTitle(event: Event): void {
     this.entryLocal.title = (event.target as HTMLInputElement).value;
-    this.entryService.setEntry(this.entryLocal);
   }
 
   addNote(event: Event): void {
     this.entryLocal.note = (event.target as HTMLInputElement).value;
-    this.entryService.setEntry(this.entryLocal);
   }
 
   // TODO - inkonzisztens állapot a video-note.html mentésénél éppen a mentés után a reset alap állapotban van
 
   saveEntry(): void {
-    this.currentEntryId++;
-    this.entryLocal.entryId = this.currentEntryId;
-    this.entryService.pushArrayEntry(this.entryLocal);
+    if (this.editMode)
+    {
+      this.entryService.setArrayEntryById(this.entryLocal);
+      this.editMode = false;
+    }
+    else
+    {
+      this.currentEntryId++;
+      this.entryLocal.entryId = this.currentEntryId;
+      this.entryService.pushArrayEntry(this.entryLocal);
+    }
     this.entryService.resetEntry();
   }
 
