@@ -3,7 +3,7 @@
 
 .extended-view
     display: flex
-    height: 210px
+    height: 225px
     @include border(true, true, true, true)
 
 .control-div
@@ -11,7 +11,9 @@
     max-height: 150px
 
 .thumbnail-div
-    @include flex(space-between, center)
+    @include flex(center, center)
+    min-width: 300px
+    min-height: 150px
 
 .thumbnail
     max-width: 300px
@@ -42,11 +44,11 @@
 
 .note-div
     width: 100%
-    margin: 15px 0px
+    margin: 10px
     overflow: auto
 
     .note
-        margin: 0px 0px 0px 15px
+        margin: 0px
 
 .edit
     grid-column: 2
