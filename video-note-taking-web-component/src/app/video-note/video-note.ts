@@ -11,10 +11,15 @@ import { EntryService } from '../services/entry';
 })
 export class VideoNote {
   arrayEntry$!: Observable<Array<Entry>>;
+  isExtendedViews: boolean[] = [];
 
   constructor(private entryService: EntryService) {}
 
   ngOnInit(): void {
     this.arrayEntry$ = this.entryService.getArrayEntry();
+  }
+
+  toggleView(idx: number) {
+    this.isExtendedViews[idx] = !this.isExtendedViews[idx];
   }
 }

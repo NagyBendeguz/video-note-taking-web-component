@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Entry } from '../models/entry';
 import { VideoService } from '../services/video';
 import { EntryService } from '../services/entry';
@@ -12,6 +12,7 @@ import { EntryService } from '../services/entry';
 export class ExtendedView {
   @Input() entry: Entry = new Entry();
   @Input() isExtendedView: boolean = true;
+  @Output() onClose = new EventEmitter<void>();
 
   constructor(public videoService: VideoService, private entryService: EntryService) {}
 
@@ -23,8 +24,8 @@ export class ExtendedView {
     this.entryService.deleteById(this.entry.entryId);
   }
 
-  closeExtendedView(): void {
-    this.isExtendedView = !this.isExtendedView;
+  close() {
+    this.onClose.emit();
   }
 
   jumpToTimestamp(): void {

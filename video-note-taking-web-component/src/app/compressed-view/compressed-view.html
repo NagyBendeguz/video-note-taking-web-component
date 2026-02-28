@@ -12,7 +12,7 @@
         <div class="note-div">
             <p class="note">{{ entry.note }}</p>
         </div>
-        <button (click)="openExtendedView()" class="down-button">
+        <button (click)="toggle()" class="down-button">
             <img src="chevron-down.svg" alt="Open Extended View" class="down">
         </button>
     </div>
@@ -20,6 +20,7 @@
 @else {
     <extended-view-element
         [entry]="entry"
-        [isExtendedView]="isExtendedView">
+        [isExtendedView]="true"
+        (onClose)="toggle()">
     </extended-view-element>
 }

@@ -16,14 +16,8 @@
         <div class="note-div">
             <p class="note">{{ entry.note }}</p>
         </div>
-        <button (click)="closeExtendedView()" class="up-button">
+        <button (click)="close()" class="up-button">
             <img src="chevron-up.svg" alt="Close Extended View" class="up">
         </button>
     </div>
-}
-@else {
-    <compressed-view-element
-        [entry]="entry"
-        [isExtendedView]="isExtendedView">
-    </compressed-view-element>
 }

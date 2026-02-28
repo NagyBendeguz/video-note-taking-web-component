@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Entry } from '../models/entry';
 import { VideoService } from '../services/video';
 
@@ -11,11 +11,12 @@ import { VideoService } from '../services/video';
 export class CompressedView {
   @Input() entry: Entry = new Entry();
   @Input() isExtendedView: boolean = false;
+  @Output() onToggle = new EventEmitter<void>();
 
   constructor(public videoService: VideoService) {}
 
-  openExtendedView(): void {
-    this.isExtendedView = !this.isExtendedView;
+  toggle() {
+    this.onToggle.emit();
   }
 
   jumpToTimestamp(): void {
