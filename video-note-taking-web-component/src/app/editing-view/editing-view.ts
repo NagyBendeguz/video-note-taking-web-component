@@ -72,13 +72,14 @@ export class EditingView {
     this.entryLocal.note = (event.target as HTMLInputElement).value;
   }
 
-  // TODO - inkonzisztens állapot a video-note.html mentésénél éppen a mentés után a reset alap állapotban van
+  // TODO - inkonzisztens állapot a video-note.html/.sass mentésénél entryId az 1 lesz minden mentés után
 
   saveEntry(): void {
     if (this.editMode)
     {
       this.entryService.setArrayEntryById(this.entryLocal);
       this.editMode = false;
+      this.entryService.setEditMode(false);
     }
     else
     {

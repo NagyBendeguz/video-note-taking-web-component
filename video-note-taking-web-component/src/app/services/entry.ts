@@ -12,6 +12,9 @@ export class EntryService {
   private editEntrySource = new BehaviorSubject<Entry>(new Entry());
   editEntry$ = this.editEntrySource.asObservable();
 
+  private editModeSource = new BehaviorSubject<boolean>(false);
+  editMode$ = this.editModeSource.asObservable();
+
   private arrayEntrySource = new BehaviorSubject<Array<Entry>>(new Array<Entry>());
   arrayEntry$ = this.arrayEntrySource.asObservable();
 
@@ -33,6 +36,14 @@ export class EntryService {
 
   setEditEntry(editEntry: Entry): void {
     this.editEntrySource.next(editEntry);
+  }
+
+  getEditMode(): Observable<boolean> {
+    return this.editMode$;
+  }
+
+  setEditMode(editMode: boolean): void {
+    this.editModeSource.next(editMode);
   }
 
   getArrayEntry(): Observable<Array<Entry>> {

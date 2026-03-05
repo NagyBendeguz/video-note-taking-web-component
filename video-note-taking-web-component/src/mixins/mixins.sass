@@ -40,12 +40,24 @@
         color: white
         background-color: $button-save-hover-background-color
 
+    &:disabled
+        background-color: $button-disabled-background-color
+        color: $button-disabled-text-color
+        opacity: 0.6
+        cursor: not-allowed
+
 @mixin delete-button
     background-color: $button-delete-background-color
 
     &:hover
         color: white
         background-color: $button-delete-hover-background-color
+
+    &:disabled
+        background-color: $button-disabled-background-color
+        color: $button-disabled-text-color
+        opacity: 0.6
+        cursor: not-allowed
 
 @mixin cancel-button
     background-color: $button-cancel-background-color

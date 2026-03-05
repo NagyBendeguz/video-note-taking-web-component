@@ -17,8 +17,8 @@
             <input type="text" name="title" id="title" placeholder="Title" [value]="(entry$ | async)?.title" (input)="addTitle($event)" required>
         </div>
         <div class="save-cancel">
-            <button (click)="cancelEntry()" class="cancel">Cancel Entry</button>
-            <button (click)="saveEntry()" class="save">Save Entry</button>
+            <button (click)="cancelEntry()" [disabled]="(entry$ | async)?.title === '' && (entry$ | async)?.note === ''" class="cancel">Cancel Entry</button>
+            <button (click)="saveEntry()" [disabled]="(entry$ | async)?.title === '' && (entry$ | async)?.note === ''" class="save">Save Entry</button>
         </div>
     </div>
     <div class="note">

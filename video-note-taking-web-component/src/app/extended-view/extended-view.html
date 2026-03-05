@@ -9,10 +9,10 @@
                 <p (click)="jumpToTimestamp()" class="timestamp">
                     {{ entry.timestamp }}
                 </p>
-                <button (click)="deleteEntry()" class="delete">Delete Entry</button>
+                <button (click)="deleteEntry()" [disabled]="editMode$ | async" class="delete">Delete Entry</button>
                 <button (click)="editEntry()" class="edit">Edit Entry</button>
-
-                @if (showModal) {
+                @if (showModal)
+                {
                     <confirm-delete-element
                         (confirm)="confirmDelete()"
                         (cancel)="cancelDelete()">
