@@ -11,6 +11,7 @@ import { VideoSettings } from './video-settings/video-settings';
 import { CompressedView } from './compressed-view/compressed-view';
 import { ExtendedView } from './extended-view/extended-view';
 import { EditingView } from './editing-view/editing-view';
+import { ConfirmDelete } from './confirm-delete/confirm-delete';
 
 @NgModule({
   declarations: [
@@ -21,8 +22,8 @@ import { EditingView } from './editing-view/editing-view';
     VideoSettings,
     CompressedView,
     ExtendedView,
-    EditingView
-
+    EditingView,
+    ConfirmDelete
   ],
   imports: [
     BrowserModule,
@@ -45,6 +46,7 @@ export class AppModule {
     const compressedViewElement = createCustomElement(CompressedView, { injector });
     const extendedViewElement = createCustomElement(ExtendedView, { injector });
     const editingViewElement = createCustomElement(EditingView, { injector });
+    const confirmDeleteElement = createCustomElement(ConfirmDelete, { injector });
 
     // Lehessen használni egyedi web komponensként.
     customElements.define('video-player-element', videoPlayerElement);
@@ -54,8 +56,9 @@ export class AppModule {
     customElements.define('compressed-view-element', compressedViewElement);
     customElements.define('extended-view-element', extendedViewElement);
     customElements.define('editing-view-element', editingViewElement);
+    customElements.define('confirm-delete-element', confirmDeleteElement);
   }
-  
+
   // Manuális bootstrap.
   ngDoBootstrap(appRef: ApplicationRef) {
     appRef.bootstrap(App);

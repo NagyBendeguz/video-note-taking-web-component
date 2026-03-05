@@ -19,6 +19,7 @@
     padding: 4px 8px
     font-size: 14px
     border: none
+    border-radius: 5px
     background-color: transparent
     cursor: pointer
 
@@ -32,13 +33,19 @@
         color: white
         background-color: $button-export-hover-background-color
 
-
 @mixin save-button
     background-color: $button-save-background-color
 
     &:hover
         color: white
         background-color: $button-save-hover-background-color
+
+@mixin delete-button
+    background-color: $button-delete-background-color
+
+    &:hover
+        color: white
+        background-color: $button-delete-hover-background-color
 
 @mixin cancel-button
     background-color: $button-cancel-background-color

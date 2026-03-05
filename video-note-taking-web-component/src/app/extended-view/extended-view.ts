@@ -13,6 +13,7 @@ export class ExtendedView {
   @Input() entry: Entry = new Entry();
   @Input() isExtendedView: boolean = true;
   @Output() onClose = new EventEmitter<void>();
+  showModal = false;
 
   constructor(public videoService: VideoService, private entryService: EntryService) {}
 
@@ -21,7 +22,16 @@ export class ExtendedView {
   }
 
   deleteEntry(): void {
+    this.showModal = true;
+  }
+
+  confirmDelete(): void {
     this.entryService.deleteById(this.entry.entryId);
+    this.showModal = false;
+  }
+
+  cancelDelete(): void {
+    this.showModal = false;
   }
 
   close() {

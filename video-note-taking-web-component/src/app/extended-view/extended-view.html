@@ -9,8 +9,15 @@
                 <p (click)="jumpToTimestamp()" class="timestamp">
                     {{ entry.timestamp }}
                 </p>
-                <button (click)="deleteEntry()" class="delete">Delete</button>
-                <button (click)="editEntry()" class="edit">Edit</button>
+                <button (click)="deleteEntry()" class="delete">Delete Entry</button>
+                <button (click)="editEntry()" class="edit">Edit Entry</button>
+
+                @if (showModal) {
+                    <confirm-delete-element
+                        (confirm)="confirmDelete()"
+                        (cancel)="cancelDelete()">
+                    </confirm-delete-element>
+                }
             </div>
         </div>
         <div class="note-div">
