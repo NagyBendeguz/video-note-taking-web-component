@@ -23,8 +23,8 @@ export class EntryService {
     this.entrySource.next(entry);
   }
 
-  resetEntry(): void {
-    this.entrySource.next(new Entry());
+  resetEntry(entry: Entry): void {
+    this.entrySource.next(new Entry(entry.thumbnail, entry.timestamp));
   }
 
   getEditEntry(): Observable<Entry> {
@@ -64,18 +64,18 @@ export class EntryService {
     }
   }
 
-  deleteById(entryId: number): void {
+  deleteById(entryToDelete: Entry): void {
     const currentArray = this.arrayEntrySource.getValue();
-    const filteredArray = currentArray.filter(entry => entry.entryId !== entryId);
+    const filteredArray = currentArray.filter(entry => entry.entryId !== entryToDelete.entryId);
 
     if (filteredArray.length === currentArray.length)
     {
-      console.error(`Entry with ID ${entryId} not found for deletion.`);
+      console.error(`Entry with ID ${entryToDelete.entryId} not found for deletion.`);
     }
     else
     {
       this.arrayEntrySource.next(filteredArray);
-      this.resetEntry();
+      this.resetEntry(entryToDelete);
     }
   }
 }

@@ -86,11 +86,16 @@ export class EditingView {
       this.entryLocal.entryId = this.currentEntryId;
       this.entryService.pushArrayEntry(this.entryLocal);
     }
-    this.entryService.resetEntry();
+    this.entryService.resetEntry(this.entryLocal);
   }
 
+  /**
+   * Törölni a jelenleg készülő bejegyzést.
+   */
   cancelEntry(): void {
-    this.resetCurrentEntry();
+    this.entryService.resetEntry(this.entryLocal);
+    this.entryService.setEditMode(false);
+    this.entryLocal = new Entry();
   }
 
   saveNote(): void {
@@ -127,18 +132,6 @@ export class EditingView {
 
   table(): void {
 
-  }
-
-  /**
-   * Törölni a jelenleg készülő bejegyzést.
-   */
-  private resetCurrentEntry(): void {
-    this.entryLocal.entryId = 0;
-    this.entryLocal.title = "";
-    this.entryLocal.thumbnail = "image.svg";
-    this.entryLocal.timestamp = "00:00:00.000";
-    this.entryLocal.note = "";
-    this.entryService.resetEntry();
   }
 
   /**

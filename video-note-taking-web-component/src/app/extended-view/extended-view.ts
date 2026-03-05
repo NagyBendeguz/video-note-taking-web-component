@@ -26,7 +26,7 @@ export class ExtendedView {
   }
 
   confirmDelete(): void {
-    this.entryService.deleteById(this.entry.entryId);
+    this.entryService.deleteById(this.entry);
     this.showModal = false;
   }
 
