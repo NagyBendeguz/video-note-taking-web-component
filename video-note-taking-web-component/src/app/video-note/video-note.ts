@@ -11,7 +11,7 @@ import { EntryService } from '../services/entry';
 })
 export class VideoNote {
   arrayEntry$!: Observable<Array<Entry>>;
-  isExtendedViews: boolean[] = [];
+  isExtendedViews: Map<string, boolean> = new Map();
 
   constructor(private entryService: EntryService) {}
 
@@ -19,7 +19,8 @@ export class VideoNote {
     this.arrayEntry$ = this.entryService.getArrayEntry();
   }
 
-  toggleView(idx: number) {
-    this.isExtendedViews[idx] = !this.isExtendedViews[idx];
+  toggleView(entryId: string) {
+    const currentState = this.isExtendedViews.get(entryId) || false;
+    this.isExtendedViews.set(entryId, !currentState);
   }
 }

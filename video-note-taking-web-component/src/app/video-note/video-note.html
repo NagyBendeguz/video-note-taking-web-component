@@ -4,8 +4,8 @@
         {
             <compressed-view-element
                 [entry]="currentEntry"
-                [isExtendedView]="isExtendedViews[idx]"
-                (onToggle)="toggleView(idx)"
+                [isExtendedView]="isExtendedViews.get(currentEntry.entryId + '') || false"
+                (onToggle)="toggleView(currentEntry.entryId + '')"
                 [ngClass]="'element-' + idx">
             </compressed-view-element>
         }
