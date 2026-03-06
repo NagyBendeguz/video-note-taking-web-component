@@ -1,4 +1,5 @@
-@if (!isExtendedView) {
+@if (!isExtendedView)
+{
     <div class="compressed-view">
         <div class="thumbnail-div">
             <img [src]="entry.thumbnail" [alt]="entry.title" class="thumbnail">
@@ -17,7 +18,8 @@
         </button>
     </div>
 }
-@else {
+@else
+{
     <extended-view-element
         [entry]="entry"
         [isExtendedView]="true"

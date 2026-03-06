@@ -9,8 +9,8 @@ import { VideoService } from '../services/video';
   styleUrl: './compressed-view.sass',
 })
 export class CompressedView {
-  @Input() entry: Entry = new Entry();
-  @Input() isExtendedView: boolean = false;
+  @Input() entry!: Entry;
+  @Input() isExtendedView!: boolean;
   @Output() onToggle = new EventEmitter<void>();
 
   constructor(public videoService: VideoService) {}

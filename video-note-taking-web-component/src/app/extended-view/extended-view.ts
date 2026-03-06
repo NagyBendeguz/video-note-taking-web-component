@@ -11,8 +11,8 @@ import { Observable, Subject, takeUntil } from 'rxjs';
   styleUrl: './extended-view.sass',
 })
 export class ExtendedView {
-  @Input() entry: Entry = new Entry();
-  @Input() isExtendedView: boolean = true;
+  @Input() entry!: Entry;
+  @Input() isExtendedView!: boolean;
   @Output() onClose = new EventEmitter<void>();
   editMode$!: Observable<boolean>;
   editModeLocal: boolean = false;
@@ -47,6 +47,7 @@ export class ExtendedView {
   }
 
   confirmDelete(): void {
+    this.close();
     this.entryService.deleteById(this.entry);
     this.showModal = false;
   }
