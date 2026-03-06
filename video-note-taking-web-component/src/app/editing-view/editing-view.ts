@@ -81,7 +81,7 @@ export class EditingView {
       this.editMode = false;
       this.entryService.setEditMode(false);
     }
-    else
+    else if (this.entryLocal.title !== "" || this.entryLocal.note !== "")
     {
       this.currentEntryId++;
       this.entryLocal.entryId = this.currentEntryId;
@@ -94,9 +94,12 @@ export class EditingView {
    * Törölni a jelenleg készülő bejegyzést.
    */
   cancelEntry(): void {
-    this.entryService.resetEntry(this.entryLocal);
-    this.entryService.setEditMode(false);
-    this.entryLocal = new Entry();
+    if (this.entryLocal.title !== "" || this.entryLocal.note !== "")
+    {
+      this.entryService.resetEntry(this.entryLocal);
+      this.entryService.setEditMode(false);
+      this.entryLocal = new Entry();
+    }
   }
 
   saveNote(): void {
