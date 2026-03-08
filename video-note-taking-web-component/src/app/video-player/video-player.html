@@ -2,17 +2,17 @@
     <div class="video-outer-div" [ngClass]="{'open-page video-outer-div-open-page': (isSettings$ | async) || (isNote$ | async)}">
         <div (click)="togglePlay()" class="video-div">
             <video (loadedmetadata)="onVideoMetadataLoaded($event)" (timeupdate)="setCurrentTime()" #videoElement>
-                <source src="video.mp4" type="video/mp4">
+                <source [src]="source" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         </div>
     </div>
     <canvas id="canvas" class="hidden" #canvasElement></canvas>
-    <video-navbar-element></video-navbar-element>
-    <video-note-element
+    <video-navbar></video-navbar>
+    <video-note
         [ngClass]="{'hidden': !(isNote$ | async)}">
-    </video-note-element>
-    <video-settings-element
+    </video-note>
+    <video-settings
         [ngClass]="{'hidden': !(isSettings$ | async)}">
-    </video-settings-element>
+    </video-settings>
 </div>

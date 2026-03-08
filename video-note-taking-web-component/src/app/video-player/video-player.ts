@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { VideoService } from '../services/video';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
@@ -9,6 +9,7 @@ import { Observable, Subject, takeUntil } from 'rxjs';
   styleUrl: './video-player.sass',
 })
 export class VideoPlayer {
+  @Input() source: string = "";
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLDivElement>;
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;

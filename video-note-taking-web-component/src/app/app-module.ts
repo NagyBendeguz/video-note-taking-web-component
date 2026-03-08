@@ -1,4 +1,4 @@
-import { ApplicationRef, CUSTOM_ELEMENTS_SCHEMA, Injector, NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Injector, NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing-module';
@@ -49,18 +49,15 @@ export class AppModule {
     const confirmDeleteElement = createCustomElement(ConfirmDelete, { injector });
 
     // Lehessen használni egyedi web komponensként.
-    customElements.define('video-player-element', videoPlayerElement);
-    customElements.define('video-navbar-element', videoNavbarElement);
-    customElements.define('video-note-element', videoNoteElement);
-    customElements.define('video-settings-element', videoSettingsElement);
-    customElements.define('compressed-view-element', compressedViewElement);
-    customElements.define('extended-view-element', extendedViewElement);
-    customElements.define('editing-view-element', editingViewElement);
-    customElements.define('confirm-delete-element', confirmDeleteElement);
+    customElements.define('video-player', videoPlayerElement);
+    customElements.define('video-navbar', videoNavbarElement);
+    customElements.define('video-note', videoNoteElement);
+    customElements.define('video-settings', videoSettingsElement);
+    customElements.define('compressed-view', compressedViewElement);
+    customElements.define('extended-view', extendedViewElement);
+    customElements.define('editing-view', editingViewElement);
+    customElements.define('confirm-delete', confirmDeleteElement);
   }
 
-  // Manuális bootstrap.
-  ngDoBootstrap(appRef: ApplicationRef) {
-    appRef.bootstrap(App);
-  }
+  ngDoBootstrap() {}
 }

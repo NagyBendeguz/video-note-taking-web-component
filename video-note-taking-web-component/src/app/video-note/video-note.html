@@ -2,13 +2,13 @@
     <div class="note-view">
         @for (currentEntry of arrayEntry$ | async; track $index; let idx = $index;)
         {
-            <compressed-view-element
+            <compressed-view
                 [entry]="currentEntry"
                 [isExtendedView]="isExtendedViews.get(currentEntry.entryId + '') || false"
                 (onToggle)="toggleView(currentEntry.entryId + '')"
                 [ngClass]="'element-' + idx">
-            </compressed-view-element>
+            </compressed-view>
         }
     </div>
-    <editing-view-element></editing-view-element>
+    <editing-view></editing-view>
 </div>
