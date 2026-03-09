@@ -1,14 +1,24 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Video Note-Taking Web Component</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-<body>
-  <!--<app-root></app-root>-->
-  <video-player source="video.mp4"></video-player>
-</body>
+    <head>
+        <meta charset="utf-8">
+        <title>Video Note-Taking Web Component</title>
+        <base href="/">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+    </head>
+    <body>
+        <video-player src="video.mp4"></video-player>
+
+        <!--
+        <button onclick="changeSource('video2.mp4')">Video 2</button>
+        <script>
+            function changeSource(newSrc)
+            {
+                const videoPlayer = document.querySelector("video-player");
+                videoPlayer.src = "video2.mp4";
+            }
+        </script>
+        -->
+    </body>
 </html>

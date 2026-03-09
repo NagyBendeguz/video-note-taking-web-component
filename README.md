@@ -1,5 +1,5 @@
 # Videó jegyzetelő webkomponens
 
 ```html
-<video-player source="video.mp4"></video-player>
+<video-player src="video.mp4"></video-player>
 ```

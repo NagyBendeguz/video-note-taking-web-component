@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Input, SimpleChanges, ViewChild } from '@angular/core';
 import { VideoService } from '../services/video';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-video-player',
@@ -9,7 +9,9 @@ import { Observable, Subject, takeUntil } from 'rxjs';
   styleUrl: './video-player.sass',
 })
 export class VideoPlayer {
-  @Input() source: string = "";
+  @Input() src: string = "";
+  private srcSubject = new BehaviorSubject<string>(this.src);
+  src$: Observable<string> = this.srcSubject.asObservable();
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLDivElement>;
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
@@ -72,6 +74,20 @@ export class VideoPlayer {
       this.setFullscreen();
       this.cdr.detectChanges();
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['src'])
+    {
+      this.srcSubject.next(changes['src'].currentValue);
+
+      // Ha nem ez az első alkalom a forrás beállítására.
+      if (changes['src'].previousValue)
+      {
+        const video = this.videoElement.nativeElement;
+        video.src = changes['src'].currentValue;
+      }
+    }
   }
 
   ngOnDestroy(): void {
