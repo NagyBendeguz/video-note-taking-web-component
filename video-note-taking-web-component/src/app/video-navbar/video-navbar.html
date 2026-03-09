@@ -4,35 +4,34 @@
     }">
     <ul class="video-navbar">
         <li>
-            <button (click)="onTogglePlay()" class="btn play-pause">
-                <img src="play.svg" alt="Play" [ngClass]="{'hidden': isPlaying$ | async}">
-                <img src="pause.svg" alt="Pause" [ngClass]="{'hidden': !(isPlaying$ | async)}">
+            <button (click)="onTogglePlay()">
+                <i class="bi bi-caret-right" [ngClass]="{'hidden': isPlaying$ | async}"></i>
+                <i class="bi bi-pause" [ngClass]="{'hidden': !(isPlaying$ | async)}"></i>
             </button>
         </li>
         <li>
-            <button (click)="onRewind()" class="btn rewind">
-                <img src="rewind.svg" alt="Rewind">
+            <button (click)="onRewind()">
+                <i class="bi bi-rewind"></i>
             </button>
         </li>
         <li>
-            <button (click)="onForward()" class="btn forward">
-                <img src="forward.svg" alt="Forward">
+            <button (click)="onForward()">
+                <i class="bi bi-fast-forward"></i>
             </button>
         </li>
         <li>
             @if ((volumePercentage$ | async) === 0)
             {
-                <button (click)="unMute()" class="btn volume">
-                    <img src="volume-1.svg" alt="Mute Volume">
+                <button (click)="unMute()">
+                    <i class="bi bi-volume-mute"></i>
                 </button>
             }
             @else
             {
-                <button (click)="mute()" class="btn volume">
-                    <img src="volume-1.svg" alt="Mute Volume" class="hidden"><!--Csak azért van itt, hogy az ikon betöltődjön és ne legyen egy pillanatnyi villódzás.-->
-                    <img src="volume-2.svg" alt="Low Volume" [ngClass]="{'hidden': !((volumePercentage$ | async)! > 0 && (volumePercentage$ | async)! < 33)}">
-                    <img src="volume-3.svg" alt="Medium Volume" [ngClass]="{'hidden': !((volumePercentage$ | async)! >= 33 && (volumePercentage$ | async)! <= 66)}">
-                    <img src="volume-4.svg" alt="High Volume" [ngClass]="{'hidden': !((volumePercentage$ | async)! > 66)}">
+                <button (click)="mute()">
+                    <i class="bi bi-volume-off" [ngClass]="{'hidden': !((volumePercentage$ | async)! > 0 && (volumePercentage$ | async)! < 33)}"></i>
+                    <i class="bi bi-volume-down" [ngClass]="{'hidden': !((volumePercentage$ | async)! >= 33 && (volumePercentage$ | async)! <= 66)}"></i>
+                    <i class="bi bi-volume-up" [ngClass]="{'hidden': !((volumePercentage$ | async)! > 66)}"></i>
                 </button>
             }
             <input type="range" min="0" max="100" [value]="(volumePercentage$ | async)" (input)="setVolume($event.target.value)">
@@ -41,19 +40,19 @@
             <progress id="progress" [max]="(duration$ | async)" [value]="(currentTime$ | async)" (click)="setCurrentTimeByClick($event)"></progress>
         </li>
         <li>
-            <button (click)="setNote()" class="btn note">
-                <img src="note.svg" alt="Note">
+            <button (click)="setNote()">
+                <i class="bi bi-journals"></i>
             </button>
         </li>
         <li>
-            <button (click)="setSettings()" class="btn settings">
-                <img src="settings.svg" alt="Settings">
+            <button (click)="setSettings()">
+                <i class="bi bi-gear"></i>
             </button>
         </li>
         <li>
-            <button (click)="setFullscreen()" class="btn fullscreen">
-                <img src="fullscreen-on.svg" alt="Fullscreen On" [ngClass]="{'hidden': fullscreenRequest$ | async}">
-                <img src="fullscreen-off.svg" alt="Fullscreen Off" [ngClass]="{'hidden': !(fullscreenRequest$ | async)}">
+            <button (click)="setFullscreen()">
+                <i class="bi bi-arrows-fullscreen" [ngClass]="{'hidden': fullscreenRequest$ | async}"></i>
+                <i class="bi bi-fullscreen-exit" [ngClass]="{'hidden': !(fullscreenRequest$ | async)}"></i>
             </button>
         </li>
     </ul>

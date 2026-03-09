@@ -5,11 +5,11 @@
         </div>
         <div class="time">
             <button (click)="editingRewind()">
-                <img src="chevron-double-left.svg" alt="Rewind">
+                <i class="bi bi-chevron-double-left"></i>
             </button>
             <span>{{ (entry$ | async)?.timestamp }}</span>
             <button (click)="editingForward()">
-                <img src="chevron-double-right.svg" alt="Forward">
+                <i class="bi bi-chevron-double-right"></i>
             </button>
         </div>
         <div class="title">
@@ -25,25 +25,25 @@
         <div class="edit-note">
             <div class="style-buttons">
                 <button (click)="bold()">
-                    <img src="bold.svg" alt="Bold" title="Bold">
+                    <i class="bi bi-type-bold"></i>
                 </button>
                 <button (click)="italic()">
-                    <img src="italic.svg" alt="Italic" title="Italic">
+                    <i class="bi bi-type-italic"></i>
                 </button>
                 <button (click)="underline()">
-                    <img src="underline.svg" alt="Underline" title="Underline">
+                    <i class="bi bi-type-underline"></i>
                 </button>
                 <button (click)="strikethrough()">
-                    <img src="strikethrough.svg" alt="Strikethrough" title="Strikethrough">
+                    <i class="bi bi-type-strikethrough"></i>
                 </button>
                 <button (click)="orderedList()">
-                    <img src="ordered-list.svg" alt="Ordered List" title="Ordered List">
+                    <i class="bi bi-list-ol"></i>
                 </button>
                 <button (click)="unorderedList()">
-                    <img src="unordered-list.svg" alt="Unordered List" title="Unordered List">
+                    <i class="bi bi-list-ul"></i>
                 </button>
                 <button (click)="table()">
-                    <img src="table.svg" alt="Table" title="Table">
+                    <i class="bi bi-table"></i>
                 </button>
             </div>
             <div>
