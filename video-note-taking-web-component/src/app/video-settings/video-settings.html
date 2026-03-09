@@ -2,8 +2,15 @@
     <h2>Settings</h2>
     <h3>Default Video Settings</h3>
     <ul>
-        <li>Video Quality</li>
-        <li>Playback Speed</li>
+        <li>
+            <label for="speedSelector">Playback Speed: </label>
+            <select id="speedSelector" (change)="changePlaybackSpeed($event)">
+                @for (speed of playbackSpeeds; track $index)
+                {
+                    <option [value]="speed" [selected]="speed === 1">{{speed}}x</option>
+                }
+            </select>
+        </li>
         <li>Subtitles</li>
     </ul>
     <h3>App Settings</h3>

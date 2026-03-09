@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, HostListener, Input, SimpleChanges, ViewChild } from '@angular/core';
 import { VideoService } from '../services/video';
 import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
+import { SettingsService } from '../services/settings';
 
 @Component({
   selector: 'app-video-player',
@@ -26,7 +27,7 @@ export class VideoPlayer {
   timestamp: string = "00:00:00.000";
   private unsubscribe$ = new Subject<void>();
 
-  constructor(private cdr: ChangeDetectorRef, private videoService: VideoService) {}
+  constructor(private cdr: ChangeDetectorRef, private videoService: VideoService, private settingsService: SettingsService) {}
 
   ngOnInit(): void {
     this.checkFullscreen();
@@ -73,6 +74,10 @@ export class VideoPlayer {
       this.fullscreenRequestLocal = currentFullscreenRequest;
       this.setFullscreen();
       this.cdr.detectChanges();
+    });
+
+    this.settingsService.playbackRate$.pipe(takeUntil(this.unsubscribe$)).subscribe(rate => {
+      this.setVideoPlaybackRate(rate);
     });
   }
 
@@ -271,5 +276,14 @@ export class VideoPlayer {
     const seconds = timeParts[0] * 3600 + timeParts[1] * 60 + timeParts[2] + timeParts[3] / 1000;
 
     video.currentTime = seconds;
+  }
+
+  /**
+   * A videó lejátszási sebességének a beállítása.
+   * @param rate - A beállítani kívánt lejátszási sebesség.
+   */
+  private setVideoPlaybackRate(rate: number): void {
+    const video = this.videoElement.nativeElement;
+    video.playbackRate = rate;
   }
 }
