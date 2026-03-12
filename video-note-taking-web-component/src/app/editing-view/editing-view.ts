@@ -4,6 +4,7 @@ import { Entry } from '../models/entry';
 import { EntryService } from '../services/entry';
 import { VideoService } from '../services/video';
 import { PdfService } from '../services/pdf';
+import DOMPurify from 'dompurify';
 
 @Component({
   selector: 'app-editing-view',
@@ -66,11 +67,13 @@ export class EditingView {
   }
 
   addTitle(event: Event): void {
-    this.entryLocal.title = (event.target as HTMLInputElement).value;
+    const dirtyTitle = (event.target as HTMLInputElement).value;
+    this.entryLocal.title = DOMPurify.sanitize(dirtyTitle);
   }
 
   addNote(event: Event): void {
-    this.entryLocal.note = (event.target as HTMLInputElement).value;
+    const dirtyNote = (event.target as HTMLInputElement).value;
+    this.entryLocal.note = DOMPurify.sanitize(dirtyNote);
   }
 
   // TODO - inkonzisztens állapot a video-note.html/.sass mentésénél entryId az 1 lesz minden mentés után
