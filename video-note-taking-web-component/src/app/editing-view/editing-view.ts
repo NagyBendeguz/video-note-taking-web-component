@@ -80,7 +80,10 @@ export class EditingView {
 
   addTitle(event: Event): void {
     const dirtyTitle = (event.target as HTMLInputElement).value;
-    this.entryLocal.title = DOMPurify.sanitize(dirtyTitle);
+    if (dirtyTitle.length <= 50)
+    {
+      this.entryLocal.title = DOMPurify.sanitize(dirtyTitle);
+    }
   }
 
   addNote(event: Event): void {

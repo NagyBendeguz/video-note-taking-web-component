@@ -9,7 +9,7 @@ export class PdfService {
   constructor() {}
 
   async generatePdf(jsonData: any[]) {
-    const doc = new jsPDF("landscape");
+    const doc = new jsPDF();
 
     // A dokumentum magassága és szélessége.
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -18,11 +18,15 @@ export class PdfService {
     // Minden belépéshez kezdeti függőleges pozíció.
     let yPosition = 10;
 
+    // Sor magassága.
+    const lineHeight = 6;
+
     // Végigmenni a bejegyzéseken.
     for (const entry of jsonData)
     {
       // Ellenőrizni, hogy van-e elég hely a következő bejegyzéshez.
-      if (yPosition + 90 > pageHeight) {
+      if (yPosition + 50 > pageHeight)
+      {
         // Ha nincs akkor adjon hozzá egy új oldalt a dokumentumhoz.
         doc.addPage();
         // A tetejére újra beállítani a kezdeti függőleges pozíciót.
@@ -45,12 +49,12 @@ export class PdfService {
         {
           img.onload = () =>
           {
-            // A kép eredeti magassága és szélessége
+            // A kép eredeti magassága és szélessége.
             const imgWidth = img.width;
             const imgHeight = img.height;
 
             // A kép maximum pagasságának és szélességének beállítása.
-            const maxWidth = pageWidth / 2;
+            const maxWidth = pageWidth / 3;
             const maxHeight = pageHeight - yPosition;
 
             // A képarány megtartása.
@@ -71,34 +75,37 @@ export class PdfService {
             }
 
             // A kép hozzáadása a dokumentumhoz.
-            doc.addImage(img, 'PNG', 10, yPosition, scaledWidth, scaledHeight); // Image at (10, yPosition)
+            doc.addImage(img, 'PNG', 10, yPosition, scaledWidth, scaledHeight);
             resolve();
           };
         });
       }
 
-      // A szöveg elhelyezkedésének beállítása.
-      const textX = 10;
-      const textYTitle = yPosition + scaledHeight + 10;
-      const textYTime = textYTitle + 10;
-
       // Cím hozzáadása.
-      const titleLines = doc.splitTextToSize(entry.title, pageWidth / 2);
+      const titleLines = doc.splitTextToSize(entry.title, pageWidth / 2 - 22);
       doc.setFontSize(20);
-      doc.text(titleLines, textX, textYTitle);
+      doc.text(titleLines, pageWidth / 3 + 15, yPosition + 8);
 
       // Időbélyeg hozzáadása.
-      const timestampLines = doc.splitTextToSize(`${entry.timestamp}`, pageWidth / 2);
+      const timestampLines = doc.splitTextToSize(`${entry.timestamp}`, pageWidth / 2 - 22);
       doc.setFontSize(14);
-      doc.text(timestampLines, textX, textYTime);
+      doc.text(timestampLines, pageWidth / 3 + 15, yPosition + 27);
 
       // Jegyzet hozzáadása.
-      const noteLines = doc.splitTextToSize(`${entry.note}`, pageWidth / 2 - 20);
+      const noteLines = doc.splitTextToSize(`${entry.note}`, pageWidth - 22);
       doc.setFontSize(14);
-      doc.text(noteLines, pageWidth / 2 + 15, yPosition + 5);
+      const noteYPosition = yPosition + scaledHeight + 10;
+      doc.text(noteLines, 12, noteYPosition);
 
-      // A következő bejegyzés miatt (hogy legyen elég hely közöttük) a kezdeti függőleges pozíció felülírása.
-      yPosition += Math.max(scaledHeight + 60, 90) + 10;
+      // Frissíteni az yPosition-t a következő bejegyzéshez.
+      yPosition = noteYPosition + (noteLines.length * lineHeight) + 10;
+
+      // A következő bejegyzéssel ne folyjon össze.
+      if (yPosition + 60 > pageHeight)
+      {
+        doc.addPage();
+        yPosition = 10;
+      }
     }
 
     // A PDF elmentése.
