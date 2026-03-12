@@ -5,6 +5,8 @@ import { EntryService } from '../services/entry';
 import { VideoService } from '../services/video';
 import { PdfService } from '../services/pdf';
 import DOMPurify from 'dompurify';
+import { SettingsService } from '../services/settings';
+import { Settings } from '../models/settings';
 
 @Component({
   selector: 'app-editing-view',
@@ -18,9 +20,15 @@ export class EditingView {
   currentEntryId: number = 0;
   editMode: boolean = false;
   private note: any[] = [];
+  settingsLocal: Settings = new Settings();
   private unsubscribe$ = new Subject<void>();
 
-  constructor(private entryService: EntryService, private videoService: VideoService, private pdfService: PdfService) {}
+  constructor(
+    private entryService: EntryService,
+    private videoService: VideoService,
+    private settingsSerivce: SettingsService,
+    private pdfService: PdfService
+  ) {}
 
   ngOnInit(): void {
     this.entry$ = this.entryService.getEntry();
@@ -51,6 +59,10 @@ export class EditingView {
     this.entryService.getArrayEntry().pipe(takeUntil(this.unsubscribe$)).subscribe(currentNote => {
       this.note = currentNote;
     });
+
+    this.settingsSerivce.settings$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentSettings => {
+      this.settingsLocal = currentSettings;
+    });
   }
 
   ngOnDestroy(): void {
@@ -59,11 +71,11 @@ export class EditingView {
   }
 
   editingRewind(): void {
-    this.videoService.emitRewind();
+    this.videoService.emitRewind(this.settingsLocal.thumbnailRewindRate);
   }
 
   editingForward(): void {
-    this.videoService.emitForward();
+    this.videoService.emitForward(this.settingsLocal.thumbnailForwardRate);
   }
 
   addTitle(event: Event): void {

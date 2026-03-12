@@ -69,14 +69,14 @@ export class VideoNavbar {
    * Hátra tekerés kibocsátása.
    */
   onRewind(): void {
-    this.videoService.emitRewind();
+    this.videoService.emitRewind(10);
   }
 
   /**
    * Előre tekerés kibocsátása.
    */
   onForward(): void {
-    this.videoService.emitForward();
+    this.videoService.emitForward(10);
   }
 
   /**

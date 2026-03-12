@@ -36,8 +36,6 @@ export class VideoPlayer {
   isSettings$!: Observable<boolean>;
   isSettingsLocal: boolean = false;
   fullscreenRequestLocal: boolean = false;
-  rewindSeconds: number = 10;
-  forwardSeconds: number = 10;
   timestamp: string = "00:00:00.000";
   private unsubscribe$ = new Subject<void>();
 
@@ -49,8 +47,12 @@ export class VideoPlayer {
 
   ngAfterViewInit(): void {
     this.videoService.togglePlay.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.togglePlay());
-    this.videoService.rewind.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.rewind());
-    this.videoService.forward.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.forward());
+    this.videoService.rewind.pipe(takeUntil(this.unsubscribe$)).subscribe((moveRate: number) => {
+      this.rewind(moveRate);
+    });
+    this.videoService.forward.pipe(takeUntil(this.unsubscribe$)).subscribe((moveRate: number) => {
+      this.forward(moveRate)
+    });
     this.videoService.timestamp$.pipe(takeUntil(this.unsubscribe$)).subscribe(timestamp => {
       this.timestamp = timestamp;
     });
@@ -172,17 +174,17 @@ export class VideoPlayer {
   /**
    * A videó hátra tekerése.
    */
-  rewind(): void {
+  rewind(moveRate: number): void {
     const video = this.videoElement.nativeElement;
-    video.currentTime = Math.max(video.currentTime - this.rewindSeconds, 0);
+    video.currentTime = Math.max(video.currentTime - moveRate, 0);
   }
 
   /**
    * A videó előre tekerése.
    */
-  forward(): void {
+  forward(moveRate: number): void {
     const video = this.videoElement.nativeElement;
-    video.currentTime = Math.min(video.currentTime + this.forwardSeconds, video.duration);
+    video.currentTime = Math.min(video.currentTime + moveRate, video.duration);
     if (video.currentTime === video.duration)
     {
       video.pause();

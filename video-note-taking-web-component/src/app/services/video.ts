@@ -29,14 +29,14 @@ export class VideoService {
   private thumbnailSource = new BehaviorSubject<string>("");
   thumbnail$ = this.thumbnailSource.asObservable();
 
-  private rewindSeconds: number = 10;
-  private forwardSeconds: number = 10;
+  //private rewindSeconds: number = 10;
+  //private forwardSeconds: number = 10;
   private timestampSource = new BehaviorSubject<string>("00:00:00.000");
   timestamp$ = this.timestampSource.asObservable();
 
   togglePlay = new EventEmitter<void>();
-  rewind = new EventEmitter<void>();
-  forward = new EventEmitter<void>();
+  rewind = new EventEmitter<number>();
+  forward = new EventEmitter<number>();
   jumpToTimestamp = new EventEmitter<void>();
 
   getPlaying(): Observable<boolean> {
@@ -107,19 +107,19 @@ export class VideoService {
     this.togglePlay.emit();
   }
 
-  emitRewind(): void {
-    this.rewind.emit();
+  emitRewind(moveRate: number): void {
+    this.rewind.emit(moveRate);
   }
 
-  emitForward(): void {
-    this.forward.emit();
+  emitForward(moveRate: number): void {
+    this.forward.emit(moveRate);
   }
 
   emitJumpToTimestamp(): void {
     this.jumpToTimestamp.emit();
   }
 
-  getRewindSeconds(): number {
+  /*getRewindSeconds(): number {
     return this.rewindSeconds;
   }
 
@@ -133,7 +133,7 @@ export class VideoService {
 
   setForwardSeconds(seconds: number): void {
     this.forwardSeconds = seconds;
-  }
+  }*/
 
   getTimestamp(): Observable<string> {
     return this.timestamp$;

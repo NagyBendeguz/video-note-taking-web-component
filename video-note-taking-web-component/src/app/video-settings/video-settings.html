@@ -1,6 +1,6 @@
 <div class="settings-div">
     <h2>Settings</h2>
-    <h3>Default Video Settings</h3>
+    <h3>Video Navbar Settings</h3>
     <ul>
         <li>
             <label>Playback Speed: </label>
@@ -12,6 +12,9 @@
             </select>
         </li>
         <li>
+            <label>Video Move Rate in Seconds: </label>
+        </li>
+        <li>
             <label>Subtitles: </label>
             <button (click)="toggleSubtitles()">{{ isSubtitleVisible ? "Turn Off" : "Turn On" }}</button>
         </li>
@@ -20,7 +23,7 @@
             <button (click)="toggleOffset()">{{ isOffsetNegative ? "Turn Off" : "Turn On" }}</button>
         </li>
     </ul>
-    <h3>App Settings</h3>
+    <h3>Editing Settings</h3>
     <ul>
         <li>Language</li>
         <li>Thumbnail Resolution</li>
@@ -29,8 +32,14 @@
         <li>Confirm Cancel</li>
         <li>Confirm Delete</li>
         <li>Default Folder Location</li>
-        <li>Video Move Rate</li>
-        <li>Thumbnail Move Rate</li>
+        <li>
+            <label>Thumbnail Forward Rate in Seconds: </label>
+            <input type="number" [value]="(settings$ | async)?.thumbnailForwardRate" (input)="setThumbnailForwardRate($event)">
+        </li>
+        <li>
+            <label>Thumbnail Rewind Rate in Seconds: </label>
+            <input type="number" [value]="(settings$ | async)?.thumbnailRewindRate" (input)="setThumbnailRewindRate($event)">
+        </li>
         <li>Auto Save</li>
         <li>Font Size</li>
     </ul>
