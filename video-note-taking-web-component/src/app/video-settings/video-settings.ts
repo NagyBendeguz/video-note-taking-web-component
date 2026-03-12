@@ -8,7 +8,9 @@ import { SettingsService } from '../services/settings';
   styleUrl: './video-settings.sass',
 })
 export class VideoSettings {
-  playbackSpeeds = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+  playbackSpeeds: number[] = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+  isSubtitleVisible: boolean = false;
+  isOffsetNegative: boolean = true;
 
   constructor (private settingsSerivce: SettingsService) {}
 
@@ -16,5 +18,16 @@ export class VideoSettings {
     const target = event.target as HTMLSelectElement;
     const speed = parseFloat(target.value);
     this.settingsSerivce.setPlaybackRate(speed);
+  }
+
+  toggleSubtitles(): void {
+    this.settingsSerivce.toggleSubtitles();
+    this.isSubtitleVisible = !this.isSubtitleVisible;
+  }
+
+  toggleOffset(): void {
+    const value = this.isOffsetNegative ? "0px" : "-65px";
+    document.documentElement.style.setProperty("--video-navbar-offset", value);
+    this.isOffsetNegative = !this.isOffsetNegative;
   }
 }

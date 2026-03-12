@@ -13,8 +13,22 @@ export class VideoPlayer {
   @Input() src: string = "";
   private srcSubject = new BehaviorSubject<string>(this.src);
   src$: Observable<string> = this.srcSubject.asObservable();
+
+  @Input() subtitle: string = "";
+  private subtitleSubject = new BehaviorSubject<string>(this.subtitle);
+  subtitle$: Observable<string> = this.subtitleSubject.asObservable();
+
+  @Input() lang: string = "";
+  private langSubject = new BehaviorSubject<string>(this.lang);
+  lang$: Observable<string> = this.langSubject.asObservable();
+
+  label: string = "";
+  private labelSubject = new BehaviorSubject<string>(this.label);
+  label$: Observable<string> = this.labelSubject.asObservable();
+
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLDivElement>;
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
+  @ViewChild('subtitlesTrack') subtitlesTrack!: ElementRef<HTMLTrackElement>;
   @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
   volumePercentageLocal: number = 100;
   isNote$!: Observable<boolean>;
@@ -70,14 +84,22 @@ export class VideoPlayer {
       this.isSettingsLocal = currentSettings;
     });
 
+    // Teljes képrenyős mód változtatása.
     this.videoService.fullscreenRequest$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentFullscreenRequest => {
       this.fullscreenRequestLocal = currentFullscreenRequest;
       this.setFullscreen();
       this.cdr.detectChanges();
     });
 
+    // Videó lejátszási sebességének változtatása.
     this.settingsService.playbackRate$.pipe(takeUntil(this.unsubscribe$)).subscribe(rate => {
       this.setVideoPlaybackRate(rate);
+    });
+
+    // Videó feliratának ki-be kapcsolása.
+    this.settingsService.getSubtitleVisibility().pipe(takeUntil(this.unsubscribe$)).subscribe((isVisible) => {
+      const track = this.subtitlesTrack.nativeElement as HTMLTrackElement;
+      track.track.mode = isVisible ? "showing" : "hidden";
     });
   }
 
@@ -91,6 +113,30 @@ export class VideoPlayer {
       {
         const video = this.videoElement.nativeElement;
         video.src = changes['src'].currentValue;
+      }
+    }
+    if (changes['subtitle'])
+    {
+      this.subtitleSubject.next(changes['subtitle'].currentValue);
+
+      // Ha nem ez az első alkalom a forrás beállítására.
+      if (changes['subtitle'].previousValue)
+      {
+        let track = this.subtitlesTrack.nativeElement;
+        track.src = changes['subtitle'].currentValue;
+      }
+    }
+    if (changes['lang'])
+    {
+      this.langSubject.next(changes['lang'].currentValue);
+      this.labelSubject.next(this.getLanguageLabel(changes['lang'].currentValue));
+
+      // Ha nem ez az első alkalom a forrás beállítására.
+      if (changes['lang'].previousValue)
+      {
+        let track = this.subtitlesTrack.nativeElement;
+        track.lang = changes['lang'].currentValue;
+        track.label = this.getLanguageLabel(changes['lang'].currentValue);
       }
     }
   }
@@ -285,5 +331,19 @@ export class VideoPlayer {
   private setVideoPlaybackRate(rate: number): void {
     const video = this.videoElement.nativeElement;
     video.playbackRate = rate;
+  }
+
+  /**
+   * Átalakítja a rövidített nyelvet pl.: en -> English.
+   * @param lang - A rövidített nyelv a lang-hoz.
+   * @returns - Az átalakított nyelv a label-hez.
+   */
+  getLanguageLabel(lang: string): string {
+    try {
+      return new Intl.DisplayNames(['en'], { type: 'language' }).of(lang) || "";
+    }
+    catch (error) {
+      return 'Unknown Language';
+    }
   }
 }

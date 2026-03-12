@@ -3,6 +3,7 @@
         <div (click)="togglePlay()" class="video-div">
             <video (loadedmetadata)="onVideoMetadataLoaded($event)" (timeupdate)="setCurrentTime()" #videoElement>
                 <source [src]="src$ | async" type="video/mp4">
+                <track [src]="subtitle$ | async" kind="subtitles" [srclang]="lang$ | async" [label]="label$ | async" #subtitlesTrack>
                 Your browser does not support the video tag.
             </video>
         </div>

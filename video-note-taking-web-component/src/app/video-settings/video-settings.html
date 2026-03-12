@@ -3,15 +3,22 @@
     <h3>Default Video Settings</h3>
     <ul>
         <li>
-            <label for="speedSelector">Playback Speed: </label>
-            <select id="speedSelector" (change)="changePlaybackSpeed($event)">
+            <label>Playback Speed: </label>
+            <select (change)="changePlaybackSpeed($event)">
                 @for (speed of playbackSpeeds; track $index)
                 {
                     <option [value]="speed" [selected]="speed === 1">{{speed}}x</option>
                 }
             </select>
         </li>
-        <li>Subtitles</li>
+        <li>
+            <label>Subtitles: </label>
+            <button (click)="toggleSubtitles()">{{ isSubtitleVisible ? "Turn Off" : "Turn On" }}</button>
+        </li>
+        <li>
+            <label>Video Navbar Offset: </label>
+            <button (click)="toggleOffset()">{{ isOffsetNegative ? "Turn Off" : "Turn On" }}</button>
+        </li>
     </ul>
     <h3>App Settings</h3>
     <ul>
