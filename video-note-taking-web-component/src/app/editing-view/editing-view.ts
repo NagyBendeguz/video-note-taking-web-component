@@ -3,6 +3,7 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 import { Entry } from '../models/entry';
 import { EntryService } from '../services/entry';
 import { VideoService } from '../services/video';
+import { PdfService } from '../services/pdf';
 
 @Component({
   selector: 'app-editing-view',
@@ -18,7 +19,7 @@ export class EditingView {
   private note: any[] = [];
   private unsubscribe$ = new Subject<void>();
 
-  constructor(private entryService: EntryService, private videoService: VideoService) {}
+  constructor(private entryService: EntryService, private videoService: VideoService, private pdfService: PdfService) {}
 
   ngOnInit(): void {
     this.entry$ = this.entryService.getEntry();
@@ -107,7 +108,7 @@ export class EditingView {
   }
 
   exportNote(): void {
-
+    this.pdfService.generatePdf(this.note);
   }
 
   bold(): void {
