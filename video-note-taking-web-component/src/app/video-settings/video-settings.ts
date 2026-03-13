@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { SettingsService } from '../services/settings';
 import { Settings } from '../models/settings';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { EntryService } from '../services/entry';
 import DOMPurify from 'dompurify';
 
 @Component({
@@ -18,7 +19,7 @@ export class VideoSettings {
   isOffsetNegative: boolean = true;
   private unsubscribe$ = new Subject<void>();
 
-  constructor (private settingsSerivce: SettingsService) {}
+  constructor (private settingsSerivce: SettingsService, private entryService: EntryService) {}
 
   ngOnInit(): void {
     this.settings$ = this.settingsSerivce.getSettings();
@@ -33,28 +34,42 @@ export class VideoSettings {
     this.unsubscribe$.complete();
   }
 
+  /**
+   * Beállítani a videó lejátszási sebességét.
+   * @param event - A kívánt lejátszási sebesség.
+   */
   changePlaybackSpeed(event: Event): void {
     const target = event.target as HTMLSelectElement;
     const speed = parseFloat(target.value);
     this.settingsSerivce.setPlaybackRate(speed);
   }
 
+  /**
+   * A videó feliratok ki és be kapcsolása.
+   */
   toggleSubtitles(): void {
     this.settingsSerivce.toggleSubtitles();
     this.isSubtitleVisible = !this.isSubtitleVisible;
   }
 
+  /**
+   * A videó vezérlősávjának a videóval való átfedésének ki és be kapcsolása.
+   */
   toggleOffset(): void {
     const value = this.isOffsetNegative ? "0px" : "-65px";
     document.documentElement.style.setProperty("--video-navbar-offset", value);
     this.isOffsetNegative = !this.isOffsetNegative;
   }
 
+  /**
+   * A szerkesztési nézetben az idő előretekerés mértékegységének változtatása.
+   * @param event - A szerkesztési nézetben az idő előretekerésére beállítani kívánt mértékegység.
+   */
   setThumbnailForwardRate(event: Event): void {
     const dirtyThumbnailForwardRate = (event.target as HTMLInputElement).value;
     const sanitizedValue = Number(DOMPurify.sanitize(dirtyThumbnailForwardRate));
 
-    // Ellenőrizni, hogy a bemenet egy érvényes szám-e.
+    // Ellenőrizni, hogy a bemenet az egy érvényes szám-e.
     if (isNaN(sanitizedValue) || sanitizedValue <= 0)
     {
       this.settingsLocal.thumbnailForwardRate = 1;
@@ -65,11 +80,15 @@ export class VideoSettings {
     }
   }
 
+  /**
+   * A szerkesztési nézetben az idő hátratekerés mértékegységének változtatása.
+   * @param event - A szerkesztési nézetben az idő hátratekerésére beállítani kívánt mértékegység.
+   */
   setThumbnailRewindRate(event: Event): void {
     const dirtyThumbnailRewindRate = (event.target as HTMLInputElement).value;
     const sanitizedValue = Number(DOMPurify.sanitize(dirtyThumbnailRewindRate));
 
-    // Ellenőrizni, hogy a bemenet egy érvényes szám-e.
+    // Ellenőrizni, hogy a bemenet az egy érvényes szám-e.
     if (isNaN(sanitizedValue) || sanitizedValue <= 0)
     {
       this.settingsLocal.thumbnailRewindRate = 1;
@@ -77,6 +96,32 @@ export class VideoSettings {
     else
     {
       this.settingsLocal.thumbnailRewindRate = sanitizedValue;
+    }
+  }
+
+  /**
+   * A kiválasztott JSON fájl betöltése.
+   * @param event - A betölteni kívánt JSON fájl.
+   */
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length)
+    {
+      const file = input.files[0];
+      const reader = new FileReader();
+
+      reader.onload = (e: ProgressEvent<FileReader>) =>
+      {
+        try {
+          const jsonData = JSON.parse(e.target?.result as string);
+          this.entryService.setArrayEntry(jsonData);
+        }
+        catch (error) {
+          console.error("Error parsing JSON: ", error);
+        }
+      };
+
+      reader.readAsText(file);
     }
   }
 }

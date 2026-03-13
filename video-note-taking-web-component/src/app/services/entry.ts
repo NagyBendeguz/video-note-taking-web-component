@@ -27,7 +27,7 @@ export class EntryService {
   }
 
   resetEntry(entry: Entry): void {
-    this.entrySource.next(new Entry(entry.thumbnail, entry.timestamp));
+    this.entrySource.next(new Entry(entry.timestamp, entry.thumbnail));
   }
 
   getEditEntry(): Observable<Entry> {

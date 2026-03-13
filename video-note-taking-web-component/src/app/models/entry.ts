@@ -1,15 +1,15 @@
 export class Entry {
     entryId: number;
     title: string;
-    thumbnail: string;
     timestamp: string;
     note: string;
+    thumbnail: string;
 
-    constructor(thumbnail: string = "", timestamp: string = "00:00:00.000") {
+    constructor(timestamp: string = "00:00:00.000", thumbnail: string = "") {
         this.entryId = 0;
         this.title = "";
-        this.thumbnail = thumbnail;
         this.timestamp = timestamp;
         this.note = "";
+        this.thumbnail = thumbnail;
     }
 }

@@ -1,6 +1,13 @@
 <div class="settings-div">
     <h2>Settings</h2>
-    <h3>Video Navbar Settings</h3>
+    <h3>Load Note</h3>
+    <ul>
+        <li>
+            <label>Load Note: </label>
+            <input type="file" (change)="onFileChange($event)" accept=".json">
+        </li>
+    </ul>
+    <h3>Video Player Settings</h3>
     <ul>
         <li>
             <label>Playback Speed: </label>
