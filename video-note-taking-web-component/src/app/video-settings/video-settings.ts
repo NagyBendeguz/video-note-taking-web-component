@@ -3,6 +3,7 @@ import { SettingsService } from '../services/settings';
 import { Settings } from '../models/settings';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { EntryService } from '../services/entry';
+import Ajv from 'ajv';
 import DOMPurify from 'dompurify';
 
 @Component({
@@ -18,6 +19,25 @@ export class VideoSettings {
   isSubtitleVisible: boolean = false;
   isOffsetNegative: boolean = true;
   private unsubscribe$ = new Subject<void>();
+  private ajv = new Ajv();
+
+  // A betölteni kívánt JSON fájl struktúrája.
+  private jsonSchema =
+  {
+    type: "array",
+    items: {
+      type: "object",
+      properties: {
+        entryId: { type: "integer" },
+        title: { type: "string" },
+        timestamp: { type: "string" },
+        note: { type: "string" },
+        thumbnail: { type: "string" }
+      },
+      required: ["entryId", "title", "timestamp", "note", "thumbnail"],
+      additionalProperties: false,
+    }
+  };
 
   constructor (private settingsSerivce: SettingsService, private entryService: EntryService) {}
 
@@ -105,6 +125,7 @@ export class VideoSettings {
    */
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
+
     if (input.files && input.files.length)
     {
       const file = input.files[0];
@@ -114,7 +135,20 @@ export class VideoSettings {
       {
         try {
           const jsonData = JSON.parse(e.target?.result as string);
-          this.entryService.setArrayEntry(jsonData);
+          
+          // A JSON fájl struktúra ellenőrzése.
+          const valid = this.ajv.validate(this.jsonSchema, jsonData);
+          if (!valid)
+          {
+            console.error("Invalid JSON structure: ", this.ajv.errors);
+            return;
+          }
+
+          // A JSON fájlban található minden bejegyzés tisztítása.
+          const sanitizedData = jsonData.map((entry: any) => this.sanitizeInput(entry));
+
+          // A megtisztított jegyzet betöltése.
+          this.entryService.setArrayEntry(sanitizedData);
         }
         catch (error) {
           console.error("Error parsing JSON: ", error);
@@ -123,5 +157,28 @@ export class VideoSettings {
 
       reader.readAsText(file);
     }
+  }
+
+  /**
+   * A paraméterként megkapott JSON fájl tisztítása.
+   * @param data - A tisztítani kívánt JSON fájl.
+   * @returns - A megtisztított JSON fájl.
+   */
+  private sanitizeInput(data: any) {
+    const sanitizedData: any = {};
+
+    Object.keys(data).forEach(key =>
+    {
+      if (typeof data[key] === "string")
+      {
+        sanitizedData[key] = DOMPurify.sanitize(data[key]).trim();
+      }
+      else
+      {
+        sanitizedData[key] = data[key];
+      }
+    });
+
+    return sanitizedData;
   }
 }
