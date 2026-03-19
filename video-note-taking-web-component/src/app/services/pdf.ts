@@ -109,6 +109,6 @@ export class PdfService {
     }
 
     // A PDF elmentése.
-    doc.save("note.pdf");
+    doc.save('note.pdf');
   }
 }

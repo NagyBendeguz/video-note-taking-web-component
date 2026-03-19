@@ -10,19 +10,19 @@ import { SettingsService } from '../services/settings';
   styleUrl: './video-player.sass',
 })
 export class VideoPlayer {
-  @Input() src: string = "";
+  @Input() src: string = '';
   private srcSubject = new BehaviorSubject<string>(this.src);
   src$: Observable<string> = this.srcSubject.asObservable();
 
-  @Input() subtitle: string = "";
+  @Input() subtitle: string = '';
   private subtitleSubject = new BehaviorSubject<string>(this.subtitle);
   subtitle$: Observable<string> = this.subtitleSubject.asObservable();
 
-  @Input() lang: string = "";
+  @Input() lang: string = '';
   private langSubject = new BehaviorSubject<string>(this.lang);
   lang$: Observable<string> = this.langSubject.asObservable();
 
-  label: string = "";
+  label: string = '';
   private labelSubject = new BehaviorSubject<string>(this.label);
   label$: Observable<string> = this.labelSubject.asObservable();
 
@@ -36,7 +36,8 @@ export class VideoPlayer {
   isSettings$!: Observable<boolean>;
   isSettingsLocal: boolean = false;
   fullscreenRequestLocal: boolean = false;
-  timestamp: string = "00:00:00.000";
+  timestamp: string = '00:00:00.000';
+  private isVideoNavbarOffset!: boolean;
   private unsubscribe$ = new Subject<void>();
 
   constructor(private cdr: ChangeDetectorRef, private videoService: VideoService, private settingsService: SettingsService) {}
@@ -101,7 +102,11 @@ export class VideoPlayer {
     // Videó feliratának ki-be kapcsolása.
     this.settingsService.getSubtitleVisibility().pipe(takeUntil(this.unsubscribe$)).subscribe((isVisible) => {
       const track = this.subtitlesTrack.nativeElement as HTMLTrackElement;
-      track.track.mode = isVisible ? "showing" : "hidden";
+      track.track.mode = isVisible ? 'showing' : 'hidden';
+    });
+
+    this.settingsService.videoNavbarOffset$.pipe(takeUntil(this.unsubscribe$)).subscribe(offset => {
+      this.isVideoNavbarOffset = offset;
     });
   }
 
@@ -245,6 +250,7 @@ export class VideoPlayer {
     const player = this.videoPlayer.nativeElement;
     if (this.fullscreenRequestLocal)
     {
+      this.setVideoNabarOffset(true);
       player.requestFullscreen();
     }
     else if (document.fullscreenElement)
@@ -264,6 +270,11 @@ export class VideoPlayer {
         this.videoService.setFullscreen(false);
       }
     });
+  }
+
+  private setVideoNabarOffset(offset: boolean): void {
+    const value = offset ? '0px' : '-65px';
+    document.documentElement.style.setProperty('--video-navbar-offset', value);
   }
 
   /**
@@ -296,7 +307,7 @@ export class VideoPlayer {
   private createCurrentThumbnail(): void {
     const video = this.videoElement.nativeElement;
     const canvas = this.canvasElement.nativeElement;
-    const context = canvas.getContext("2d");
+    const context = canvas.getContext('2d');
 
     if (context)
     {
@@ -307,7 +318,7 @@ export class VideoPlayer {
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
       // Átalakítani a videó frame-t base64-re.
-      const dataURL = canvas.toDataURL("image/png");
+      const dataURL = canvas.toDataURL('image/png');
 
       this.videoService.setThumbnail(dataURL);
     }
@@ -342,7 +353,7 @@ export class VideoPlayer {
    */
   getLanguageLabel(lang: string): string {
     try {
-      return new Intl.DisplayNames(['en'], { type: 'language' }).of(lang) || "";
+      return new Intl.DisplayNames(['en'], { type: 'language' }).of(lang) || '';
     }
     catch (error) {
       return 'Unknown Language';

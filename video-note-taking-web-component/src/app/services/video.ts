@@ -31,7 +31,7 @@ export class VideoService {
 
   //private rewindSeconds: number = 10;
   //private forwardSeconds: number = 10;
-  private timestampSource = new BehaviorSubject<string>("00:00:00.000");
+  private timestampSource = new BehaviorSubject<string>('00:00:00.000');
   timestamp$ = this.timestampSource.asObservable();
 
   togglePlay = new EventEmitter<void>();

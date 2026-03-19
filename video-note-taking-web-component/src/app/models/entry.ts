@@ -5,7 +5,7 @@ export class Entry {
     note: string;
     thumbnail: string;
 
-    constructor(timestamp: string = "00:00:00.000", thumbnail: string = "") {
+    constructor(timestamp: string = '00:00:00.000', thumbnail: string = '') {
         this.entryId = 0;
         this.title = "";
         this.timestamp = timestamp;

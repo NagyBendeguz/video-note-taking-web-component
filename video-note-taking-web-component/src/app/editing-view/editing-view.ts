@@ -100,7 +100,7 @@ export class EditingView {
       this.editMode = false;
       this.entryService.setEditMode(false);
     }
-    else if (this.entryLocal.title !== "" || this.entryLocal.note !== "")
+    else if (this.entryLocal.title !== '' || this.entryLocal.note !== '')
     {
       this.currentEntryId++;
       this.entryLocal.entryId = this.currentEntryId;
@@ -113,7 +113,7 @@ export class EditingView {
    * Törölni a jelenleg készülő bejegyzést.
    */
   cancelEntry(): void {
-    if (this.entryLocal.title !== "" || this.entryLocal.note !== "")
+    if (this.entryLocal.title !== '' || this.entryLocal.note !== '')
     {
       this.entryService.resetEntry(this.entryLocal);
       this.entryService.setEditMode(false);
@@ -185,7 +185,7 @@ export class EditingView {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = "note.json";
+    a.download = 'note.json';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

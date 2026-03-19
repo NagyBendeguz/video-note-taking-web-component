@@ -12,6 +12,9 @@ export class SettingsService {
   private playbackRateSource = new BehaviorSubject<number>(1);
   playbackRate$ = this.playbackRateSource.asObservable();
 
+  private videoNavbarOffsetSource = new BehaviorSubject<boolean>(true);
+  videoNavbarOffset$ = this.videoNavbarOffsetSource.asObservable();
+
   private isVisible = new BehaviorSubject<boolean>(false);
 
   getSettings(): Observable<Settings> {
@@ -24,6 +27,10 @@ export class SettingsService {
 
   setPlaybackRate(speed: number): void {
     this.playbackRateSource.next(speed);
+  }
+
+  setVideoNavbarOffset(isOffset: boolean): void {
+    this.videoNavbarOffsetSource.next(isOffset);
   }
 
   toggleSubtitles(): void {

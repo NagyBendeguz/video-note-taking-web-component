@@ -1,17 +1,18 @@
 import { Shortcuts } from "./shortcuts";
 
 export class Settings {
-    language: string = "en";
-    thumbnailResolution: string = "";
+    language: string = 'en';
+    thumbnailResolution: string = '';
     convertInput: boolean = false;
-    theme: string = "";
+    theme: string = '';
     confirmCancel: boolean = false;
     confirmDelete: boolean = true;
-    defaultFolderLocation: string = "";
+    defaultFolderLocation: string = '';
     videoMoveRate: number = 0;
     thumbnailForwardRate: number = 1;
     thumbnailRewindRate: number = 1;
     autoSave: boolean = false;
     fontSize: number = 16;
+    videoNavbarOffset: boolean = true;
     shortcuts: Shortcuts = new Shortcuts();
 }

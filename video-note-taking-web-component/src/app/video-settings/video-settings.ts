@@ -76,8 +76,9 @@ export class VideoSettings {
    * A videó vezérlősávjának a videóval való átfedésének ki és be kapcsolása.
    */
   toggleOffset(): void {
-    const value = this.isOffsetNegative ? "0px" : "-65px";
-    document.documentElement.style.setProperty("--video-navbar-offset", value);
+    const value = this.isOffsetNegative ? '0px' : '-65px';
+    document.documentElement.style.setProperty('--video-navbar-offset', value);
+    this.settingsSerivce.setVideoNavbarOffset(this.isOffsetNegative);
     this.isOffsetNegative = !this.isOffsetNegative;
   }
 
@@ -140,7 +141,7 @@ export class VideoSettings {
           const valid = this.ajv.validate(this.jsonSchema, jsonData);
           if (!valid)
           {
-            console.error("Invalid JSON structure: ", this.ajv.errors);
+            console.error('Invalid JSON structure: ', this.ajv.errors);
             return;
           }
 
@@ -151,7 +152,7 @@ export class VideoSettings {
           this.entryService.setArrayEntry(sanitizedData);
         }
         catch (error) {
-          console.error("Error parsing JSON: ", error);
+          console.error('Error parsing JSON: ', error);
         }
       };
 
@@ -169,7 +170,7 @@ export class VideoSettings {
 
     Object.keys(data).forEach(key =>
     {
-      if (typeof data[key] === "string")
+      if (typeof data[key] === 'string')
       {
         sanitizedData[key] = DOMPurify.sanitize(data[key]).trim();
       }
