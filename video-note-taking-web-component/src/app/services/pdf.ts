@@ -8,7 +8,7 @@ export class PdfService {
 
   constructor() {}
 
-  async generatePdf(jsonData: any[]) {
+  async generatePDF(jsonData: any[]) {
     const doc = new jsPDF();
 
     // A dokumentum magassága és szélessége.
@@ -108,7 +108,7 @@ export class PdfService {
       }
     }
 
-    // A PDF elmentése.
+    // A PDF fájl mentése.
     doc.save('note.pdf');
   }
 }

@@ -43,7 +43,6 @@
         <li>Theme</li>
         <li>Confirm Cancel</li>
         <li>Confirm Delete</li>
-        <li>Default Folder Location</li>
         <li>
             <label>Thumbnail Forward Rate in Seconds: </label>
             <input type="number" [value]="(settings$ | async)?.thumbnailForwardRate" (input)="setThumbnailForwardRate($event)">
@@ -52,7 +51,6 @@
             <label>Thumbnail Rewind Rate in Seconds: </label>
             <input type="number" [value]="(settings$ | async)?.thumbnailRewindRate" (input)="setThumbnailRewindRate($event)">
         </li>
-        <li>Auto Save</li>
         <li>Font Size</li>
     </ul>
     <h3>Shortcuts</h3>

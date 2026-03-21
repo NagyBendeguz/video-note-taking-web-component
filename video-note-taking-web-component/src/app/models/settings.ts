@@ -7,11 +7,9 @@ export class Settings {
     theme: string = '';
     confirmCancel: boolean = false;
     confirmDelete: boolean = true;
-    defaultFolderLocation: string = '';
     videoMoveRate: number = 0;
     thumbnailForwardRate: number = 1;
     thumbnailRewindRate: number = 1;
-    autoSave: boolean = false;
     fontSize: number = 16;
     videoNavbarOffset: boolean = true;
     shortcuts: Shortcuts = new Shortcuts();

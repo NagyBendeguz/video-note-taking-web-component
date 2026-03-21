@@ -125,6 +125,10 @@ export class VideoSettings {
     }
   }
 
+  /**
+   * A videó vezérlősávjában az idő előretekerés mértékegységének változtatása.
+   * @param event - A videó vezérlősávjában az idő előretekerésére beállítani kívánt mértékegység.
+   */
   setVideoForwardRate(event: Event): void {
     const dirtyVideoForwardRate = (event.target as HTMLInputElement).value;
     const sanitizedValue = Number(DOMPurify.sanitize(dirtyVideoForwardRate)) || 10;
@@ -140,6 +144,10 @@ export class VideoSettings {
     }
   }
 
+  /**
+   * A videó vezérlősávjában az idő hátratekerés mértékegységének változtatása.
+   * @param event - A videó vezérlősávjában az idő hátratekerésére beállítani kívánt mértékegység.
+   */
   setVideoRewindRate(event: Event): void {
     const dirtyVideoForwardRate = (event.target as HTMLInputElement).value;
     const sanitizedValue = Number(DOMPurify.sanitize(dirtyVideoForwardRate)) || 10;

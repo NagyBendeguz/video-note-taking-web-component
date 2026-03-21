@@ -21,6 +21,7 @@ export class EditingView {
   editMode: boolean = false;
   private note: any[] = [];
   settingsLocal: Settings = new Settings();
+  showModal: boolean = false;
   private unsubscribe$ = new Subject<void>();
 
   constructor(
@@ -93,6 +94,9 @@ export class EditingView {
 
   // TODO - inkonzisztens állapot a video-note.html/.sass mentésénél entryId az 1 lesz minden mentés után
 
+  /**
+   * A jelenlegi bejegyzés mentése.
+   */
   saveEntry(): void {
     if (this.editMode)
     {
@@ -110,23 +114,45 @@ export class EditingView {
   }
 
   /**
-   * Törölni a jelenleg készülő bejegyzést.
+   * A leendő bejegyzés elvetésének kezdése, a megerősítő modal megnyitása.
    */
   cancelEntry(): void {
-    if (this.entryLocal.title !== '' || this.entryLocal.note !== '')
-    {
-      this.entryService.resetEntry(this.entryLocal);
-      this.entryService.setEditMode(false);
-      this.entryLocal = new Entry();
-    }
+    this.showModal = true;
   }
 
+  /**
+   * Törölni a jelenleg készülő bejegyzést.
+   */
+  confirmCancel(): void {
+    if (this.entryLocal.title !== '' || this.entryLocal.note !== '')
+    {
+      this.entryService.setEditMode(false);
+      this.entryLocal = new Entry(this.entryLocal.timestamp, this.entryLocal.thumbnail);
+      this.entryService.resetEntry(this.entryLocal);
+    }
+
+    this.cancelCancel();
+  }
+
+  /**
+   * A mégse visszavonása a megerősítő modal becsukásával.
+   */
+  cancelCancel(): void {
+    this.showModal = false;
+  }
+
+  /**
+   * A jegyzet mentése JSON fájlba.
+   */
   saveNote(): void {
     this.downloadJSON(this.note);
   }
 
+  /**
+   * A jegyzet exportálása PDF fájlba.
+   */
   exportNote(): void {
-    this.pdfService.generatePdf(this.note);
+    this.pdfService.generatePDF(this.note);
   }
 
   bold(): void {

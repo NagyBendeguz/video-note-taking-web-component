@@ -19,6 +19,15 @@
         <div class="save-cancel">
             <button (click)="cancelEntry()" [disabled]="(entry$ | async)?.title === '' && (entry$ | async)?.note === ''" class="cancel">Cancel Entry</button>
             <button (click)="saveEntry()" [disabled]="(entry$ | async)?.title === '' && (entry$ | async)?.note === ''" class="save">Save Entry</button>
+            @if (showModal)
+            {
+                <confirm-message
+                    [message]="'Yes Cancel'"
+                    [type]="'cancel'"
+                    (confirm)="confirmCancel()"
+                    (cancel)="cancelCancel()">
+                </confirm-message>
+            }
         </div>
     </div>
     <div class="note">
