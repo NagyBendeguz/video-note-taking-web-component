@@ -1,0 +1,10 @@
+<div class="modal">
+    <div class="modal-content">
+        <h4>Warning!</h4>
+        <p>Are you sure you want to {{ type }} it?</p>
+        <div class="modal-footer">
+            <button class="cancel" (click)="cancelButton()">Cancel</button>
+            <button class="delete" (click)="confirmButton()">{{ message }}</button>
+        </div>
+    </div>
+</div>

@@ -36,11 +36,17 @@ export class ExtendedView {
     this.unsubscribe$.complete();
   }
 
+  /**
+   * A bejegyzés szerekesztése.
+   */
   editEntry(): void {
     this.entryService.setEditEntry(this.entry);
     this.entryService.setEditMode(true);
   }
 
+  /**
+   * A bejegyzés törlésének kezdése, a megerősítő modal megnyitása.
+   */
   deleteEntry(): void {
     if (!this.editModeLocal)
     {
@@ -68,14 +74,23 @@ export class ExtendedView {
     this.cancelDelete();
   }
 
+  /**
+   * A törlés visszavonása a modal becsukásával.
+   */
   cancelDelete(): void {
     this.showModal = false;
   }
 
+  /**
+   * A bővített nézet összecsukása tömörített nézetbe, ennek az emit-álása.
+   */
   close() {
     this.onClose.emit();
   }
 
+  /**
+   * Az időbéllyegre kattintással a videó megfelelő pillanatára ugrani.
+   */
   jumpToTimestamp(): void {
     this.videoService.setTimestamp(this.entry.timestamp);
     this.videoService.emitJumpToTimestamp();

@@ -11,7 +11,7 @@ import { VideoSettings } from './video-settings/video-settings';
 import { CompressedView } from './compressed-view/compressed-view';
 import { ExtendedView } from './extended-view/extended-view';
 import { EditingView } from './editing-view/editing-view';
-import { ConfirmDelete } from './confirm-delete/confirm-delete';
+import { ConfirmMessage } from './confirm-message/confirm-message';
 
 @NgModule({
   declarations: [
@@ -23,7 +23,7 @@ import { ConfirmDelete } from './confirm-delete/confirm-delete';
     CompressedView,
     ExtendedView,
     EditingView,
-    ConfirmDelete
+    ConfirmMessage
   ],
   imports: [
     BrowserModule,
@@ -46,7 +46,7 @@ export class AppModule {
     const compressedViewElement = createCustomElement(CompressedView, { injector });
     const extendedViewElement = createCustomElement(ExtendedView, { injector });
     const editingViewElement = createCustomElement(EditingView, { injector });
-    const confirmDeleteElement = createCustomElement(ConfirmDelete, { injector });
+    const confirmMessageElement = createCustomElement(ConfirmMessage, { injector });
 
     // Lehessen használni egyedi web komponensként.
     customElements.define('video-player', videoPlayerElement);
@@ -56,7 +56,7 @@ export class AppModule {
     customElements.define('compressed-view', compressedViewElement);
     customElements.define('extended-view', extendedViewElement);
     customElements.define('editing-view', editingViewElement);
-    customElements.define('confirm-delete', confirmDeleteElement);
+    customElements.define('confirm-message', confirmMessageElement);
   }
 
   ngDoBootstrap() {}

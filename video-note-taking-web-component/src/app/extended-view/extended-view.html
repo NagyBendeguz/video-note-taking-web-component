@@ -14,10 +14,12 @@
                 <button (click)="editEntry()" class="edit">Edit Entry</button>
                 @if (showModal)
                 {
-                    <confirm-delete
+                    <confirm-message
+                        [message]="'Delete'"
+                        [type]="'delete'"
                         (confirm)="confirmDelete()"
                         (cancel)="cancelDelete()">
-                    </confirm-delete>
+                    </confirm-message>
                 }
             </div>
         </div>
