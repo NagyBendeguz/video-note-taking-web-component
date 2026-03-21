@@ -1,7 +1,4 @@
-<nav [ngClass]="{
-    'full-width': !(isSettings$ | async) || !(isNote$ | async),
-    'half-width': (isSettings$ | async) || (isNote$ | async)
-    }">
+<nav [ngClass]="(isSettings$ | async) || (isNote$ | async) ? 'half-width' : 'full-width'">
     <ul class="video-navbar">
         <li>
             <button (click)="onTogglePlay()">
@@ -40,17 +37,17 @@
             <progress id="progress" [max]="(duration$ | async)" [value]="(currentTime$ | async)" (click)="setCurrentTimeByClick($event)"></progress>
         </li>
         <li>
-            <button (click)="setNote()">
+            <button (click)="toggleNotePage()">
                 <i class="bi bi-journals"></i>
             </button>
         </li>
         <li>
-            <button (click)="setSettings()">
+            <button (click)="toggleSettingsPage()">
                 <i class="bi bi-gear"></i>
             </button>
         </li>
         <li>
-            <button (click)="setFullscreen()">
+            <button (click)="toggleFullscreen()">
                 <i class="bi bi-arrows-fullscreen" [ngClass]="{'hidden': fullscreenRequest$ | async}"></i>
                 <i class="bi bi-fullscreen-exit" [ngClass]="{'hidden': !(fullscreenRequest$ | async)}"></i>
             </button>

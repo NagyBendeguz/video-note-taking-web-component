@@ -10,34 +10,38 @@ import { SettingsService } from '../services/settings';
   styleUrl: './video-player.sass',
 })
 export class VideoPlayer {
+  // Videó forrása.
   @Input() src: string = '';
   private srcSubject = new BehaviorSubject<string>(this.src);
   src$: Observable<string> = this.srcSubject.asObservable();
 
+  // Felirat forrása.
   @Input() subtitle: string = '';
   private subtitleSubject = new BehaviorSubject<string>(this.subtitle);
   subtitle$: Observable<string> = this.subtitleSubject.asObservable();
 
+  // Nyelv.
   @Input() lang: string = '';
   private langSubject = new BehaviorSubject<string>(this.lang);
   lang$: Observable<string> = this.langSubject.asObservable();
 
+  // Nyelvből készült címke.
   label: string = '';
   private labelSubject = new BehaviorSubject<string>(this.label);
   label$: Observable<string> = this.labelSubject.asObservable();
 
-  @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLDivElement>;
+  // Videó elemei.
+  @ViewChild('videoPlayerDiv') videoPlayerDiv!: ElementRef<HTMLDivElement>;
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
   @ViewChild('subtitlesTrack') subtitlesTrack!: ElementRef<HTMLTrackElement>;
   @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
-  volumePercentageLocal: number = 100;
+
   isNote$!: Observable<boolean>;
   isNoteLocal: boolean = false;
   isSettings$!: Observable<boolean>;
   isSettingsLocal: boolean = false;
-  fullscreenRequestLocal: boolean = false;
-  timestamp: string = '00:00:00.000';
-  private isVideoNavbarOffset!: boolean;
+  private timestamp: string = '00:00:00.000';
+  //private isVideoNavbarOffset!: boolean;
   private unsubscribe$ = new Subject<void>();
 
   constructor(private cdr: ChangeDetectorRef, private videoService: VideoService, private settingsService: SettingsService) {}
@@ -60,9 +64,8 @@ export class VideoPlayer {
     this.videoService.jumpToTimestamp.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.jumpToTimestamp());
 
     // A hangerő szabályozása.
-    this.videoService.volume$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentVolume => {
-      this.volumePercentageLocal = currentVolume;
-      this.changeVolume();
+    this.videoService.volume$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentVolumePercentage => {
+      this.changeVolume(currentVolumePercentage);
     });
 
     // A videó jelenlegi idejének beállítása egy egyedi eseménnyel.
@@ -89,25 +92,24 @@ export class VideoPlayer {
 
     // Teljes képrenyős mód változtatása.
     this.videoService.fullscreenRequest$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentFullscreenRequest => {
-      this.fullscreenRequestLocal = currentFullscreenRequest;
-      this.setFullscreen();
+      this.setFullscreen(currentFullscreenRequest);
       this.cdr.detectChanges();
     });
 
     // Videó lejátszási sebességének változtatása.
-    this.settingsService.playbackRate$.pipe(takeUntil(this.unsubscribe$)).subscribe(rate => {
-      this.setVideoPlaybackRate(rate);
+    this.settingsService.playbackRate$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentPlaybackRate => {
+      this.setVideoPlaybackRate(currentPlaybackRate);
     });
 
     // Videó feliratának ki-be kapcsolása.
-    this.settingsService.getSubtitleVisibility().pipe(takeUntil(this.unsubscribe$)).subscribe((isVisible) => {
-      const track = this.subtitlesTrack.nativeElement as HTMLTrackElement;
-      track.track.mode = isVisible ? 'showing' : 'hidden';
+    this.settingsService.isVisible$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentIsVisible => {
+      this.setVideoSubtitleVisibility(currentIsVisible);
     });
 
-    this.settingsService.videoNavbarOffset$.pipe(takeUntil(this.unsubscribe$)).subscribe(offset => {
-      this.isVideoNavbarOffset = offset;
-    });
+    // Videó vezérlősávjának az eltolása.
+    /*this.settingsService.videoNavbarOffset$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentOffset => {
+      this.isVideoNavbarOffset = currentOffset;
+    });*/
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -200,16 +202,15 @@ export class VideoPlayer {
   /**
    * A videó hangerejének változtatása.
    */
-  changeVolume(): void {
+  changeVolume(volumePercentage: number = 100): void {
     const video = this.videoElement.nativeElement;
-    video.volume = this.volumePercentageLocal / 100;
+    video.volume = volumePercentage / 100;
   }
 
   /**
    * A videó meta adatainak betöltésekor a videó hosszának és magasságának betöltése.
-   * @param event - Esemény.
    */
-  onVideoMetadataLoaded(event: Event): void {
+  onVideoMetadataLoaded(): void {
     this.setDuration();
     this.setVideoHeight();
   }
@@ -224,10 +225,13 @@ export class VideoPlayer {
 
   /**
    * A videó jelenlegi idejének beállítása.
+   * Jegyzetelő módban képernyőképet készít a videó jelenlegi képkockájáról.
    */
   setCurrentTime(): void {
     const video = this.videoElement.nativeElement;
     this.videoService.setCurrentTime(video.currentTime);
+
+    // Ha a jegyzetelő felület van megnyitva akkor készítsen képernyőképet a videó jelenlegi képkockájáról.
     if (this.isNoteLocal)
     {
       this.createCurrentThumbnail();
@@ -246,11 +250,12 @@ export class VideoPlayer {
   /**
    * A teljes képernyős módba való belépés és kilépés.
    */
-  setFullscreen(): void {
-    const player = this.videoPlayer.nativeElement;
-    if (this.fullscreenRequestLocal)
+  setFullscreen(fullscreenRequest: boolean = false): void {
+    const player = this.videoPlayerDiv.nativeElement;
+    if (fullscreenRequest)
     {
       this.setVideoNabarOffset(true);
+      this.settingsService.setVideoNavbarOffset(true);
       player.requestFullscreen();
     }
     else if (document.fullscreenElement)
@@ -302,6 +307,15 @@ export class VideoPlayer {
   }
 
   /**
+   * A videó feliratának ki-be kapcsolása.
+   * @param currentIsVisible - A felirat ki-be kapcsolásának jelenlegi állapota.
+   */
+  private setVideoSubtitleVisibility(currentIsVisible: boolean = false): void {
+    const track = this.subtitlesTrack.nativeElement as HTMLTrackElement;
+    track.track.mode = currentIsVisible ? 'showing' : 'hidden';
+  }
+
+  /**
    * A videó jelenlegi képkockájáról elkészíteni egy képernyőképet.
    */
   private createCurrentThumbnail(): void {
@@ -329,7 +343,7 @@ export class VideoPlayer {
    */
   private jumpToTimestamp(): void {
     const video = this.videoElement.nativeElement;
-    
+
     // Másodpercekké alakítás.
     const timeParts = this.timestamp.split(/[:.]+/).map(Number);
     const seconds = timeParts[0] * 3600 + timeParts[1] * 60 + timeParts[2] + timeParts[3] / 1000;

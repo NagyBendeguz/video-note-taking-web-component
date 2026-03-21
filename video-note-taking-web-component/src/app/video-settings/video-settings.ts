@@ -78,8 +78,8 @@ export class VideoSettings {
   toggleOffset(): void {
     const value = this.isOffsetNegative ? '0px' : '-65px';
     document.documentElement.style.setProperty('--video-navbar-offset', value);
-    this.settingsSerivce.setVideoNavbarOffset(this.isOffsetNegative);
     this.isOffsetNegative = !this.isOffsetNegative;
+    this.settingsSerivce.setVideoNavbarOffset(this.isOffsetNegative);
   }
 
   /**

@@ -11,16 +11,16 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 export class VideoNavbar {
   isPlaying$!: Observable<boolean>;
   volumePercentage$!: Observable<number>;
-  previousVolume: number = 100;
+  private previousVolume: number = 100;
   duration$!: Observable<number>;
-  durationLocal: number = 0;
+  private duration: number = 0;
   currentTime$!: Observable<number>;
   isNote$!: Observable<boolean>;
-  isNoteLocal: boolean = false;
+  private isNote: boolean = false;
   isSettings$!: Observable<boolean>;
-  isSettingsLocal: boolean = false;
+  private isSettings: boolean = false;
   fullscreenRequest$!: Observable<boolean>;
-  fullscreenRequestLocal: boolean = false;
+  private fullscreenRequest: boolean = false;
   private unsubscribe$ = new Subject<void>();
 
   constructor(public videoService: VideoService) {}
@@ -41,16 +41,28 @@ export class VideoNavbar {
     this.duration$ = this.videoService.getDuration();
 
     this.videoService.duration$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentDuration => {
-      this.durationLocal = currentDuration;
+      this.duration = currentDuration;
     });
 
     this.currentTime$ = this.videoService.getCurrentTime();
 
     this.isNote$ = this.videoService.getNote();
 
+    this.videoService.isNote$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentIsNote => {
+      this.isNote = currentIsNote;
+    });
+
     this.isSettings$ = this.videoService.getSettings();
 
+    this.videoService.isSettings$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentIsSettings => {
+      this.isSettings = currentIsSettings;
+    });
+
     this.fullscreenRequest$ = this.videoService.getFullscreen();
+
+    this.videoService.fullscreenRequest$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentFullscreenRequest => {
+      this.fullscreenRequest = currentFullscreenRequest;
+    });
   }
 
   ngOnDestroy(): void {
@@ -96,7 +108,7 @@ export class VideoNavbar {
   }
 
   /**
-   * A videó hangerejének visszaállítása gombnyomásra az előző hangerőre.
+   * A videó hangerejének gombnyomásra való visszaállítása az előző hangerőre (ami nem nulla).
    */
   unMute(): void {
     this.videoService.setVolume(this.previousVolume);
@@ -107,13 +119,13 @@ export class VideoNavbar {
    * @param event - Az egér kattintási eseménye a videó progress bar-ján.
    */
   setCurrentTimeByClick(event: MouseEvent): void {
+    // Az új időhöz szükséges változók kiszámítása.
     const progressBar = event.target as HTMLProgressElement;
     const clickPosition = event.clientX - progressBar.getBoundingClientRect().left;
     const barWidth = progressBar.clientWidth;
 
-    const newTime = (clickPosition / barWidth) * this.durationLocal;
-
-    this.videoService.setCurrentTime(newTime);
+    // Az új idő kiszámítása.
+    const newTime = (clickPosition / barWidth) * this.duration;
 
     document.dispatchEvent(new CustomEvent('setVideoTime', { detail: newTime }));
   }
@@ -121,34 +133,31 @@ export class VideoNavbar {
   /**
    * A jegyzetelés oldal ki-be kapcsolása.
    */
-  setNote(): void {
+  toggleNotePage(): void {
     // Ha nyitva van a másik oldal akkor először bezárja azt.
-    if (this.isSettingsLocal)
+    if (this.isSettings)
     {
-      this.setSettings();
+      this.toggleSettingsPage();
     }
-    this.videoService.setNote(!this.isNoteLocal);
-    this.isNoteLocal = !this.isNoteLocal;
+    this.videoService.setNote(!this.isNote);
   }
 
   /**
    * A beállítások oldal ki-be kapcsolása.
    */
-  setSettings(): void {
+  toggleSettingsPage(): void {
     // Ha nyitva van a másik oldal akkor először bezárja azt.
-    if (this.isNoteLocal)
+    if (this.isNote)
     {
-      this.setNote();
+      this.toggleNotePage();
     }
-    this.videoService.setSettings(!this.isSettingsLocal);
-    this.isSettingsLocal = !this.isSettingsLocal;
+    this.videoService.setSettings(!this.isSettings);
   }
 
   /**
    * A teljes képernyős mód ki-be kapcsolása.
    */
-  setFullscreen(): void {
-    this.videoService.setFullscreen(!this.fullscreenRequestLocal);
-    this.fullscreenRequestLocal = !this.fullscreenRequestLocal;
+  toggleFullscreen(): void {
+    this.videoService.setFullscreen(!this.fullscreenRequest);
   }
 }

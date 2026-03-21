@@ -15,7 +15,8 @@ export class SettingsService {
   private videoNavbarOffsetSource = new BehaviorSubject<boolean>(true);
   videoNavbarOffset$ = this.videoNavbarOffsetSource.asObservable();
 
-  private isVisible = new BehaviorSubject<boolean>(false);
+  private isVisibleSource = new BehaviorSubject<boolean>(false);
+  isVisible$ = this.isVisibleSource.asObservable();
 
   getSettings(): Observable<Settings> {
     return this.settings$;
@@ -34,10 +35,6 @@ export class SettingsService {
   }
 
   toggleSubtitles(): void {
-    this.isVisible.next(!this.isVisible.value);
-  }
-
-  getSubtitleVisibility(): Observable<boolean> {
-    return this.isVisible.asObservable();
+    this.isVisibleSource.next(!this.isVisibleSource.value);
   }
 }
