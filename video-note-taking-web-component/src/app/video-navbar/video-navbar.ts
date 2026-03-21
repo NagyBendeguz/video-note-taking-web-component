@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { VideoService } from '../services/video';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { SettingsService } from '../services/settings';
 
 @Component({
   selector: 'app-video-navbar',
@@ -21,9 +22,11 @@ export class VideoNavbar {
   private isSettings: boolean = false;
   fullscreenRequest$!: Observable<boolean>;
   private fullscreenRequest: boolean = false;
+  private videoForwardRate!: number;
+  private videoRewindRate!: number;
   private unsubscribe$ = new Subject<void>();
 
-  constructor(public videoService: VideoService) {}
+  constructor(private videoService: VideoService, private settingsService: SettingsService) {}
 
   ngOnInit() {
     this.isPlaying$ = this.videoService.getPlaying();
@@ -63,6 +66,14 @@ export class VideoNavbar {
     this.videoService.fullscreenRequest$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentFullscreenRequest => {
       this.fullscreenRequest = currentFullscreenRequest;
     });
+
+    this.settingsService.videoForwardRate$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentVideoForwardRate => {
+      this.videoForwardRate = currentVideoForwardRate;
+    });
+
+    this.settingsService.videoRewindRate$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentVideoRewindRate => {
+      this.videoRewindRate = currentVideoRewindRate;
+    });
   }
 
   ngOnDestroy(): void {
@@ -81,14 +92,14 @@ export class VideoNavbar {
    * Hátra tekerés kibocsátása.
    */
   onRewind(): void {
-    this.videoService.emitRewind(10);
+    this.videoService.emitRewind(this.videoRewindRate);
   }
 
   /**
    * Előre tekerés kibocsátása.
    */
   onForward(): void {
-    this.videoService.emitForward(10);
+    this.videoService.emitForward(this.videoForwardRate);
   }
 
   /**

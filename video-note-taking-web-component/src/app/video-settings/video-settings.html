@@ -19,7 +19,12 @@
             </select>
         </li>
         <li>
-            <label>Video Move Rate in Seconds: </label>
+            <label>Forward Rate in Seconds: </label>
+            <input type="number" [value]="(videoForwardRate$ | async)" (input)="setVideoForwardRate($event)">
+        </li>
+        <li>
+            <label>Rewind Rate in Seconds: </label>
+            <input type="number" [value]="(videoRewindRate$ | async)" (input)="setVideoRewindRate($event)">
         </li>
         <li>
             <label>Subtitles: </label>

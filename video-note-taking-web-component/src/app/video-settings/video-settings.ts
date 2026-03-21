@@ -18,6 +18,8 @@ export class VideoSettings {
   playbackSpeeds: number[] = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
   isSubtitleVisible: boolean = false;
   isOffsetNegative: boolean = true;
+  videoForwardRate$!: Observable<number>;
+  videoRewindRate$!: Observable<number>;
   private unsubscribe$ = new Subject<void>();
   private ajv = new Ajv();
 
@@ -47,6 +49,9 @@ export class VideoSettings {
     this.settingsSerivce.settings$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentSettings => {
       this.settingsLocal = currentSettings;
     });
+
+    this.videoForwardRate$ = this.settingsSerivce.getVideoForwardRate();
+    this.videoRewindRate$ = this.settingsSerivce.getVideoRewindRate();
   }
 
   ngOnDestroy(): void {
@@ -88,7 +93,7 @@ export class VideoSettings {
    */
   setThumbnailForwardRate(event: Event): void {
     const dirtyThumbnailForwardRate = (event.target as HTMLInputElement).value;
-    const sanitizedValue = Number(DOMPurify.sanitize(dirtyThumbnailForwardRate));
+    const sanitizedValue = Number(DOMPurify.sanitize(dirtyThumbnailForwardRate)) || 1;
 
     // Ellenőrizni, hogy a bemenet az egy érvényes szám-e.
     if (isNaN(sanitizedValue) || sanitizedValue <= 0)
@@ -107,7 +112,7 @@ export class VideoSettings {
    */
   setThumbnailRewindRate(event: Event): void {
     const dirtyThumbnailRewindRate = (event.target as HTMLInputElement).value;
-    const sanitizedValue = Number(DOMPurify.sanitize(dirtyThumbnailRewindRate));
+    const sanitizedValue = Number(DOMPurify.sanitize(dirtyThumbnailRewindRate)) || 1;
 
     // Ellenőrizni, hogy a bemenet az egy érvényes szám-e.
     if (isNaN(sanitizedValue) || sanitizedValue <= 0)
@@ -117,6 +122,36 @@ export class VideoSettings {
     else
     {
       this.settingsLocal.thumbnailRewindRate = sanitizedValue;
+    }
+  }
+
+  setVideoForwardRate(event: Event): void {
+    const dirtyVideoForwardRate = (event.target as HTMLInputElement).value;
+    const sanitizedValue = Number(DOMPurify.sanitize(dirtyVideoForwardRate)) || 10;
+
+    // Ellenőrizni, hogy a bemenet az egy érvényes szám-e.
+    if (isNaN(sanitizedValue) || sanitizedValue <= 0)
+    {
+      this.settingsSerivce.setVideoForwardRate(10);
+    }
+    else
+    {
+      this.settingsSerivce.setVideoForwardRate(sanitizedValue);
+    }
+  }
+
+  setVideoRewindRate(event: Event): void {
+    const dirtyVideoForwardRate = (event.target as HTMLInputElement).value;
+    const sanitizedValue = Number(DOMPurify.sanitize(dirtyVideoForwardRate)) || 10;
+
+    // Ellenőrizni, hogy a bemenet az egy érvényes szám-e.
+    if (isNaN(sanitizedValue) || sanitizedValue <= 0)
+    {
+      this.settingsSerivce.setVideoRewindRate(10);
+    }
+    else
+    {
+      this.settingsSerivce.setVideoRewindRate(sanitizedValue);
     }
   }
 

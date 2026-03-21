@@ -18,6 +18,12 @@ export class SettingsService {
   private isVisibleSource = new BehaviorSubject<boolean>(false);
   isVisible$ = this.isVisibleSource.asObservable();
 
+  private videoForwardRateSource = new BehaviorSubject<number>(10);
+  videoForwardRate$ = this.videoForwardRateSource.asObservable();
+
+  private videoRewindRateSource = new BehaviorSubject<number>(10);
+  videoRewindRate$ = this.videoRewindRateSource.asObservable();
+
   getSettings(): Observable<Settings> {
     return this.settings$;
   }
@@ -32,6 +38,22 @@ export class SettingsService {
 
   setVideoNavbarOffset(isOffset: boolean): void {
     this.videoNavbarOffsetSource.next(isOffset);
+  }
+
+  getVideoForwardRate(): Observable<number> {
+    return this.videoForwardRate$;
+  }
+
+  setVideoForwardRate(videoForwardRate: number): void {
+    this.videoForwardRateSource.next(videoForwardRate);
+  }
+
+  getVideoRewindRate(): Observable<number> {
+    return this.videoRewindRate$;
+  }
+
+  setVideoRewindRate(videoRewindRate: number): void {
+    this.videoRewindRateSource.next(videoRewindRate);
   }
 
   toggleSubtitles(): void {
