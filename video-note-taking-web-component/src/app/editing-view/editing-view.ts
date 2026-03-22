@@ -17,7 +17,7 @@ import { Settings } from '../models/settings';
 export class EditingView {
   entry$!: Observable<Entry>;
   entryLocal: Entry = new Entry();
-  currentEntryId: number = 0;
+  private currentEntryId!: number;
   editMode: boolean = false;
   private note: any[] = [];
   settingsLocal: Settings = new Settings();
@@ -64,6 +64,10 @@ export class EditingView {
     this.settingsSerivce.settings$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentSettings => {
       this.settingsLocal = currentSettings;
     });
+
+    this.entryService.currentEntryId$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentCurrentEntryId => {
+      this.currentEntryId = currentCurrentEntryId;
+    });
   }
 
   ngOnDestroy(): void {
@@ -109,15 +113,23 @@ export class EditingView {
       this.currentEntryId++;
       this.entryLocal.entryId = this.currentEntryId;
       this.entryService.pushArrayEntry(this.entryLocal);
+      this.entryService.setCurrentEntryId(this.currentEntryId);
     }
     this.entryService.resetEntry(this.entryLocal);
   }
 
   /**
-   * A leendő bejegyzés elvetésének kezdése, a megerősítő modal megnyitása.
+   * A leendő bejegyzés elvetésének kezdése, a megerősítő modal megnyitása beállítástól függően.
    */
   cancelEntry(): void {
-    this.showModal = true;
+    if (this.settingsLocal.confirmCancel)
+    {
+      this.showModal = true;
+    }
+    else
+    {
+      this.confirmCancel();
+    }
   }
 
   /**
@@ -126,6 +138,7 @@ export class EditingView {
   confirmCancel(): void {
     if (this.entryLocal.title !== '' || this.entryLocal.note !== '')
     {
+      this.editMode = false;
       this.entryService.setEditMode(false);
       this.entryLocal = new Entry(this.entryLocal.timestamp, this.entryLocal.thumbnail);
       this.entryService.resetEntry(this.entryLocal);

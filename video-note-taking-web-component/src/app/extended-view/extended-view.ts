@@ -3,6 +3,8 @@ import { Entry } from '../models/entry';
 import { VideoService } from '../services/video';
 import { EntryService } from '../services/entry';
 import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
+import { SettingsService } from '../services/settings';
+import { Settings } from '../models/settings';
 
 @Component({
   selector: 'app-extended-view',
@@ -19,15 +21,20 @@ export class ExtendedView {
   editMode$!: Observable<boolean>;
   editModeLocal: boolean = false;
   showModal: boolean = false;
+  settingsLocal: Settings = new Settings();
   private unsubscribe$ = new Subject<void>();
 
-  constructor(public videoService: VideoService, private entryService: EntryService) {}
+  constructor(public videoService: VideoService, private entryService: EntryService, private settingsSerivce: SettingsService) {}
 
   ngOnInit(): void {
     this.editMode$ = this.entryService.getEditMode();
 
     this.entryService.editMode$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentEditMode => {
       this.editModeLocal = currentEditMode;
+    });
+
+    this.settingsSerivce.settings$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentSettings => {
+      this.settingsLocal = currentSettings;
     });
   }
 
@@ -48,9 +55,13 @@ export class ExtendedView {
    * A bejegyzés törlésének kezdése, a megerősítő modal megnyitása.
    */
   deleteEntry(): void {
-    if (!this.editModeLocal)
+    if (!this.editModeLocal && this.settingsLocal.confirmDelete)
     {
       this.showModal = true;
+    }
+    else
+    {
+      this.confirmDelete();
     }
   }
 

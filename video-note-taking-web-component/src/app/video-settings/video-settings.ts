@@ -88,6 +88,20 @@ export class VideoSettings {
   }
 
   /**
+   * A szerkesztői felületen a mégse gomb megnyomására a megerősítő üzenet ki-be kapcsolása.
+   */
+  toggleConfirmCancel(): void {
+    this.settingsLocal.confirmCancel = !this.settingsLocal.confirmCancel;
+  }
+
+  /**
+   * A bővített nézeten a törlés gomb megnyomására a megerősítő üzenet ki-be kapcsolása.
+   */
+  toggleConfirmDelete(): void {
+    this.settingsLocal.confirmDelete = !this.settingsLocal.confirmDelete;
+  }
+
+  /**
    * A szerkesztési nézetben az idő előretekerés mértékegységének változtatása.
    * @param event - A szerkesztési nézetben az idő előretekerésére beállítani kívánt mértékegység.
    */

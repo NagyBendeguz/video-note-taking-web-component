@@ -18,6 +18,9 @@ export class EntryService {
   private arrayEntrySource = new BehaviorSubject<Array<Entry>>(new Array<Entry>());
   arrayEntry$ = this.arrayEntrySource.asObservable();
 
+  private currentEntryIdSource = new BehaviorSubject<number>(0);
+  currentEntryId$ = this.currentEntryIdSource.asObservable();
+
   getEntry(): Observable<Entry> {
     return this.entry$;
   }
@@ -88,5 +91,9 @@ export class EntryService {
       this.arrayEntrySource.next(filteredArray);
       this.resetEntry(entryToDelete);
     }
+  }
+
+  setCurrentEntryId(currentEntryId: number): void {
+    this.currentEntryIdSource.next(currentEntryId);
   }
 }

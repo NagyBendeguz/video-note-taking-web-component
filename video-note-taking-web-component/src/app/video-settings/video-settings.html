@@ -41,8 +41,15 @@
         <li>Thumbnail Resolution</li>
         <li>Convert Input</li>
         <li>Theme</li>
-        <li>Confirm Cancel</li>
-        <li>Confirm Delete</li>
+        <li>Font Size</li>
+        <li>
+            <label>Confirm Cancel: </label>
+            <button (click)="toggleConfirmCancel()">{{ (settings$ | async)?.confirmCancel ? "Turn Off" : "Turn On" }}</button>
+        </li>
+        <li>
+            <label>Confirm Delete: </label>
+            <button (click)="toggleConfirmDelete()">{{ (settings$ | async)?.confirmDelete ? "Turn Off" : "Turn On" }}</button>
+        </li>
         <li>
             <label>Thumbnail Forward Rate in Seconds: </label>
             <input type="number" [value]="(settings$ | async)?.thumbnailForwardRate" (input)="setThumbnailForwardRate($event)">
@@ -51,7 +58,6 @@
             <label>Thumbnail Rewind Rate in Seconds: </label>
             <input type="number" [value]="(settings$ | async)?.thumbnailRewindRate" (input)="setThumbnailRewindRate($event)">
         </li>
-        <li>Font Size</li>
     </ul>
     <h3>Shortcuts</h3>
     <ul>
