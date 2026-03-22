@@ -207,6 +207,12 @@ export class VideoSettings {
 
           // A megtisztított jegyzet betöltése.
           this.entryService.setArrayEntry(sanitizedData);
+
+          // Megtalálni a legnagyobb bejegyzés id-t.
+          const highestEntryId = Math.max(...sanitizedData.map((entry: any) => entry.entryId));
+
+          // A legnagyobb bejegyzés id-t beállítani a jelenlegi id-re, hogy innentől számítsa az új bejegyzésekhez az id-t.
+          this.entryService.setCurrentEntryId(highestEntryId);
         }
         catch (error) {
           console.error('Error parsing JSON: ', error);
