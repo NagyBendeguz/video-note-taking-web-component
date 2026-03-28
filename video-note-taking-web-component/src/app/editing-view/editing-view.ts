@@ -7,6 +7,7 @@ import { PdfService } from '../services/pdf';
 import { SettingsService } from '../services/settings';
 import { Settings } from '../models/settings';
 import DOMPurify from 'dompurify';
+import { marked } from 'marked';
 
 @Component({
   selector: 'app-editing-view',
@@ -22,6 +23,7 @@ export class EditingView {
   private note: any[] = [];
   settings: Settings = new Settings();
   showModal: boolean = false;
+  formattedNote: string = '';
   private unsubscribe$ = new Subject<void>();
 
   constructor(
@@ -94,9 +96,9 @@ export class EditingView {
   addNote(event: Event): void {
     const dirtyNote = (event.target as HTMLInputElement).value;
     this.entry.note = DOMPurify.sanitize(dirtyNote);
+    this.entry.formattedNote = this.entry.note;
+    this.updatePreview();
   }
-
-  // TODO - inkonzisztens állapot a video-note.html/.sass mentésénél entryId az 1 lesz minden mentés után
 
   /**
    * A jelenlegi bejegyzés mentése.
@@ -168,32 +170,57 @@ export class EditingView {
     this.pdfService.generatePDF(this.note);
   }
 
-  bold(): void {
+  async updatePreview(): Promise<void> {
+    // Markdown-t átalakítani to HTML-be.
+    this.formattedNote = await marked.parse(this.entry.formattedNote);
+  }
 
+  bold(): void {
+    this.modifyText('**', '**');
   }
 
   italic(): void {
-
+    this.modifyText('_', '_');
   }
 
   underline(): void {
-
+    // TODO
+    this.modifyText('~~', '~~');
   }
 
   strikethrough(): void {
-
+    this.modifyText('~~', '~~');
   }
 
   orderedList(): void {
-
+    this.addList('1. ');
   }
 
   unorderedList(): void {
-
+    this.addList('- ');
   }
 
   table(): void {
+    this.entry.formattedNote += '\n| Column 1 | Column 2 |\n| --- | --- |\n| Content 1 | Content 2 |';
+    this.updatePreview();
+  }
 
+  modifyText(start: string, end: string): void {
+    const textarea = document.getElementById('note') as HTMLTextAreaElement;
+    const cursorPos = textarea.selectionStart;
+    const textBefore = this.entry.formattedNote.substring(0, cursorPos);
+    const textAfter = this.entry.formattedNote.substring(cursorPos);
+    this.entry.formattedNote = textBefore + start + textAfter + end;
+    this.updatePreview();
+    textarea.value = this.entry.formattedNote; 
+    textarea.selectionStart = cursorPos + start.length; 
+    textarea.selectionEnd = cursorPos + start.length; 
+    textarea.focus(); 
+  }
+
+  addList(prefix: string): void {
+    this.entry.formattedNote += '\n' + prefix;
+    this.updatePreview();
   }
 
   /**
