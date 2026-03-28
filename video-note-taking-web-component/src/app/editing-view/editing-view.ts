@@ -24,6 +24,7 @@ export class EditingView {
   settings: Settings = new Settings();
   showModal: boolean = false;
   formattedNote: string = '';
+  private currentOrderedListNumber: number = 1;
   private unsubscribe$ = new Subject<void>();
 
   constructor(
@@ -117,6 +118,7 @@ export class EditingView {
       this.entryService.pushArrayEntry(this.entry);
       this.entryService.setCurrentEntryId(this.currentEntryId);
     }
+    this.currentOrderedListNumber = 1;
     this.entryService.resetEntry(this.entry);
   }
 
@@ -193,34 +195,57 @@ export class EditingView {
   }
 
   orderedList(): void {
-    this.addList('1. ');
+    this.modifyText(`\n${this.currentOrderedListNumber}. `, '\n');
+    this.currentOrderedListNumber++;
   }
 
   unorderedList(): void {
-    this.addList('- ');
+    this.modifyText('\n- ', '\n');
   }
 
   table(): void {
-    this.entry.formattedNote += '\n| Column 1 | Column 2 |\n| --- | --- |\n| Content 1 | Content 2 |';
-    this.updatePreview();
+    this.modifyText('\n| Header | Header |\n| --- | --- |\n| ', 'Row | Row |');
   }
 
   modifyText(start: string, end: string): void {
     const textarea = document.getElementById('note') as HTMLTextAreaElement;
+    // A kurzor aktuális pozíciója.
     const cursorPos = textarea.selectionStart;
-    const textBefore = this.entry.formattedNote.substring(0, cursorPos);
-    const textAfter = this.entry.formattedNote.substring(cursorPos);
-    this.entry.formattedNote = textBefore + start + textAfter + end;
-    this.updatePreview();
-    textarea.value = this.entry.formattedNote; 
-    textarea.selectionStart = cursorPos + start.length; 
-    textarea.selectionEnd = cursorPos + start.length; 
-    textarea.focus(); 
-  }
+    // A kiválasztás végső pozíciója.
+    const endPos = textarea.selectionEnd;
+    // Ki van-e jelölve szöveg.
+    const isTextSelected = cursorPos !== endPos;
 
-  addList(prefix: string): void {
-    this.entry.formattedNote += '\n' + prefix;
+    // A kurzor előtt található szöveg.
+    let textBefore = this.entry.formattedNote.substring(0, cursorPos);
+    // A kurzor után található szöveg.
+    let textAfter = this.entry.formattedNote.substring(endPos);
+
+    let selectedText = '';
+
+    // Ha van kijelölt szöveg, akkor a kiválasztott szöveg beillesztésre kerül a start és end karakterek közé.
+    if (isTextSelected)
+    {
+      selectedText = this.entry.formattedNote.substring(cursorPos, endPos);
+      // A kijelölt szöveg tördelése.
+      this.entry.formattedNote = textBefore + start + selectedText + end + textAfter;
+    }
+    // Ha nincs kijelölt szöveg, a formázási karakterek a kurzor pozíciójára kerülnek.
+    else
+    {
+      // Formázási karakterek beszúrása a kurzor helyére.
+      this.entry.formattedNote = textBefore + start + end + textAfter;
+    }
+
+    // Az előnézet frissítése.
     this.updatePreview();
+    // Frissíteni a textarea-t az új formázott jegyzettel.
+    textarea.value = this.entry.formattedNote;
+    // A kurzor maradjon ugyanott, ahol eredetileg volt.
+    textarea.selectionStart = cursorPos + (isTextSelected ? start.length + selectedText.length + end.length : start.length); 
+    // Az új kurzorpozíció kezdőpontját és végpontját ugyanarra az értékre beállítani.
+    textarea.selectionEnd = textarea.selectionStart;
+    textarea.focus(); 
   }
 
   /**
