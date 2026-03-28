@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Entry } from '../models/entry';
 import { EntryService } from '../services/entry';
+import { marked } from 'marked';
 
 @Component({
   selector: 'app-video-note',
@@ -17,10 +18,20 @@ export class VideoNote {
 
   ngOnInit(): void {
     this.arrayEntry$ = this.entryService.getArrayEntry();
+
+    this.arrayEntry$.subscribe(entries => {
+      entries.forEach(entry => {
+        this.formatNote(entry);
+      });
+    });
   }
 
   toggleView(entryId: string): void {
     const currentState = this.isExtendedViews.get(entryId) || false;
     this.isExtendedViews.set(entryId, !currentState);
+  }
+
+  async formatNote(entry: Entry): Promise<void> {
+    entry.formattedNote = await marked(entry.formattedNote);
   }
 }
