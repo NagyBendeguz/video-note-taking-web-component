@@ -36,10 +36,6 @@ export class SettingsService {
     this.playbackRateSource.next(speed);
   }
 
-  setVideoNavbarOffset(isOffset: boolean): void {
-    this.videoNavbarOffsetSource.next(isOffset);
-  }
-
   getVideoForwardRate(): Observable<number> {
     return this.videoForwardRate$;
   }
@@ -54,6 +50,14 @@ export class SettingsService {
 
   setVideoRewindRate(videoRewindRate: number): void {
     this.videoRewindRateSource.next(videoRewindRate);
+  }
+
+  getVideoNavbarOffset(): Observable<boolean> {
+    return this.videoNavbarOffset$;
+  }
+
+  toggleVideoNavbarOffset(): void {
+    this.videoNavbarOffsetSource.next(!this.videoNavbarOffsetSource.value);
   }
 
   toggleSubtitles(): void {

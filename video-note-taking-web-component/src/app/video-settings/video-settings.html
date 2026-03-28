@@ -32,7 +32,7 @@
         </li>
         <li>
             <label>Video Navbar Offset: </label>
-            <button (click)="toggleOffset()">{{ isOffsetNegative ? "Turn Off" : "Turn On" }}</button>
+            <button (click)="toggleOffset()" [disabled]="isFullscreen$ | async">{{ (isOffsetNegative$ | async) ? "Turn Off" : "Turn On" }}</button>
         </li>
     </ul>
     <h3>Editing Settings</h3>

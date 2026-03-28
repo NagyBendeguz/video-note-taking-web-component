@@ -100,10 +100,15 @@ export class VideoSettings {
    * A videó vezérlősávjának a videóval való átfedésének ki és be kapcsolása.
    */
   toggleOffset(): void {
-    const value = this.isOffsetNegative ? '0px' : '-65px';
+    if (!this.isFullscreen)
+    {
+      this.settingsSerivce.toggleVideoNavbarOffset();
+    }
+  }
+
+  private changeOffset(offset: boolean): void {
+    const value = offset ? '-65px' : '0px';
     document.documentElement.style.setProperty('--video-navbar-offset', value);
-    this.isOffsetNegative = !this.isOffsetNegative;
-    this.settingsSerivce.setVideoNavbarOffset(this.isOffsetNegative);
   }
 
   /**

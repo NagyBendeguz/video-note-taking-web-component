@@ -41,7 +41,8 @@ export class VideoPlayer {
   isSettings$!: Observable<boolean>;
   isSettings: boolean = false;
   private timestamp: string = '00:00:00.000';
-  //private isVideoNavbarOffset!: boolean;
+  private navbarOffsetState: boolean = false;
+  private isVideoNavbarOffset!: boolean;
   private unsubscribe$ = new Subject<void>();
 
   constructor(
@@ -115,9 +116,9 @@ export class VideoPlayer {
     });
 
     // Videó vezérlősávjának az eltolása.
-    /*this.settingsService.videoNavbarOffset$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentOffset => {
+    this.settingsService.videoNavbarOffset$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentOffset => {
       this.isVideoNavbarOffset = currentOffset;
-    });*/
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -260,14 +261,26 @@ export class VideoPlayer {
    */
   setFullscreen(fullscreenRequest: boolean = false): void {
     const player = this.videoPlayerDiv.nativeElement;
+    // Ha teljes képernyős mód kérés történt akkor váltson teljes képernyős módra.
     if (fullscreenRequest)
     {
-      this.setVideoNabarOffset(true);
-      this.settingsService.setVideoNavbarOffset(true);
+      // Ha el van tolva a videó vezérlősávja akkor vonja vissza de mentse le a jelenlegi állapotot.
+      if (this.isVideoNavbarOffset)
+      {
+        this.settingsService.toggleVideoNavbarOffset();
+        this.navbarOffsetState = true;
+      }
       player.requestFullscreen();
     }
+    // Ha az oldal már teljes képernyős módban van akkor lépjen ki belőle.
     else if (document.fullscreenElement)
     {
+      // Ha a teljes képernyős módba való belépéskor a videó vezérlősávja el volt tolva akkor most kilépéskor állítsa vissza azt.
+      if (this.navbarOffsetState)
+      {
+        this.settingsService.toggleVideoNavbarOffset();
+        this.navbarOffsetState = false;
+      }
       document.exitFullscreen();
     }
   }
@@ -283,11 +296,6 @@ export class VideoPlayer {
         this.videoService.setFullscreen(false);
       }
     });
-  }
-
-  private setVideoNabarOffset(offset: boolean): void {
-    const value = offset ? '0px' : '-65px';
-    document.documentElement.style.setProperty('--video-navbar-offset', value);
   }
 
   /**
