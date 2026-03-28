@@ -15,7 +15,7 @@ export class CompressedView {
 
   constructor(public videoService: VideoService) {}
 
-  toggle() {
+  toggle(): void {
     this.onToggle.emit();
   }
 

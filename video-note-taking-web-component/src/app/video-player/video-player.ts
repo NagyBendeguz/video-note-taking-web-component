@@ -37,14 +37,18 @@ export class VideoPlayer {
   @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
 
   isNote$!: Observable<boolean>;
-  isNoteLocal: boolean = false;
+  isNote: boolean = false;
   isSettings$!: Observable<boolean>;
-  isSettingsLocal: boolean = false;
+  isSettings: boolean = false;
   private timestamp: string = '00:00:00.000';
   //private isVideoNavbarOffset!: boolean;
   private unsubscribe$ = new Subject<void>();
 
-  constructor(private cdr: ChangeDetectorRef, private videoService: VideoService, private settingsService: SettingsService) {}
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private videoService: VideoService,
+    private settingsService: SettingsService
+  ) {}
 
   ngOnInit(): void {
     this.checkFullscreen();
@@ -52,15 +56,19 @@ export class VideoPlayer {
 
   ngAfterViewInit(): void {
     this.videoService.togglePlay.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.togglePlay());
+
     this.videoService.rewind.pipe(takeUntil(this.unsubscribe$)).subscribe((moveRate: number) => {
       this.rewind(moveRate);
     });
+
     this.videoService.forward.pipe(takeUntil(this.unsubscribe$)).subscribe((moveRate: number) => {
-      this.forward(moveRate)
+      this.forward(moveRate);
     });
+
     this.videoService.timestamp$.pipe(takeUntil(this.unsubscribe$)).subscribe(timestamp => {
       this.timestamp = timestamp;
     });
+
     this.videoService.jumpToTimestamp.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.jumpToTimestamp());
 
     // A hangerő szabályozása.
@@ -77,7 +85,7 @@ export class VideoPlayer {
 
     // A jegyzetelő felület megnyitásakor és amikor nyitva van folyamatosan készítsen képernyőképeket a videó adott képkockájáról.
     this.videoService.isNote$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentNote => {
-      this.isNoteLocal = currentNote;
+      this.isNote = currentNote;
       if (currentNote)
       {
         this.createCurrentThumbnail();
@@ -87,7 +95,7 @@ export class VideoPlayer {
     this.isSettings$ = this.videoService.getSettings();
 
     this.videoService.isSettings$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentSettings => {
-      this.isSettingsLocal = currentSettings;
+      this.isSettings = currentSettings;
     });
 
     // Teljes képrenyős mód változtatása.
@@ -157,7 +165,7 @@ export class VideoPlayer {
   }
 
   @HostListener('window:resize')
-  onResize() {
+  onResize(): void {
     this.setVideoHeight();
   }
 
@@ -232,7 +240,7 @@ export class VideoPlayer {
     this.videoService.setCurrentTime(video.currentTime);
 
     // Ha a jegyzetelő felület van megnyitva akkor készítsen képernyőképet a videó jelenlegi képkockájáról.
-    if (this.isNoteLocal)
+    if (this.isNote)
     {
       this.createCurrentThumbnail();
     }
@@ -288,7 +296,7 @@ export class VideoPlayer {
   private setVideoHeight(): void {
     const video = this.videoElement.nativeElement;
     // (Az alsó margó miatt plusz 5 pixel.)
-    if (!this.isSettingsLocal && !this.isNoteLocal)
+    if (!this.isSettings && !this.isNote)
     {
       this.setSassVariable(video.clientHeight + 5);
     }

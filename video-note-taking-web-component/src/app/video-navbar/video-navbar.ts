@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { VideoService } from '../services/video';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { filter, Observable, Subject, takeUntil } from 'rxjs';
 import { SettingsService } from '../services/settings';
 
 @Component({
@@ -28,17 +28,19 @@ export class VideoNavbar {
 
   constructor(private videoService: VideoService, private settingsService: SettingsService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.isPlaying$ = this.videoService.getPlaying();
 
     this.volumePercentage$ = this.videoService.getVolume();
 
-    this.volumePercentage$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentVolume => {
+    this.volumePercentage$
+    .pipe(
+      takeUntil(this.unsubscribe$),
       // Csak akkor mentse le a hangerő változást ha nem nulla a jelenlegi hangerő.
-      if (currentVolume !== 0)
-      {
-        this.previousVolume = currentVolume;
-      }
+      filter(currentVolume => currentVolume !== 0)
+    )
+    .subscribe(currentVolume => {
+      this.previousVolume = currentVolume;
     });
 
     this.duration$ = this.videoService.getDuration();

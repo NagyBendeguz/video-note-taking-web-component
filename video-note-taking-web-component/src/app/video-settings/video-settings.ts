@@ -5,6 +5,7 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 import { EntryService } from '../services/entry';
 import Ajv from 'ajv';
 import DOMPurify from 'dompurify';
+import { VideoService } from '../services/video';
 
 @Component({
   selector: 'app-video-settings',
@@ -14,12 +15,14 @@ import DOMPurify from 'dompurify';
 })
 export class VideoSettings {
   settings$!: Observable<Settings>;
-  settingsLocal: Settings = new Settings();
+  settings: Settings = new Settings();
   playbackSpeeds: number[] = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
   isSubtitleVisible: boolean = false;
-  isOffsetNegative: boolean = true;
+  isOffsetNegative$!: Observable<boolean>;
   videoForwardRate$!: Observable<number>;
   videoRewindRate$!: Observable<number>;
+  isFullscreen$!: Observable<boolean>;
+  private isFullscreen!: boolean;
   private unsubscribe$ = new Subject<void>();
   private ajv = new Ajv();
 
@@ -41,13 +44,29 @@ export class VideoSettings {
     }
   };
 
-  constructor (private settingsSerivce: SettingsService, private entryService: EntryService) {}
+  constructor (
+    private settingsSerivce: SettingsService,
+    private entryService: EntryService,
+    private videoService: VideoService
+  ) {}
 
   ngOnInit(): void {
     this.settings$ = this.settingsSerivce.getSettings();
 
     this.settingsSerivce.settings$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentSettings => {
-      this.settingsLocal = currentSettings;
+      this.settings = currentSettings;
+    });
+
+    this.isOffsetNegative$ = this.settingsSerivce.getVideoNavbarOffset();
+
+    this.settingsSerivce.videoNavbarOffset$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentVideoOffset => {
+      this.changeOffset(currentVideoOffset);
+    });
+
+    this.isFullscreen$ = this.videoService.getFullscreen();
+
+    this.videoService.fullscreenRequest$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentFullscreenRequest => {
+      this.isFullscreen = currentFullscreenRequest;
     });
 
     this.videoForwardRate$ = this.settingsSerivce.getVideoForwardRate();
@@ -91,14 +110,14 @@ export class VideoSettings {
    * A szerkesztői felületen a mégse gomb megnyomására a megerősítő üzenet ki-be kapcsolása.
    */
   toggleConfirmCancel(): void {
-    this.settingsLocal.confirmCancel = !this.settingsLocal.confirmCancel;
+    this.settings.confirmCancel = !this.settings.confirmCancel;
   }
 
   /**
    * A bővített nézeten a törlés gomb megnyomására a megerősítő üzenet ki-be kapcsolása.
    */
   toggleConfirmDelete(): void {
-    this.settingsLocal.confirmDelete = !this.settingsLocal.confirmDelete;
+    this.settings.confirmDelete = !this.settings.confirmDelete;
   }
 
   /**
@@ -112,11 +131,11 @@ export class VideoSettings {
     // Ellenőrizni, hogy a bemenet az egy érvényes szám-e.
     if (isNaN(sanitizedValue) || sanitizedValue <= 0)
     {
-      this.settingsLocal.thumbnailForwardRate = 1;
+      this.settings.thumbnailForwardRate = 1;
     }
     else
     {
-      this.settingsLocal.thumbnailForwardRate = sanitizedValue;
+      this.settings.thumbnailForwardRate = sanitizedValue;
     }
   }
 
@@ -131,11 +150,11 @@ export class VideoSettings {
     // Ellenőrizni, hogy a bemenet az egy érvényes szám-e.
     if (isNaN(sanitizedValue) || sanitizedValue <= 0)
     {
-      this.settingsLocal.thumbnailRewindRate = 1;
+      this.settings.thumbnailRewindRate = 1;
     }
     else
     {
-      this.settingsLocal.thumbnailRewindRate = sanitizedValue;
+      this.settings.thumbnailRewindRate = sanitizedValue;
     }
   }
 
@@ -191,7 +210,8 @@ export class VideoSettings {
 
       reader.onload = (e: ProgressEvent<FileReader>) =>
       {
-        try {
+        try
+        {
           const jsonData = JSON.parse(e.target?.result as string);
           
           // A JSON fájl struktúra ellenőrzése.

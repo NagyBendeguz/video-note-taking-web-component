@@ -12,11 +12,11 @@ export class ConfirmMessage {
   @Output() confirm = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
 
-  confirmButton() {
+  confirmButton(): void {
     this.confirm.emit();
   }
 
-  cancelButton() {
+  cancelButton(): void {
     this.cancel.emit();
   }
 }

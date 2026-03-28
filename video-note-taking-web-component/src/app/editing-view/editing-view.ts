@@ -4,9 +4,9 @@ import { Entry } from '../models/entry';
 import { EntryService } from '../services/entry';
 import { VideoService } from '../services/video';
 import { PdfService } from '../services/pdf';
-import DOMPurify from 'dompurify';
 import { SettingsService } from '../services/settings';
 import { Settings } from '../models/settings';
+import DOMPurify from 'dompurify';
 
 @Component({
   selector: 'app-editing-view',
@@ -16,11 +16,11 @@ import { Settings } from '../models/settings';
 })
 export class EditingView {
   entry$!: Observable<Entry>;
-  entryLocal: Entry = new Entry();
+  entry: Entry = new Entry();
   private currentEntryId!: number;
   editMode: boolean = false;
   private note: any[] = [];
-  settingsLocal: Settings = new Settings();
+  settings: Settings = new Settings();
   showModal: boolean = false;
   private unsubscribe$ = new Subject<void>();
 
@@ -35,26 +35,26 @@ export class EditingView {
     this.entry$ = this.entryService.getEntry();
 
     this.entryService.entry$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentEntry => {
-      this.entryLocal = currentEntry;
+      this.entry = currentEntry;
     });
 
     this.entryService.editEntry$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentEditEntry => {
       if (currentEditEntry.entryId !== 0)
       {
         this.editMode = true;
-        this.entryLocal = {...currentEditEntry};
-        this.entryService.setEntry(this.entryLocal);
+        this.entry = {...currentEditEntry};
+        this.entryService.setEntry(this.entry);
       }
     });
 
     this.videoService.currentTime$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentTime => {
-      this.entryLocal.timestamp = this.formatVideoTimestamp(currentTime);
-      this.entryService.setEntry(this.entryLocal);
+      this.entry.timestamp = this.formatVideoTimestamp(currentTime);
+      this.entryService.setEntry(this.entry);
     });
 
     this.videoService.thumbnail$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentThumbnail => {
-      this.entryLocal.thumbnail = currentThumbnail;
-      this.entryService.setEntry(this.entryLocal);
+      this.entry.thumbnail = currentThumbnail;
+      this.entryService.setEntry(this.entry);
     });
 
     this.entryService.getArrayEntry().pipe(takeUntil(this.unsubscribe$)).subscribe(currentNote => {
@@ -62,7 +62,7 @@ export class EditingView {
     });
 
     this.settingsSerivce.settings$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentSettings => {
-      this.settingsLocal = currentSettings;
+      this.settings = currentSettings;
     });
 
     this.entryService.currentEntryId$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentCurrentEntryId => {
@@ -76,24 +76,24 @@ export class EditingView {
   }
 
   editingRewind(): void {
-    this.videoService.emitRewind(this.settingsLocal.thumbnailRewindRate);
+    this.videoService.emitRewind(this.settings.thumbnailRewindRate);
   }
 
   editingForward(): void {
-    this.videoService.emitForward(this.settingsLocal.thumbnailForwardRate);
+    this.videoService.emitForward(this.settings.thumbnailForwardRate);
   }
 
   addTitle(event: Event): void {
     const dirtyTitle = (event.target as HTMLInputElement).value;
     if (dirtyTitle.length <= 50)
     {
-      this.entryLocal.title = DOMPurify.sanitize(dirtyTitle);
+      this.entry.title = DOMPurify.sanitize(dirtyTitle);
     }
   }
 
   addNote(event: Event): void {
     const dirtyNote = (event.target as HTMLInputElement).value;
-    this.entryLocal.note = DOMPurify.sanitize(dirtyNote);
+    this.entry.note = DOMPurify.sanitize(dirtyNote);
   }
 
   // TODO - inkonzisztens állapot a video-note.html/.sass mentésénél entryId az 1 lesz minden mentés után
@@ -104,25 +104,25 @@ export class EditingView {
   saveEntry(): void {
     if (this.editMode)
     {
-      this.entryService.setArrayEntryById(this.entryLocal);
+      this.entryService.setArrayEntryById(this.entry);
       this.editMode = false;
       this.entryService.setEditMode(false);
     }
-    else if (this.entryLocal.title !== '' || this.entryLocal.note !== '')
+    else if (this.entry.title !== '' || this.entry.note !== '')
     {
       this.currentEntryId++;
-      this.entryLocal.entryId = this.currentEntryId;
-      this.entryService.pushArrayEntry(this.entryLocal);
+      this.entry.entryId = this.currentEntryId;
+      this.entryService.pushArrayEntry(this.entry);
       this.entryService.setCurrentEntryId(this.currentEntryId);
     }
-    this.entryService.resetEntry(this.entryLocal);
+    this.entryService.resetEntry(this.entry);
   }
 
   /**
    * A leendő bejegyzés elvetésének kezdése, a megerősítő modal megnyitása beállítástól függően.
    */
   cancelEntry(): void {
-    if (this.settingsLocal.confirmCancel)
+    if (this.settings.confirmCancel)
     {
       this.showModal = true;
     }
@@ -136,12 +136,12 @@ export class EditingView {
    * Törölni a jelenleg készülő bejegyzést.
    */
   confirmCancel(): void {
-    if (this.entryLocal.title !== '' || this.entryLocal.note !== '')
+    if (this.entry.title !== '' || this.entry.note !== '')
     {
       this.editMode = false;
       this.entryService.setEditMode(false);
-      this.entryLocal = new Entry(this.entryLocal.timestamp, this.entryLocal.thumbnail);
-      this.entryService.resetEntry(this.entryLocal);
+      this.entry = new Entry(this.entry.timestamp, this.entry.thumbnail);
+      this.entryService.resetEntry(this.entry);
     }
 
     this.cancelCancel();

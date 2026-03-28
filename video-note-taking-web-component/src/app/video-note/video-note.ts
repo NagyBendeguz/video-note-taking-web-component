@@ -19,7 +19,7 @@ export class VideoNote {
     this.arrayEntry$ = this.entryService.getArrayEntry();
   }
 
-  toggleView(entryId: string) {
+  toggleView(entryId: string): void {
     const currentState = this.isExtendedViews.get(entryId) || false;
     this.isExtendedViews.set(entryId, !currentState);
   }

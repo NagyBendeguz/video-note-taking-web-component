@@ -19,22 +19,26 @@ export class ExtendedView {
   arrayEntry$: BehaviorSubject<Entry[]> = new BehaviorSubject<Entry[]>([]);
   isExtendedViews: Map<string, boolean> = new Map();
   editMode$!: Observable<boolean>;
-  editModeLocal: boolean = false;
+  editMode: boolean = false;
   showModal: boolean = false;
-  settingsLocal: Settings = new Settings();
+  settings: Settings = new Settings();
   private unsubscribe$ = new Subject<void>();
 
-  constructor(public videoService: VideoService, private entryService: EntryService, private settingsSerivce: SettingsService) {}
+  constructor(
+    public videoService: VideoService,
+    private entryService: EntryService,
+    private settingsSerivce: SettingsService
+  ) {}
 
   ngOnInit(): void {
     this.editMode$ = this.entryService.getEditMode();
 
     this.entryService.editMode$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentEditMode => {
-      this.editModeLocal = currentEditMode;
+      this.editMode = currentEditMode;
     });
 
     this.settingsSerivce.settings$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentSettings => {
-      this.settingsLocal = currentSettings;
+      this.settings = currentSettings;
     });
   }
 
@@ -55,7 +59,7 @@ export class ExtendedView {
    * A bejegyzés törlésének kezdése, a megerősítő modal megnyitása.
    */
   deleteEntry(): void {
-    if (!this.editModeLocal && this.settingsLocal.confirmDelete)
+    if (!this.editMode && this.settings.confirmDelete)
     {
       this.showModal = true;
     }
@@ -95,7 +99,7 @@ export class ExtendedView {
   /**
    * A bővített nézet összecsukása tömörített nézetbe, ennek az emit-álása.
    */
-  close() {
+  close(): void {
     this.onClose.emit();
   }
 
