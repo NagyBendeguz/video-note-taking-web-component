@@ -99,22 +99,15 @@ export class EditingView {
     this.addNoteFormat(dirtyNote);
   }
 
-  addNoteFormat(currentNote: string): void {
+  private addNoteFormat(currentNote: string): void {
     const cleanedNoteWithMD = DOMPurify.sanitize(currentNote);
 
     this.entry.note = this.cleanNoteFromMD(cleanedNoteWithMD);
-
     this.entry.formattedNoteMD = cleanedNoteWithMD;
-    this.entry.formattedNoteHTML = cleanedNoteWithMD;
     this.formatNote(this.entry.formattedNoteMD);
   }
 
-  async formatNote(formattedNoteMD: string): Promise<void> {
-    const formattedNoteHTML = await marked(formattedNoteMD);
-    this.entry.formattedNoteHTML = formattedNoteHTML;
-  }
-
-  cleanNoteFromMD(cleanedNoteWithMD: string): string {
+  private cleanNoteFromMD(cleanedNoteWithMD: string): string {
     const cleanedNoteWithoutMD = cleanedNoteWithMD
                                   .replace(/(\*\*|__)(.*?)\1/g, '$2') // bold
                                   .replace(/(\*|_)(.*?)\1/g, '$2') // italic
@@ -122,6 +115,31 @@ export class EditingView {
                                   .replace(/`([^`]+)`/g, '$1'); // inline
 
     return cleanedNoteWithoutMD;
+  }
+
+  private async formatNote(formattedNoteMD: string): Promise<void> {
+    let formattedNoteHTML = await marked(formattedNoteMD);
+    formattedNoteHTML = this.cleanNoteHTML(formattedNoteHTML);
+    this.entry.formattedNoteHTML = this.convertNewlinesToBr(formattedNoteHTML);
+  }
+
+  private cleanNoteHTML(noteHTML: string): string {
+    // Eltávolítani a listaelemek előtt és után található felesleges <br> tag-eket.
+    return noteHTML
+      .replace(/<br\s*\/?>/g, ' ') // Eltávolítani minden <br> tag-et, és kicserélni szóközre.
+      .replace(/(<li>.*?)<\/li>/g, (match) => match.replace(/\s*<br\s*\/?>\s*/g, '') ) // Eltávolítani <br> tag-eket a <li> tag-ekben.
+      .replace(/>\s+</g, '> <'); // Megtisztítani a a HTML tag-ekben található üres helyeket.
+  }
+
+  private convertNewlinesToBr(noteHTML: string): string {
+    // A lista elemeket kivéve az új sorokat <br> tag-eké alakítani.
+    const lines = noteHTML.split(/<\/li>\s*(<li>|<\/ol>|<\/ul>)/);
+    return lines.map(line => {
+      if (line.startsWith('<li>') || line.endsWith('</li>')) {
+        return line;
+      }
+      return line.replace(/\n/g, '<br>');
+    }).join('');
   }
 
   /**
