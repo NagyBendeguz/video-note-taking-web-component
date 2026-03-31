@@ -32,6 +32,6 @@ export class VideoNote {
   }
 
   async formatNote(entry: Entry): Promise<void> {
-    entry.formattedNote = await marked(entry.formattedNote);
+    entry.formattedNoteHTML = await marked(entry.formattedNoteHTML);
   }
 }

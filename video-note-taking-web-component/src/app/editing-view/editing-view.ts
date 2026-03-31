@@ -23,7 +23,6 @@ export class EditingView {
   private note: any[] = [];
   settings: Settings = new Settings();
   showModal: boolean = false;
-  formattedNote: string = '';
   private currentOrderedListNumber: number = 1;
   private unsubscribe$ = new Subject<void>();
 
@@ -96,9 +95,40 @@ export class EditingView {
 
   addNote(event: Event): void {
     const dirtyNote = (event.target as HTMLInputElement).value;
-    this.entry.note = DOMPurify.sanitize(dirtyNote);
-    this.entry.formattedNote = this.entry.note;
-    this.updatePreview();
+
+    const cleanedNoteWithMD = DOMPurify.sanitize(dirtyNote);
+
+    this.entry.note = this.cleanNoteFromMD(cleanedNoteWithMD);
+
+    this.entry.formattedNoteMD = cleanedNoteWithMD;
+    this.entry.formattedNoteHTML = cleanedNoteWithMD;
+    //this.formatNote(this.entry.formattedNoteMD);
+  }
+
+  /*async formatNote(formattedNoteMD: string): Promise<void> {
+    const formattedNoteHTML = await marked(formattedNoteMD);
+    this.entry.formattedNoteHTML = formattedNoteHTML;
+  }*/
+
+  addNoteAfterFormat(): void {
+    const cleanedNoteWithMD = DOMPurify.sanitize(this.entry.formattedNoteMD);
+
+    this.entry.note = this.cleanNoteFromMD(cleanedNoteWithMD);
+
+    this.entry.formattedNoteMD = cleanedNoteWithMD;
+    this.entry.formattedNoteHTML = cleanedNoteWithMD;
+    //this.formatNote(this.entry.formattedNoteMD);
+  }
+
+  cleanNoteFromMD(cleanedNoteWithMD: string): string {
+    // TODO: ordered list, unordered list, table
+    const cleanedNoteWithoutMD = cleanedNoteWithMD
+                                  .replace(/(\*\*|__)(.*?)\1/g, '$2') // bold
+                                  .replace(/(\*|_)(.*?)\1/g, '$2') // italic
+                                  .replace(/~~(.*?)~~/g, '$1') // strikethrough
+                                  .replace(/`([^`]+)`/g, '$1') // inline
+                                  /*.replace(/<u>(.*?)<\/u>/g, '$1')*/; // underline
+    return cleanedNoteWithoutMD;
   }
 
   /**
@@ -172,39 +202,40 @@ export class EditingView {
     this.pdfService.generatePDF(this.note);
   }
 
-  async updatePreview(): Promise<void> {
-    // Markdown-t átalakítani to HTML-be.
-    this.formattedNote = await marked.parse(this.entry.formattedNote);
-  }
-
   bold(): void {
     this.modifyText('**', '**');
+    this.addNoteAfterFormat();
   }
 
   italic(): void {
     this.modifyText('_', '_');
+    this.addNoteAfterFormat();
   }
 
   underline(): void {
-    // TODO
-    this.modifyText('~~', '~~');
+    this.modifyText('~~', '~~'); // TODO <u></u>
+    this.addNoteAfterFormat();
   }
 
   strikethrough(): void {
     this.modifyText('~~', '~~');
+    this.addNoteAfterFormat();
   }
 
   orderedList(): void {
     this.modifyText(`\n${this.currentOrderedListNumber}. `, '\n');
     this.currentOrderedListNumber++;
+    this.addNoteAfterFormat();
   }
 
   unorderedList(): void {
     this.modifyText('\n- ', '\n');
+    this.addNoteAfterFormat();
   }
 
   table(): void {
     this.modifyText('\n| Header | Header |\n| --- | --- |\n| ', 'Row | Row |');
+    this.addNoteAfterFormat();
   }
 
   modifyText(start: string, end: string): void {
@@ -217,35 +248,35 @@ export class EditingView {
     const isTextSelected = cursorPos !== endPos;
 
     // A kurzor előtt található szöveg.
-    let textBefore = this.entry.formattedNote.substring(0, cursorPos);
+    let textBefore = this.entry.formattedNoteMD.substring(0, cursorPos);
     // A kurzor után található szöveg.
-    let textAfter = this.entry.formattedNote.substring(endPos);
+    let textAfter = this.entry.formattedNoteMD.substring(endPos);
 
     let selectedText = '';
 
     // Ha van kijelölt szöveg, akkor a kiválasztott szöveg beillesztésre kerül a start és end karakterek közé.
     if (isTextSelected)
     {
-      selectedText = this.entry.formattedNote.substring(cursorPos, endPos);
+      selectedText = this.entry.formattedNoteMD.substring(cursorPos, endPos);
       // A kijelölt szöveg tördelése.
-      this.entry.formattedNote = textBefore + start + selectedText + end + textAfter;
+      this.entry.formattedNoteMD = textBefore + start + selectedText + end + textAfter;
     }
     // Ha nincs kijelölt szöveg, a formázási karakterek a kurzor pozíciójára kerülnek.
     else
     {
       // Formázási karakterek beszúrása a kurzor helyére.
-      this.entry.formattedNote = textBefore + start + end + textAfter;
+      this.entry.formattedNoteMD = textBefore + start + end + textAfter;
     }
 
-    // Az előnézet frissítése.
-    this.updatePreview();
     // Frissíteni a textarea-t az új formázott jegyzettel.
-    textarea.value = this.entry.formattedNote;
+    textarea.value = this.entry.formattedNoteMD;
     // A kurzor maradjon ugyanott, ahol eredetileg volt.
     textarea.selectionStart = cursorPos + (isTextSelected ? start.length + selectedText.length + end.length : start.length); 
     // Az új kurzorpozíció kezdőpontját és végpontját ugyanarra az értékre beállítani.
     textarea.selectionEnd = textarea.selectionStart;
-    textarea.focus(); 
+    textarea.focus();
+
+    this.addNoteAfterFormat();
   }
 
   /**
