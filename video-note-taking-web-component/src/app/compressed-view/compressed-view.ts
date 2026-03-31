@@ -11,7 +11,6 @@ import { VideoService } from '../services/video';
 export class CompressedView {
   @Input() entry: Entry = new Entry();
   @Input() isExtendedView!: boolean;
-  @Input() formattedNote: string = '';
   @Output() onToggle = new EventEmitter<void>();
 
   constructor(public videoService: VideoService) {}

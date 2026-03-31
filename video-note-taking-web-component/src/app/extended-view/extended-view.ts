@@ -15,7 +15,6 @@ import { Settings } from '../models/settings';
 export class ExtendedView {
   @Input() entry: Entry = new Entry();
   @Input() isExtendedView!: boolean;
-  @Input() formattedNote: string = '';
   @Output() onClose = new EventEmitter<void>();
   arrayEntry$: BehaviorSubject<Entry[]> = new BehaviorSubject<Entry[]>([]);
   isExtendedViews: Map<string, boolean> = new Map();

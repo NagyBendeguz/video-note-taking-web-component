@@ -96,38 +96,31 @@ export class EditingView {
   addNote(event: Event): void {
     const dirtyNote = (event.target as HTMLInputElement).value;
 
-    const cleanedNoteWithMD = DOMPurify.sanitize(dirtyNote);
-
-    this.entry.note = this.cleanNoteFromMD(cleanedNoteWithMD);
-
-    this.entry.formattedNoteMD = cleanedNoteWithMD;
-    this.entry.formattedNoteHTML = cleanedNoteWithMD;
-    //this.formatNote(this.entry.formattedNoteMD);
+    this.addNoteFormat(dirtyNote);
   }
 
-  /*async formatNote(formattedNoteMD: string): Promise<void> {
-    const formattedNoteHTML = await marked(formattedNoteMD);
-    this.entry.formattedNoteHTML = formattedNoteHTML;
-  }*/
-
-  addNoteAfterFormat(): void {
-    const cleanedNoteWithMD = DOMPurify.sanitize(this.entry.formattedNoteMD);
+  addNoteFormat(currentNote: string): void {
+    const cleanedNoteWithMD = DOMPurify.sanitize(currentNote);
 
     this.entry.note = this.cleanNoteFromMD(cleanedNoteWithMD);
 
     this.entry.formattedNoteMD = cleanedNoteWithMD;
     this.entry.formattedNoteHTML = cleanedNoteWithMD;
-    //this.formatNote(this.entry.formattedNoteMD);
+    this.formatNote(this.entry.formattedNoteMD);
+  }
+
+  async formatNote(formattedNoteMD: string): Promise<void> {
+    const formattedNoteHTML = await marked(formattedNoteMD);
+    this.entry.formattedNoteHTML = formattedNoteHTML;
   }
 
   cleanNoteFromMD(cleanedNoteWithMD: string): string {
-    // TODO: ordered list, unordered list, table
     const cleanedNoteWithoutMD = cleanedNoteWithMD
                                   .replace(/(\*\*|__)(.*?)\1/g, '$2') // bold
                                   .replace(/(\*|_)(.*?)\1/g, '$2') // italic
                                   .replace(/~~(.*?)~~/g, '$1') // strikethrough
-                                  .replace(/`([^`]+)`/g, '$1') // inline
-                                  /*.replace(/<u>(.*?)<\/u>/g, '$1')*/; // underline
+                                  .replace(/`([^`]+)`/g, '$1'); // inline
+
     return cleanedNoteWithoutMD;
   }
 
@@ -204,38 +197,27 @@ export class EditingView {
 
   bold(): void {
     this.modifyText('**', '**');
-    this.addNoteAfterFormat();
   }
 
   italic(): void {
     this.modifyText('_', '_');
-    this.addNoteAfterFormat();
-  }
-
-  underline(): void {
-    this.modifyText('~~', '~~'); // TODO <u></u>
-    this.addNoteAfterFormat();
   }
 
   strikethrough(): void {
     this.modifyText('~~', '~~');
-    this.addNoteAfterFormat();
   }
 
   orderedList(): void {
     this.modifyText(`\n${this.currentOrderedListNumber}. `, '\n');
     this.currentOrderedListNumber++;
-    this.addNoteAfterFormat();
   }
 
   unorderedList(): void {
     this.modifyText('\n- ', '\n');
-    this.addNoteAfterFormat();
   }
 
   table(): void {
-    this.modifyText('\n| Header | Header |\n| --- | --- |\n| ', 'Row | Row |');
-    this.addNoteAfterFormat();
+    this.modifyText('\n| Header | Header |\n| --- | --- |\n| ', 'Cell | Cell |');
   }
 
   modifyText(start: string, end: string): void {
@@ -276,7 +258,7 @@ export class EditingView {
     textarea.selectionEnd = textarea.selectionStart;
     textarea.focus();
 
-    this.addNoteAfterFormat();
+    this.addNoteFormat(this.entry.formattedNoteMD);
   }
 
   /**

@@ -25,7 +25,7 @@
         </div>
         <div class="note-div">
             <!--<p class="note">{{ entry.note }}</p>-->
-            <div class="note" [innerHTML]="formattedNote"></div>
+            <div class="note" [innerHTML]="entry.formattedNoteHTML"></div>
         </div>
         <button (click)="close()" class="up-button">
             <i class="bi bi-chevron-up up"></i>

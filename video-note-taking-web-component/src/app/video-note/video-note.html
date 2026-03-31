@@ -6,8 +6,7 @@
                 [entry]="currentEntry"
                 [isExtendedView]="isExtendedViews.get(currentEntry.entryId + '') || false"
                 (onToggle)="toggleView(currentEntry.entryId + '')"
-                [ngClass]="'element-' + idx"
-                [formattedNote]="currentEntry.formattedNoteHTML">
+                [ngClass]="'element-' + idx">
             </compressed-view>
         }
     </div>
