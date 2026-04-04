@@ -36,6 +36,7 @@
     "dompurify": "^3.3.3",
     "jspdf": "^4.2.0",
     "marked": "^17.0.5",
+    "pica": "^9.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -43,6 +44,7 @@
     "@angular/build": "^21.1.1",
     "@angular/cli": "^21.1.1",
     "@angular/compiler-cli": "^21.1.0",
+    "@types/pica": "^9.0.5",
     "jsdom": "^27.1.0",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"

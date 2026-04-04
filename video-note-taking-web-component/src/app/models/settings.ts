@@ -3,7 +3,9 @@ import { Shortcuts } from "./shortcuts";
 export class Settings {
     language: string = 'en';
     theme: string = '';
-    thumbnailResolution: string = '';
+    thumbnailResolutionPercentage: number = 100;
+    thumbnailWidth: number = 1;
+    thumbnailHeight: number = 1;
     convertInput: boolean = true;
     confirmCancel: boolean = false;
     confirmDelete: boolean = true;
