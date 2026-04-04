@@ -37,6 +37,8 @@ export class VideoSettings {
         title: { type: "string" },
         timestamp: { type: "string" },
         note: { type: "string" },
+        formattedNoteHTML: { type: "string" },
+        formattedNoteMD: { type: "string" },
         thumbnail: { type: "string" }
       },
       required: ["entryId", "title", "timestamp", "note", "thumbnail"],
