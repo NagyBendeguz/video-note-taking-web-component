@@ -6,8 +6,8 @@ import { VideoService } from '../services/video';
 import { PdfService } from '../services/pdf';
 import { SettingsService } from '../services/settings';
 import { Settings } from '../models/settings';
-import DOMPurify from 'dompurify';
 import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 
 @Component({
   selector: 'app-editing-view',
@@ -77,14 +77,24 @@ export class EditingView {
     this.unsubscribe$.complete();
   }
 
+  /**
+   * A thumbnail időbeli előre mozgatása.
+   */
   editingRewind(): void {
     this.videoService.emitRewind(this.settings.thumbnailRewindRate);
   }
 
+  /**
+   * A thumbnail időbeli hátra mozgatása.
+   */
   editingForward(): void {
     this.videoService.emitForward(this.settings.thumbnailForwardRate);
   }
 
+  /**
+   * A jelenlegi bejegyzés címének tisztítása és hozzáadása a jelenlegi bejegyzéshez.
+   * @param event - Az input element-nek a event-je.
+   */
   addTitle(event: Event): void {
     const dirtyTitle = (event.target as HTMLInputElement).value;
     if (dirtyTitle.length <= 50)
@@ -93,53 +103,14 @@ export class EditingView {
     }
   }
 
+  /**
+   * A jelenlegi bejegyzés tartalmának hozzáadása a jelenlegi bejegyzéshez.
+   * @param event - Az input element-nek a event-je.
+   */
   addNote(event: Event): void {
     const dirtyNote = (event.target as HTMLInputElement).value;
 
     this.addNoteFormat(dirtyNote);
-  }
-
-  private addNoteFormat(currentNote: string): void {
-    const cleanedNoteWithMD = DOMPurify.sanitize(currentNote);
-
-    this.entry.note = this.cleanNoteFromMD(cleanedNoteWithMD);
-    this.entry.formattedNoteMD = cleanedNoteWithMD;
-    this.formatNote(this.entry.formattedNoteMD);
-  }
-
-  private cleanNoteFromMD(cleanedNoteWithMD: string): string {
-    const cleanedNoteWithoutMD = cleanedNoteWithMD
-                                  .replace(/(\*\*|__)(.*?)\1/g, '$2') // bold
-                                  .replace(/(\*|_)(.*?)\1/g, '$2') // italic
-                                  .replace(/~~(.*?)~~/g, '$1') // strikethrough
-                                  .replace(/`([^`]+)`/g, '$1'); // inline
-
-    return cleanedNoteWithoutMD;
-  }
-
-  private async formatNote(formattedNoteMD: string): Promise<void> {
-    let formattedNoteHTML = await marked(formattedNoteMD);
-    formattedNoteHTML = this.cleanNoteHTML(formattedNoteHTML);
-    this.entry.formattedNoteHTML = this.convertNewlinesToBr(formattedNoteHTML);
-  }
-
-  private cleanNoteHTML(noteHTML: string): string {
-    // Eltávolítani a listaelemek előtt és után található felesleges <br> tag-eket.
-    return noteHTML
-      .replace(/<br\s*\/?>/g, ' ') // Eltávolítani minden <br> tag-et, és kicserélni szóközre.
-      .replace(/(<li>.*?)<\/li>/g, (match) => match.replace(/\s*<br\s*\/?>\s*/g, '') ) // Eltávolítani <br> tag-eket a <li> tag-ekben.
-      .replace(/>\s+</g, '> <'); // Megtisztítani a a HTML tag-ekben található üres helyeket.
-  }
-
-  private convertNewlinesToBr(noteHTML: string): string {
-    // A lista elemeket kivéve az új sorokat <br> tag-eké alakítani.
-    const lines = noteHTML.split(/<\/li>\s*(<li>|<\/ol>|<\/ul>)/);
-    return lines.map(line => {
-      if (line.startsWith('<li>') || line.endsWith('</li>')) {
-        return line;
-      }
-      return line.replace(/\n/g, '<br>');
-    }).join('');
   }
 
   /**
@@ -213,32 +184,56 @@ export class EditingView {
     this.pdfService.generatePDF(this.note);
   }
 
+  /**
+   * Félkövér formázás.
+   */
   bold(): void {
     this.modifyText('**', '**');
   }
 
+  /**
+   * Dőlt formázás.
+   */
   italic(): void {
     this.modifyText('_', '_');
   }
 
+  /**
+   * Áthúzott formázás.
+   */
   strikethrough(): void {
     this.modifyText('~~', '~~');
   }
 
+  /**
+   * Számozott lista formázás.
+   */
   orderedList(): void {
     this.modifyText(`\n${this.currentOrderedListNumber}. `, '\n');
     this.currentOrderedListNumber++;
   }
 
+  /**
+   * Felsorolás formázás.
+   */
   unorderedList(): void {
     this.modifyText('\n- ', '\n');
   }
 
-  table(): void {
+  /**
+   * Táblázat formázás.
+   */
+  /*table(): void {
     this.modifyText('\n| Header | Header |\n| --- | --- |\n| ', 'Cell | Cell |');
-  }
+  }*/
 
-  modifyText(start: string, end: string): void {
+  /**
+   * A markdown szintaxis gombokkal való hozzáadása a kijeleölt szöveghez.
+   * Ha nincsen kijelölve semmi akkor szimplán a legenerálja a megfelelő karaktereket.
+   * @param start - A kijelölt szöveg elő beszúrabdó karakterek.
+   * @param end - A kijelölt szöveg mögé beszurandó karakterek.
+   */
+  private modifyText(start: string, end: string): void {
     const textarea = document.getElementById('note') as HTMLTextAreaElement;
     // A kurzor aktuális pozíciója.
     const cursorPos = textarea.selectionStart;
@@ -277,6 +272,72 @@ export class EditingView {
     textarea.focus();
 
     this.addNoteFormat(this.entry.formattedNoteMD);
+  }
+
+  /**
+   * A bejegyzés tisztítása és átalakítása markdown szintaxisból formázás nélküli illetve HTML formátumba.
+   * @param currentNote - A jelenlegi bejegyzés tartalma.
+   */
+  private addNoteFormat(currentNote: string): void {
+    const cleanedNoteWithMD = DOMPurify.sanitize(currentNote);
+
+    this.entry.note = this.cleanNoteFromMD(cleanedNoteWithMD);
+    this.entry.formattedNoteMD = cleanedNoteWithMD;
+    this.formatNote(this.entry.formattedNoteMD);
+  }
+
+  /**
+   * Eltünteti a markdown formázást a bejegyzés tartalmából.
+   * @param cleanedNoteWithMD - A tisztított bejegyzés tartalma markdown szintaxisban.
+   * @returns - A markdown szintaxis nélküli bejegyzés tartalma.
+   */
+  private cleanNoteFromMD(cleanedNoteWithMD: string): string {
+    const cleanedNoteWithoutMD = cleanedNoteWithMD
+                                  .replace(/(\*\*|__)(.*?)\1/g, '$2') // Félkövér.
+                                  .replace(/(\*|_)(.*?)\1/g, '$2') // Dőlt.
+                                  .replace(/~~(.*?)~~/g, '$1') // Áthúzott.
+                                  .replace(/`([^`]+)`/g, '$1'); // Beágyazott.
+
+    return cleanedNoteWithoutMD;
+  }
+
+  /**
+   * Átalakítja a Marked JavaScript könyvtár segítségével a markdown szintaxist HTML formátumba.
+   * @param formattedNoteMD - A bejegyzés tartalma markdown szintaxisban.
+   */
+  private async formatNote(formattedNoteMD: string): Promise<void> {
+    let formattedNoteHTML = await marked(formattedNoteMD);
+    formattedNoteHTML = this.cleanNoteHTML(formattedNoteHTML);
+    this.entry.formattedNoteHTML = this.convertNewlinesToBr(formattedNoteHTML);
+  }
+
+  /**
+   * Eltávolítani a listaelemek előtt és után található felesleges <br> tag-eket.
+   * @param noteHTML - A HTML formátumban található bejegyzés tartalma.
+   * @returns - A HTML formátumó bejegyzés tartalma a felesleges <br> tag-ek nélkül.
+   */
+  private cleanNoteHTML(noteHTML: string): string {
+    return noteHTML
+      .replace(/<br\s*\/?>/g, ' ') // Eltávolítani minden <br> tag-et, és kicserélni szóközre.
+      .replace(/(<li>.*?)<\/li>/g, (match) => match.replace(/\s*<br\s*\/?>\s*/g, '') ) // Eltávolítani <br> tag-eket a <li> tag-ekben.
+      .replace(/>\s+</g, '> <'); // Megtisztítani a HTML tag-ekben található üres helyeket.
+  }
+
+  /**
+   * A listaelemeket kivéve az új sorokat <br> tag-eké alakítani.
+   * @param noteHTML - A HTML formátumban található bejegyzés tartalma.
+   * @returns - A HTML formátumó bejegyzés tartalma a <br> tag-eket használva \n helyett.
+   */
+  private convertNewlinesToBr(noteHTML: string): string {
+    const lines = noteHTML.split(/<\/li>\s*(<li>|<\/ol>|<\/ul>)/);
+    return lines.map(line =>
+    {
+      if (line.startsWith('<li>') || line.endsWith('</li>'))
+      {
+        return line;
+      }
+      return line.replace(/\n/g, '<br>');
+    }).join('');
   }
 
   /**
