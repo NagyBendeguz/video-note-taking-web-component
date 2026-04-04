@@ -2,6 +2,8 @@ import { ChangeDetectorRef, Component, ElementRef, HostListener, Input, SimpleCh
 import { VideoService } from '../services/video';
 import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
 import { SettingsService } from '../services/settings';
+import { Settings } from '../models/settings';
+import pica from 'pica';
 
 @Component({
   selector: 'app-video-player',
@@ -43,7 +45,9 @@ export class VideoPlayer {
   private timestamp: string = '00:00:00.000';
   private navbarOffsetState: boolean = false;
   private isVideoNavbarOffset!: boolean;
+  private settings: Settings = new Settings();
   private unsubscribe$ = new Subject<void>();
+  private pica = new pica();
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -118,6 +122,11 @@ export class VideoPlayer {
     // Videó vezérlősávjának az eltolása.
     this.settingsService.videoNavbarOffset$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentOffset => {
       this.isVideoNavbarOffset = currentOffset;
+    });
+
+    // A beállításokra feliratkozás.
+    this.settingsService.settings$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentSettings => {
+      this.settings = currentSettings;
     });
   }
 
@@ -217,11 +226,12 @@ export class VideoPlayer {
   }
 
   /**
-   * A videó meta adatainak betöltésekor a videó hosszának és magasságának betöltése.
+   * A videó meta adatainak betöltésekor a videó hosszának és magasságának betöltése és ezt a beállításokba elmenteni.
    */
   onVideoMetadataLoaded(): void {
     this.setDuration();
     this.setVideoHeight();
+    this.setThumbnailSettings();
   }
 
   /**
@@ -332,7 +342,7 @@ export class VideoPlayer {
   }
 
   /**
-   * A videó jelenlegi képkockájáról elkészíteni egy képernyőképet.
+   * A videó jelenlegi képkockájáról elkészíteni egy képernyőképet a megfelelő minőségben.
    */
   private createCurrentThumbnail(): void {
     const video = this.videoElement.nativeElement;
@@ -347,11 +357,50 @@ export class VideoPlayer {
       // Jelenlegi videó frame-je.
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-      // Átalakítani a videó frame-t base64-re.
-      const dataURL = canvas.toDataURL('image/png');
+      // Egy új canvas létrehozása a megadott méretekkel.
+      const outputCanvas = document.createElement('canvas');
+      outputCanvas.width = this.settings.thumbnailWidth;
+      outputCanvas.height = this.settings.thumbnailHeight;
 
-      this.videoService.setThumbnail(dataURL);
+      // Pica használata a képek méretének módosításához.
+      this.pica.resize(canvas, outputCanvas)
+        .then(result => this.pica.toBlob(result, 'image/jpeg', (this.settings.thumbnailResolutionPercentage / 100))) // Minőség beállítása.
+        .then(blob => this.convertBlobToBase64(blob)) // Blob konvertálása Base64-re.
+        .then(dataURL =>
+        {
+          this.videoService.setThumbnail(dataURL);
+        })
+        .catch(error =>
+        {
+          console.error('Error during resizing: ', error);
+        }
+      );
     }
+  }
+
+  /**
+   * Blob konvertálása Base64-re
+   * @param blob - A megadott kép blob.
+   * @returns - A Base64-re konvertált kép.
+   */
+  private convertBlobToBase64(blob: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        resolve(reader.result as string); // Base64 konvertálása string-re.
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob); // Blob konvertálása Base64-re.
+    });
+  }
+
+  /**
+   * A metaadatok betöltésekor beállítani az alapértelmezett képernyőkép szélességét és magasságát a beállításokba.
+   */
+  private setThumbnailSettings(): void {
+    const video = this.videoElement.nativeElement;
+    this.settingsService.updateThumbnailWidth(video.videoWidth);
+    this.settingsService.updateThumbnailHeight(video.videoHeight);
   }
 
   /**
