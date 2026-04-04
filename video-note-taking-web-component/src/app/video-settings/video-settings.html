@@ -38,9 +38,12 @@
     <h3>Editing Settings</h3>
     <ul>
         <li>Language</li>
-        <li>Thumbnail Resolution</li>
-        <li>Convert Input</li>
         <li>Theme</li>
+        <li>Thumbnail Resolution</li>
+        <li>
+            <label>Convert Input: </label>
+            <button (click)="toggleConvertInput()">{{ (settings$ | async)?.convertInput ? "Turn Off" : "Turn On" }}</button>
+        </li>
         <li>
             <label>Confirm Cancel: </label>
             <button (click)="toggleConfirmCancel()">{{ (settings$ | async)?.confirmCancel ? "Turn Off" : "Turn On" }}</button>

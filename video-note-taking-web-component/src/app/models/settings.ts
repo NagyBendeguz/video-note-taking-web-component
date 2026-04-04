@@ -2,9 +2,9 @@ import { Shortcuts } from "./shortcuts";
 
 export class Settings {
     language: string = 'en';
-    thumbnailResolution: string = '';
-    convertInput: boolean = false;
     theme: string = '';
+    thumbnailResolution: string = '';
+    convertInput: boolean = true;
     confirmCancel: boolean = false;
     confirmDelete: boolean = true;
     thumbnailForwardRate: number = 1;

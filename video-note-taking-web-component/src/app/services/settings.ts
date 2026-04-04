@@ -63,4 +63,10 @@ export class SettingsService {
   toggleSubtitles(): void {
     this.isVisibleSource.next(!this.isVisibleSource.value);
   }
+
+  toggleConvertInput(): void {
+    const currentSettings = this.settingsSource.getValue();
+
+    this.settingsSource.next({ ...currentSettings, convertInput: !currentSettings.convertInput });
+  }
 }

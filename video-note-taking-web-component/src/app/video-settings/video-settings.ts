@@ -45,21 +45,21 @@ export class VideoSettings {
   };
 
   constructor (
-    private settingsSerivce: SettingsService,
+    private settingsService: SettingsService,
     private entryService: EntryService,
     private videoService: VideoService
   ) {}
 
   ngOnInit(): void {
-    this.settings$ = this.settingsSerivce.getSettings();
+    this.settings$ = this.settingsService.getSettings();
 
-    this.settingsSerivce.settings$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentSettings => {
+    this.settingsService.settings$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentSettings => {
       this.settings = currentSettings;
     });
 
-    this.isOffsetNegative$ = this.settingsSerivce.getVideoNavbarOffset();
+    this.isOffsetNegative$ = this.settingsService.getVideoNavbarOffset();
 
-    this.settingsSerivce.videoNavbarOffset$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentVideoOffset => {
+    this.settingsService.videoNavbarOffset$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentVideoOffset => {
       this.changeOffset(currentVideoOffset);
     });
 
@@ -69,8 +69,8 @@ export class VideoSettings {
       this.isFullscreen = currentFullscreenRequest;
     });
 
-    this.videoForwardRate$ = this.settingsSerivce.getVideoForwardRate();
-    this.videoRewindRate$ = this.settingsSerivce.getVideoRewindRate();
+    this.videoForwardRate$ = this.settingsService.getVideoForwardRate();
+    this.videoRewindRate$ = this.settingsService.getVideoRewindRate();
   }
 
   ngOnDestroy(): void {
@@ -85,14 +85,14 @@ export class VideoSettings {
   changePlaybackSpeed(event: Event): void {
     const target = event.target as HTMLSelectElement;
     const speed = parseFloat(target.value);
-    this.settingsSerivce.setPlaybackRate(speed);
+    this.settingsService.setPlaybackRate(speed);
   }
 
   /**
    * A videó feliratok ki és be kapcsolása.
    */
   toggleSubtitles(): void {
-    this.settingsSerivce.toggleSubtitles();
+    this.settingsService.toggleSubtitles();
     this.isSubtitleVisible = !this.isSubtitleVisible;
   }
 
@@ -102,13 +102,8 @@ export class VideoSettings {
   toggleOffset(): void {
     if (!this.isFullscreen)
     {
-      this.settingsSerivce.toggleVideoNavbarOffset();
+      this.settingsService.toggleVideoNavbarOffset();
     }
-  }
-
-  private changeOffset(offset: boolean): void {
-    const value = offset ? '-65px' : '0px';
-    document.documentElement.style.setProperty('--video-navbar-offset', value);
   }
 
   /**
@@ -123,6 +118,13 @@ export class VideoSettings {
    */
   toggleConfirmDelete(): void {
     this.settings.confirmDelete = !this.settings.confirmDelete;
+  }
+
+  /**
+   * A jegyzet le legyen-e renderelve.
+   */
+  toggleConvertInput(): void {
+    this.settingsService.toggleConvertInput();
   }
 
   /**
@@ -174,11 +176,11 @@ export class VideoSettings {
     // Ellenőrizni, hogy a bemenet az egy érvényes szám-e.
     if (isNaN(sanitizedValue) || sanitizedValue <= 0)
     {
-      this.settingsSerivce.setVideoForwardRate(10);
+      this.settingsService.setVideoForwardRate(10);
     }
     else
     {
-      this.settingsSerivce.setVideoForwardRate(sanitizedValue);
+      this.settingsService.setVideoForwardRate(sanitizedValue);
     }
   }
 
@@ -193,11 +195,11 @@ export class VideoSettings {
     // Ellenőrizni, hogy a bemenet az egy érvényes szám-e.
     if (isNaN(sanitizedValue) || sanitizedValue <= 0)
     {
-      this.settingsSerivce.setVideoRewindRate(10);
+      this.settingsService.setVideoRewindRate(10);
     }
     else
     {
-      this.settingsSerivce.setVideoRewindRate(sanitizedValue);
+      this.settingsService.setVideoRewindRate(sanitizedValue);
     }
   }
 
@@ -269,5 +271,14 @@ export class VideoSettings {
     });
 
     return sanitizedData;
+  }
+
+  /**
+   * A videó vezérlősávjának a videóval való átfedésének ki és be kapcsolása.
+   * @param offset - A videó vezérlősávjának jelenlegi értéke (ki-be).
+   */
+  private changeOffset(offset: boolean): void {
+    const value = offset ? '-65px' : '0px';
+    document.documentElement.style.setProperty('--video-navbar-offset', value);
   }
 }

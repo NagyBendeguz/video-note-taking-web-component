@@ -22,6 +22,7 @@ export class ExtendedView {
   editMode: boolean = false;
   showModal: boolean = false;
   settings: Settings = new Settings();
+  settings$!: Observable<Settings>;
   private unsubscribe$ = new Subject<void>();
 
   constructor(
@@ -36,6 +37,8 @@ export class ExtendedView {
     this.entryService.editMode$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentEditMode => {
       this.editMode = currentEditMode;
     });
+
+    this.settings$ = this.settingsSerivce.getSettings();
 
     this.settingsSerivce.settings$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentSettings => {
       this.settings = currentSettings;
