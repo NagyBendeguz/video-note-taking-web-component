@@ -3,9 +3,9 @@ import { SettingsService } from '../services/settings';
 import { Settings } from '../models/settings';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { EntryService } from '../services/entry';
+import { VideoService } from '../services/video';
 import Ajv from 'ajv';
 import DOMPurify from 'dompurify';
-import { VideoService } from '../services/video';
 
 @Component({
   selector: 'app-video-settings',
@@ -132,7 +132,7 @@ export class VideoSettings {
 
   /**
    * A szerkesztési nézetben az idő előretekerés mértékegységének változtatása.
-   * @param event - A szerkesztési nézetben az idő előretekerésére beállítani kívánt mértékegység.
+   * @param event - A szerkesztési nézetben az idő előretekerésére beállítani kívánt mértékegység eseményként.
    */
   setThumbnailForwardRate(event: Event): void {
     const dirtyThumbnailForwardRate = (event.target as HTMLInputElement).value;
@@ -151,7 +151,7 @@ export class VideoSettings {
 
   /**
    * A szerkesztési nézetben az idő hátratekerés mértékegységének változtatása.
-   * @param event - A szerkesztési nézetben az idő hátratekerésére beállítani kívánt mértékegység.
+   * @param event - A szerkesztési nézetben az idő hátratekerésére beállítani kívánt mértékegység eseményként.
    */
   setThumbnailRewindRate(event: Event): void {
     const dirtyThumbnailRewindRate = (event.target as HTMLInputElement).value;
@@ -170,7 +170,7 @@ export class VideoSettings {
 
   /**
    * A videó vezérlősávjában az idő előretekerés mértékegységének változtatása.
-   * @param event - A videó vezérlősávjában az idő előretekerésére beállítani kívánt mértékegység.
+   * @param event - A videó vezérlősávjában az idő előretekerésére beállítani kívánt mértékegység eseményként.
    */
   setVideoForwardRate(event: Event): void {
     const dirtyVideoForwardRate = (event.target as HTMLInputElement).value;
@@ -189,7 +189,7 @@ export class VideoSettings {
 
   /**
    * A videó vezérlősávjában az idő hátratekerés mértékegységének változtatása.
-   * @param event - A videó vezérlősávjában az idő hátratekerésére beállítani kívánt mértékegység.
+   * @param event - A videó vezérlősávjában az idő hátratekerésére beállítani kívánt mértékegység eseményként.
    */
   setVideoRewindRate(event: Event): void {
     const dirtyVideoForwardRate = (event.target as HTMLInputElement).value;
@@ -203,6 +203,60 @@ export class VideoSettings {
     else
     {
       this.settingsService.setVideoRewindRate(sanitizedValue);
+    }
+  }
+
+  /**
+   * A videó képernyőkép minőségének beállítása százalékban.
+   * @param event - A képernyőkép minőségének beállítani kívánt értéke százalékban eseményként.
+   */
+  setThumbnailQualityPercentage(event: Event): void {
+    const dirtyThumbnailQualityPercentage = (event.target as HTMLInputElement).value;
+    const sanitizedValue = Number(DOMPurify.sanitize(dirtyThumbnailQualityPercentage)) || 100;
+
+    if (isNaN(sanitizedValue) || sanitizedValue < 0)
+    {
+      this.settings.thumbnailResolutionPercentage = 100;
+    }
+    else
+    {
+      this.settings.thumbnailResolutionPercentage = sanitizedValue;
+    }
+  }
+
+  /**
+   * A videó képernyőkép szélességének beállítása.
+   * @param event - A képernyőkép szélességének beállítani kívánt értéke eseményként.
+   */
+  setThumbnailWidth(event: Event): void {
+    const dirtyThumbnailWidth = (event.target as HTMLInputElement).value;
+    const sanitizedValue = Number(DOMPurify.sanitize(dirtyThumbnailWidth)) || 1;
+
+    if (isNaN(sanitizedValue) || sanitizedValue < 0)
+    {
+      this.settings.thumbnailWidth = 1;
+    }
+    else
+    {
+      this.settings.thumbnailWidth = sanitizedValue;
+    }
+  }
+
+  /**
+   * A videó képernyőkép magasságának beállítása.
+   * @param event - A képernyőkép magasságának beállítani kívánt értéke eseményként.
+   */
+  setThumbnailHeight(event: Event): void {
+    const dirtyThumbnailHeight = (event.target as HTMLInputElement).value;
+    const sanitizedValue = Number(DOMPurify.sanitize(dirtyThumbnailHeight)) || 1;
+
+    if (isNaN(sanitizedValue) || sanitizedValue < 0)
+    {
+      this.settings.thumbnailHeight = 1;
+    }
+    else
+    {
+      this.settings.thumbnailHeight = sanitizedValue;
     }
   }
 

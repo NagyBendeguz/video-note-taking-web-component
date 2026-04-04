@@ -39,7 +39,18 @@
     <ul>
         <li>Language</li>
         <li>Theme</li>
-        <li>Thumbnail Resolution</li>
+        <li>
+            <label>Thumbnail Quality Percentage: </label>
+            <input type="range" min="1" max="100" [value]="(settings$ | async)?.thumbnailResolutionPercentage" (input)="setThumbnailQualityPercentage($event)"/>
+        </li>
+        <li>
+            <label>Thumbnail Width: </label>
+            <input type="number" [value]="(settings$ | async)?.thumbnailWidth" (input)="setThumbnailWidth($event)">
+        </li>
+        <li>
+            <label>Thumbnail Height: </label>
+            <input type="number" [value]="(settings$ | async)?.thumbnailHeight" (input)="setThumbnailHeight($event)">
+        </li>
         <li>
             <label>Convert Input: </label>
             <button (click)="toggleConvertInput()">{{ (settings$ | async)?.convertInput ? "Turn Off" : "Turn On" }}</button>
