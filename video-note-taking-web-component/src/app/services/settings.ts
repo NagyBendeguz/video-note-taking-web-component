@@ -66,7 +66,16 @@ export class SettingsService {
 
   toggleConvertInput(): void {
     const currentSettings = this.settingsSource.getValue();
-
     this.settingsSource.next({ ...currentSettings, convertInput: !currentSettings.convertInput });
+  }
+
+  updateThumbnailWidth(newThumbnailWidth: number): void {
+    const currentSettings = this.settingsSource.getValue();
+    this.settingsSource.next({ ...currentSettings, thumbnailWidth: newThumbnailWidth });
+  }
+
+  updateThumbnailHeight(newThumbnailHeight: number): void {
+    const currentSettings = this.settingsSource.getValue();
+    this.settingsSource.next({ ...currentSettings, thumbnailHeight: newThumbnailHeight });
   }
 }
