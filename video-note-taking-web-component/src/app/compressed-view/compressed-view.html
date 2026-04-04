@@ -17,7 +17,7 @@
             }
             @else
             {
-                <p class="note-raw">{{ entry.note }}</p>
+                <p class="note-raw" [innerHTML]="entry.noteWithBr"></p>
             }
         </div>
         <button (click)="toggle()" class="down-button">

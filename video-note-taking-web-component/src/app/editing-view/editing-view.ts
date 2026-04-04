@@ -282,6 +282,7 @@ export class EditingView {
     const cleanedNoteWithMD = DOMPurify.sanitize(currentNote);
 
     this.entry.note = this.cleanNoteFromMD(cleanedNoteWithMD);
+    this.entry.noteWithBr = this.convertNewlinesToBr(this.cleanNoteFromMD(cleanedNoteWithMD));
     this.entry.formattedNoteMD = cleanedNoteWithMD;
     this.formatNote(this.entry.formattedNoteMD);
   }

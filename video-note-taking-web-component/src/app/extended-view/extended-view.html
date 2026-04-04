@@ -30,7 +30,7 @@
             }
             @else
             {
-                <p class="note-raw">{{ entry.note }}</p>
+                <p class="note-raw" [innerHTML]="entry.noteWithBr"></p>
             }
         </div>
         <button (click)="close()" class="up-button">

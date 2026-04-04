@@ -3,6 +3,7 @@ export class Entry {
     title: string;
     timestamp: string;
     note: string;
+    noteWithBr: string;
     formattedNoteHTML: string;
     formattedNoteMD: string;
     thumbnail: string;
@@ -12,6 +13,7 @@ export class Entry {
         this.title = '';
         this.timestamp = timestamp;
         this.note = '';
+        this.noteWithBr = '';
         this.formattedNoteHTML = '';
         this.formattedNoteMD = '';
         this.thumbnail = thumbnail;
