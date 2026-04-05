@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-confirm-message',
@@ -11,6 +12,8 @@ export class ConfirmMessage {
   @Input() type!: string;
   @Output() confirm = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
+
+  constructor(private translate: TranslateService) {}
 
   confirmButton(): void {
     this.confirm.emit();

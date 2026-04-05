@@ -5,6 +5,7 @@ import { EntryService } from '../services/entry';
 import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
 import { SettingsService } from '../services/settings';
 import { Settings } from '../models/settings';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-extended-view',
@@ -28,7 +29,8 @@ export class ExtendedView {
   constructor(
     public videoService: VideoService,
     private entryService: EntryService,
-    private settingsSerivce: SettingsService
+    private settingsSerivce: SettingsService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {

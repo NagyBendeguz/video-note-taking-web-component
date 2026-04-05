@@ -1,9 +1,9 @@
 <div class="modal">
     <div class="modal-content">
-        <h4>Warning!</h4>
-        <p>Are you sure you want to {{ type }} it?</p>
+        <h4>{{ 'CONFIRM_MESSAGE.WARNING' | translate }}!</h4>
+        <p>{{ 'CONFIRM_MESSAGE.ARE_YOU_SURE' | translate }} {{ type }}{{ 'CONFIRM_MESSAGE.IT' | translate }}?</p>
         <div class="modal-footer">
-            <button class="cancel" (click)="cancelButton()">Cancel</button>
+            <button class="cancel" (click)="cancelButton()">{{ 'BUTTON.CANCEL' | translate }}</button>
             <button class="delete" (click)="confirmButton()">{{ message }}</button>
         </div>
     </div>

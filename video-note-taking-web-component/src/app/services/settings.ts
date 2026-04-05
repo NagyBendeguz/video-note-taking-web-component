@@ -78,4 +78,9 @@ export class SettingsService {
     const currentSettings = this.settingsSource.getValue();
     this.settingsSource.next({ ...currentSettings, thumbnailHeight: newThumbnailHeight });
   }
+
+  setLanguage(lang: string): void {
+    const currentSettings = this.settingsSource.getValue();
+    this.settingsSource.next({ ...currentSettings, language: lang });
+  }
 }

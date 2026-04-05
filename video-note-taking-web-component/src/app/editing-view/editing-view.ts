@@ -8,6 +8,7 @@ import { SettingsService } from '../services/settings';
 import { Settings } from '../models/settings';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-editing-view',
@@ -30,7 +31,8 @@ export class EditingView {
     private entryService: EntryService,
     private videoService: VideoService,
     private settingsSerivce: SettingsService,
-    private pdfService: PdfService
+    private pdfService: PdfService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {

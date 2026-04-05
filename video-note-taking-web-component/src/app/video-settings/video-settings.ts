@@ -6,6 +6,7 @@ import { EntryService } from '../services/entry';
 import { VideoService } from '../services/video';
 import Ajv from 'ajv';
 import DOMPurify from 'dompurify';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-video-settings',
@@ -47,11 +48,20 @@ export class VideoSettings {
     }
   };
 
+  langs = [
+    { code: 'en', label: 'English' },
+    { code: 'hu', label: 'Magyar' }
+  ];
+
   constructor (
     private settingsService: SettingsService,
     private entryService: EntryService,
-    private videoService: VideoService
-  ) {}
+    private videoService: VideoService,
+    private translate: TranslateService
+  ) {
+    translate.addLangs(this.langs.map(l => l.code));
+    translate.setFallbackLang('en');
+  }
 
   ngOnInit(): void {
     this.settings$ = this.settingsService.getSettings();
@@ -79,6 +89,12 @@ export class VideoSettings {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  changeLang(event: Event) {
+    const code = (event.target as HTMLSelectElement).value;
+    this.settingsService.setLanguage(code);
+    this.translate.use(code);
   }
 
   /**

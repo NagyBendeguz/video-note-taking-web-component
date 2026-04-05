@@ -13,17 +13,21 @@
             </button>
         </div>
         <div class="title">
-            <label for="title">Title</label>
-            <input type="text" name="title" id="title" placeholder="Title" [value]="(entry$ | async)?.title" (input)="addTitle($event)" required maxlength="50">
+            <label for="title">{{ 'EDIT.TITLE' | translate }}</label>
+            <input type="text" name="title" id="title" placeholder="{{ 'EDIT.TITLE' | translate }}" [value]="(entry$ | async)?.title" (input)="addTitle($event)" maxlength="50" required>
         </div>
         <div class="save-cancel">
-            <button (click)="cancelEntry()" [disabled]="(entry$ | async)?.title === '' && (entry$ | async)?.note === ''" class="cancel">Cancel Entry</button>
-            <button (click)="saveEntry()" [disabled]="(entry$ | async)?.title === '' && (entry$ | async)?.note === ''" class="save">Save Entry</button>
+            <button (click)="cancelEntry()" [disabled]="(entry$ | async)?.title === '' && (entry$ | async)?.note === ''" class="cancel">
+                {{ 'BUTTON.CANCEL' | translate }}
+            </button>
+            <button (click)="saveEntry()" [disabled]="(entry$ | async)?.title === '' && (entry$ | async)?.note === ''" class="save">
+                {{ 'EDIT.SAVE' | translate }}
+            </button>
             @if (showModal)
             {
                 <confirm-message
-                    [message]="'Yes Cancel'"
-                    [type]="'cancel'"
+                    [message]="'EDIT.CONFIRM_MESSAGE_MESSAGE' | translate"
+                    [type]="'EDIT.CONFIRM_MESSAGE_TYPE' | translate"
                     (confirm)="confirmCancel()"
                     (cancel)="cancelCancel()">
                 </confirm-message>
@@ -53,12 +57,12 @@
                 </button>-->
             </div>
             <div>
-                <button (click)="saveNote()" class="save">Save Note</button>
-                <button (click)="exportNote()" class="export">Export Note</button>
+                <button (click)="saveNote()" class="save">{{ 'EDIT.SAVE_NOTE' | translate }}</button>
+                <button (click)="exportNote()" class="export">{{ 'EDIT.EXPORT_NOTE' | translate }}</button>
             </div>
         </div>
         <div class="type-note">
-            <textarea name="note" id="note" [value]="(entry$ | async)?.formattedNoteMD" (input)="addNote($event)" placeholder="Note" required></textarea>
+            <textarea name="note" id="note" [value]="(entry$ | async)?.formattedNoteMD" (input)="addNote($event)" placeholder="{{ 'EDIT.NOTE' | translate }}" required></textarea>
         </div>
     </div>
 </div>

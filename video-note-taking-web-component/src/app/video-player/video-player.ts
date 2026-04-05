@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
 import { SettingsService } from '../services/settings';
 import { Settings } from '../models/settings';
 import pica from 'pica';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-video-player',
@@ -52,7 +53,8 @@ export class VideoPlayer {
   constructor(
     private cdr: ChangeDetectorRef,
     private videoService: VideoService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {

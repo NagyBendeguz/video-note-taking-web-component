@@ -1,16 +1,16 @@
 <div class="settings-div">
-    <h2>Settings</h2>
-    <h3>Load Note</h3>
+    <h2>{{ 'SETTINGS.SETTINGS' | translate }}</h2>
+    <h3>{{ 'SETTINGS.LOAD_NOTE' | translate }}</h3>
     <ul>
         <li>
-            <label>Load Note: </label>
+            <label>{{ 'SETTINGS.LOAD_NOTE' | translate }}: </label>
             <input type="file" (change)="onFileChange($event)" accept=".json">
         </li>
     </ul>
-    <h3>Video Player Settings</h3>
+    <h3>{{ 'SETTINGS.VIDEO_PLAYER_SETTINGS' | translate }}</h3>
     <ul>
         <li>
-            <label>Playback Speed: </label>
+            <label>{{ 'SETTINGS.PLAYBACK_SPEED' | translate }}: </label>
             <select (change)="changePlaybackSpeed($event)">
                 @for (speed of playbackSpeeds; track $index)
                 {
@@ -19,76 +19,82 @@
             </select>
         </li>
         <li>
-            <label>Forward Rate in Seconds: </label>
+            <label>{{ 'SETTINGS.FORWARD_RATE_IN_SECONDS' | translate }}: </label>
             <input type="number" [value]="(videoForwardRate$ | async)" (input)="setVideoForwardRate($event)">
         </li>
         <li>
-            <label>Rewind Rate in Seconds: </label>
+            <label>{{ 'SETTINGS.REWIND_RATE_IN_SECONDS' | translate }}: </label>
             <input type="number" [value]="(videoRewindRate$ | async)" (input)="setVideoRewindRate($event)">
         </li>
         <li>
-            <label>Subtitles: </label>
-            <button (click)="toggleSubtitles()">{{ isSubtitleVisible ? "Turn Off" : "Turn On" }}</button>
+            <label>{{ 'SETTINGS.SUBTITLES' | translate }}: </label>
+            <button (click)="toggleSubtitles()">{{ isSubtitleVisible ? ('SETTINGS.TURN_OFF' | translate) : ('SETTINGS.TURN_ON' | translate) }}</button>
         </li>
         <li>
-            <label>Video Navbar Offset: </label>
-            <button (click)="toggleOffset()" [disabled]="isFullscreen$ | async">{{ (isOffsetNegative$ | async) ? "Turn Off" : "Turn On" }}</button>
+            <label>{{ 'SETTINGS.VIDEO_NAVBAR_OFFSET' | translate }}: </label>
+            <button (click)="toggleOffset()" [disabled]="isFullscreen$ | async">{{ (isOffsetNegative$ | async) ? ('SETTINGS.TURN_OFF' | translate) : ('SETTINGS.TURN_ON' | translate) }}</button>
         </li>
     </ul>
-    <h3>Editing Settings</h3>
+    <h3>{{ 'SETTINGS.EDITING_SETTINGS' | translate }}</h3>
     <ul>
-        <li>Language</li>
-        <li>Theme</li>
         <li>
-            <label>Thumbnail Quality Percentage: </label>
+            <label>{{ 'SETTINGS.SUBTITLES' | translate }}: </label>
+            <select [value]="(settings$ | async)?.language" (change)="changeLang($event)">
+                @for (lang of langs; track $index)
+                {
+                    <option [value]="lang.code">{{ lang.label }}</option>
+                }
+            </select>
+        </li>
+        <li>{{ 'SETTINGS.THEME' | translate }}</li>
+        <li>
+            <label>{{ 'SETTINGS.THUMBNAIL_QUALITY_PERCENTAGE' | translate }}: </label>
             <input type="range" min="1" max="100" [value]="(settings$ | async)?.thumbnailResolutionPercentage" (input)="setThumbnailQualityPercentage($event)"/>
         </li>
         <li>
-            <label>Thumbnail Width: </label>
+            <label>{{ 'SETTINGS.THUMBNAIL_WIDTH' | translate }}: </label>
             <input type="number" [value]="(settings$ | async)?.thumbnailWidth" (input)="setThumbnailWidth($event)">
         </li>
         <li>
-            <label>Thumbnail Height: </label>
+            <label>{{ 'SETTINGS.THUMBNAIL_HEIGHT' | translate }}: </label>
             <input type="number" [value]="(settings$ | async)?.thumbnailHeight" (input)="setThumbnailHeight($event)">
         </li>
         <li>
-            <label>Convert Input: </label>
-            <button (click)="toggleConvertInput()">{{ (settings$ | async)?.convertInput ? "Turn Off" : "Turn On" }}</button>
+            <label>{{ 'SETTINGS.CONVERT_INPUT' | translate }}: </label>
+            <button (click)="toggleConvertInput()">{{ (settings$ | async)?.convertInput ? ('SETTINGS.TURN_OFF' | translate) : ('SETTINGS.TURN_ON' | translate) }}</button>
         </li>
         <li>
-            <label>Confirm Cancel: </label>
-            <button (click)="toggleConfirmCancel()">{{ (settings$ | async)?.confirmCancel ? "Turn Off" : "Turn On" }}</button>
+            <label>{{ 'SETTINGS.CONFIRM_CANCEL' | translate }}: </label>
+            <button (click)="toggleConfirmCancel()">{{ (settings$ | async)?.confirmCancel ? ('SETTINGS.TURN_OFF' | translate) : ('SETTINGS.TURN_ON' | translate) }}</button>
         </li>
         <li>
-            <label>Confirm Delete: </label>
-            <button (click)="toggleConfirmDelete()">{{ (settings$ | async)?.confirmDelete ? "Turn Off" : "Turn On" }}</button>
+            <label>{{ 'SETTINGS.CONFIRM_DELETE' | translate }}: </label>
+            <button (click)="toggleConfirmDelete()">{{ (settings$ | async)?.confirmDelete ? ('SETTINGS.TURN_OFF' | translate) : ('SETTINGS.TURN_ON' | translate) }}</button>
         </li>
         <li>
-            <label>Thumbnail Forward Rate in Seconds: </label>
+            <label>{{ 'SETTINGS.THUMBNAIL_FORWARD_RATE_IN_SECONDS' | translate }}: </label>
             <input type="number" [value]="(settings$ | async)?.thumbnailForwardRate" (input)="setThumbnailForwardRate($event)">
         </li>
         <li>
-            <label>Thumbnail Rewind Rate in Seconds: </label>
+            <label>{{ 'SETTINGS.THUMBNAIL_REWIND_RATE_IN_SECONDS' | translate }}: </label>
             <input type="number" [value]="(settings$ | async)?.thumbnailRewindRate" (input)="setThumbnailRewindRate($event)">
         </li>
     </ul>
-    <h3>Shortcuts</h3>
+    <h3>{{ 'SETTINGS.SHORTCUTS' | translate }}</h3>
     <ul>
-        <li>Note</li>
-        <li>Settings</li>
-        <li>Focus On Input</li>
-        <li>Thumbnail Move Forward</li>
-        <li>Thumbnail Move Backward</li>
-        <li>Save</li>
-        <li>Cancel</li>
-        <li>Edit</li>
-        <li>Delete</li>
-        <li>Bold</li>
-        <li>Italic</li>
-        <li>Underline</li>
-        <li>Strikethrough</li>
-        <li>Ordered List</li>
-        <li>Unordered List</li>
-        <li>Table</li>
+        <li>{{ 'SETTINGS.NOTE' | translate }}</li>
+        <li>{{ 'SETTINGS.SETTINGS' | translate }}</li>
+        <li>{{ 'SETTINGS.FOCUS_ON_INPUT' | translate }}</li>
+        <li>{{ 'SETTINGS.THUMBNAIL_MOVE_FORWARD' | translate }}</li>
+        <li>{{ 'SETTINGS.THUMBNAIL_MOVE_BACKWARD' | translate }}</li>
+        <li>{{ 'SETTINGS.SAVE' | translate }}</li>
+        <li>{{ 'SETTINGS.CANCEL' | translate }}</li>
+        <li>{{ 'SETTINGS.EDIT' | translate }}</li>
+        <li>{{ 'SETTINGS.DELETE' | translate }}</li>
+        <li>{{ 'SETTINGS.BOLD' | translate }}</li>
+        <li>{{ 'SETTINGS.ITALIC' | translate }}</li>
+        <li>{{ 'SETTINGS.STRIKETHROUGH' | translate }}</li>
+        <li>{{ 'SETTINGS.ORDERED_LIST' | translate }}</li>
+        <li>{{ 'SETTINGS.UNORDERED_LIST' | translate }}</li>
     </ul>
 </div>

@@ -10,13 +10,13 @@
                 <p (click)="jumpToTimestamp()" class="timestamp">
                     {{ entry.timestamp }}
                 </p>
-                <button (click)="deleteEntry()" [disabled]="editMode$ | async" class="delete">Delete Entry</button>
-                <button (click)="editEntry()" class="edit">Edit Entry</button>
+                <button (click)="deleteEntry()" [disabled]="editMode$ | async" class="delete">{{ 'EXTENDED.DELETE' | translate }}</button>
+                <button (click)="editEntry()" class="edit">{{ 'EXTENDED.EDIT' | translate }}</button>
                 @if (showModal)
                 {
                     <confirm-message
-                        [message]="'Delete'"
-                        [type]="'delete'"
+                        [message]="'EXTENDED.DELETE' | translate"
+                        [type]="'EXTENDED.CONFIRM_MESSAGE_TYPE' | translate"
                         (confirm)="confirmDelete()"
                         (cancel)="cancelDelete()">
                     </confirm-message>
