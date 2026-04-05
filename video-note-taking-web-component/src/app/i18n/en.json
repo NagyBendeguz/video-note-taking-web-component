@@ -1,0 +1,70 @@
+{
+    "BUTTON":
+    {
+        "CANCEL": "Cancel"
+    },
+    "EDIT":
+    {
+        "TITLE": "Title",
+        "NOTE": "Note",
+        "SAVE": "Save",
+        "SAVE_NOTE": "Save Note",
+        "EXPORT_NOTE": "Export Note",
+        "CONFIRM_MESSAGE_TYPE": "cancel",
+        "CONFIRM_MESSAGE_MESSAGE": "Yes Cancel"
+    },
+    "CONFIRM_MESSAGE":
+    {
+        "WARNING": "Warning",
+        "ARE_YOU_SURE": "Are you sure you want to",
+        "IT": " it"
+    },
+    "EXTENDED":
+    {
+        "DELETE": "Delete",
+        "EDIT": "Edit",
+        "CONFIRM_MESSAGE_TYPE": "delete"
+    },
+    "PLAYER":
+    {
+        "SUPPORT": "Your browser does not support the video tag."
+    },
+    "SETTINGS":
+    {
+        "SETTINGS": "Settings",
+        "LOAD_NOTE": "Load note",
+        "VIDEO_PLAYER_SETTINGS": "Video player settings",
+        "PLAYBACK_SPEED": "Playback speed",
+        "FORWARD_RATE_IN_SECONDS": "Forward rate in seconds",
+        "REWIND_RATE_IN_SECONDS": "Rewind rate in seconds",
+        "SUBTITLES": "Subtitles",
+        "VIDEO_NAVBAR_OFFSET": "Video navbar offset",
+        "EDITING_SETTINGS": "Editing settings",
+        "LANGUAGES": "Languages",
+        "THEME": "Theme",
+        "THUMBNAIL_QUALITY_PERCENTAGE": "Thumbnail quality percentage",
+        "THUMBNAIL_WIDTH": "Thumbnail width",
+        "THUMBNAIL_HEIGHT": "Thumbnail height",
+        "CONVERT_INPUT": "Convert input",
+        "CONFIRM_CANCEL": "Confirm cancel",
+        "CONFIRM_DELETE": "Confirm delete",
+        "THUMBNAIL_FORWARD_RATE_IN_SECONDS": "Thumbnail forward rate in seconds",
+        "THUMBNAIL_REWIND_RATE_IN_SECONDS": "Thumbnail rewind rate in seconds",
+        "SHORTCUTS": "Shortcuts",
+        "NOTE": "Note",
+        "FOCUS_ON_INPUT": "Focus on input",
+        "THUMBNAIL_MOVE_FORWARD": "Thumbnail move borward",
+        "THUMBNAIL_MOVE_BACKWARD": "Thumbnail move backward",
+        "SAVE": "Save",
+        "CANCEL": "Cancel",
+        "EDIT": "Edit",
+        "DELETE": "Delete",
+        "BOLD": "Bold",
+        "ITALIC": "Italic",
+        "STRIKETHROUGH": "Strikethrough",
+        "ORDERED_LIST": "Ordered list",
+        "UNORDERED_LIST": "Unordered list",
+        "TURN_ON": "Turn on",
+        "TURN_OFF": "Turn off"
+    }
+}

@@ -1,0 +1,70 @@
+{
+    "BUTTON":
+    {
+        "CANCEL": "Mégse"
+    },
+    "EDIT":
+    {
+        "TITLE": "Cím",
+        "NOTE": "Jegyzet",
+        "SAVE": "Mentés",
+        "SAVE_NOTE": "Jegyzet Mentése",
+        "EXPORT_NOTE": "Jegyzet Exportálása",
+        "CONFIRM_MESSAGE_TYPE": "visszavonja",
+        "CONFIRM_MESSAGE_MESSAGE": "Igen"
+    },
+    "CONFIRM_MESSAGE":
+    {
+        "WARNING": "Figyelem",
+        "ARE_YOU_SURE": "Biztonsan",
+        "IT": ""
+    },
+    "EXTENDED":
+    {
+        "DELETE": "Törlés",
+        "EDIT": "Szerkesztés",
+        "CONFIRM_MESSAGE_TYPE": "törli"
+    },
+    "PLAYER":
+    {
+        "SUPPORT": "A böngészője nem támogatja a videó tag-et."
+    },
+    "SETTINGS":
+    {
+        "SETTINGS": "Beállítások",
+        "LOAD_NOTE": "Jegyzet betöltése",
+        "VIDEO_PLAYER_SETTINGS": "Videó lejátszó beállításai",
+        "PLAYBACK_SPEED": "Lejátszási sebesség",
+        "FORWARD_RATE_IN_SECONDS": "Előretekerés másodpercekben",
+        "REWIND_RATE_IN_SECONDS": "Hátratekerés másodpercekben",
+        "SUBTITLES": "Feliratok",
+        "VIDEO_NAVBAR_OFFSET": "Videó vezérlősáv eltolása",
+        "EDITING_SETTINGS": "Szerkesztői beállítások",
+        "LANGUAGES": "Nyelvek",
+        "THEME": "Téma",
+        "THUMBNAIL_QUALITY_PERCENTAGE": "Képernyőkép minőségének százaléka",
+        "THUMBNAIL_WIDTH": "Képernyőkép szélessége",
+        "THUMBNAIL_HEIGHT": "Képernyőkép magassága",
+        "CONVERT_INPUT": "Bemenet konvertálása",
+        "CONFIRM_CANCEL": "Megerősítés mégse gombhoz",
+        "CONFIRM_DELETE": "Megerősítés törléshez",
+        "THUMBNAIL_FORWARD_RATE_IN_SECONDS": "Képernyőkép előretekerés másodpercekben",
+        "THUMBNAIL_REWIND_RATE_IN_SECONDS": "Képernyőkép hátratekerés másodpercekben",
+        "SHORTCUTS": "Gyorsbillentyűk",
+        "NOTE": "Jegyzet",
+        "FOCUS_ON_INPUT": "Fókuszálás bemenetkor",
+        "THUMBNAIL_MOVE_FORWARD": "Képernyőkép előretekerése",
+        "THUMBNAIL_MOVE_BACKWARD": "Képernyőkép hátratekerése",
+        "SAVE": "Mentés",
+        "CANCEL": "Mégse",
+        "EDIT": "Szerkesztés",
+        "DELETE": "Törlés",
+        "BOLD": "Félkövér",
+        "ITALIC": "Dőlt",
+        "STRIKETHROUGH": "Áthúzott",
+        "ORDERED_LIST": "Számozott lista",
+        "UNORDERED_LIST": "Számozatlan lista",
+        "TURN_ON": "Bekapcsolás",
+        "TURN_OFF": "Kikapcsolás"
+    }
+}
