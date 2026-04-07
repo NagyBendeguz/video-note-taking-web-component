@@ -29,8 +29,6 @@ export class VideoService {
   private thumbnailSource = new BehaviorSubject<string>("");
   thumbnail$ = this.thumbnailSource.asObservable();
 
-  //private rewindSeconds: number = 10;
-  //private forwardSeconds: number = 10;
   private timestampSource = new BehaviorSubject<string>('00:00:00.000');
   timestamp$ = this.timestampSource.asObservable();
 
@@ -118,22 +116,6 @@ export class VideoService {
   emitJumpToTimestamp(): void {
     this.jumpToTimestamp.emit();
   }
-
-  /*getRewindSeconds(): number {
-    return this.rewindSeconds;
-  }
-
-  setRewindSeconds(seconds: number): void {
-    this.rewindSeconds = seconds;
-  }
-
-  getForwardSeconds(): number {
-    return this.forwardSeconds;
-  }
-
-  setForwardSeconds(seconds: number): void {
-    this.forwardSeconds = seconds;
-  }*/
 
   getTimestamp(): Observable<string> {
     return this.timestamp$;

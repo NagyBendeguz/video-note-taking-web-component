@@ -72,6 +72,10 @@ export class VideoPlayer {
       this.forward(moveRate);
     });
 
+    this.videoService.isPlaying$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentIsPlaying => {
+      this.setPlay(currentIsPlaying);
+    });
+
     this.videoService.timestamp$.pipe(takeUntil(this.unsubscribe$)).subscribe(timestamp => {
       this.timestamp = timestamp;
     });
@@ -179,6 +183,18 @@ export class VideoPlayer {
   @HostListener('window:resize')
   onResize(): void {
     this.setVideoHeight();
+  }
+
+  setPlay(isPlaying: boolean): void {
+    const video = this.videoElement.nativeElement;
+    if (isPlaying)
+    {
+      video.play();
+    }
+    else
+    {
+      video.pause();
+    }
   }
 
   /**

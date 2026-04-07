@@ -152,6 +152,17 @@ export class VideoNavbar {
     {
       this.toggleSettingsPage();
     }
+
+    // A videó megállitása vagy folytatása.
+    if (!this.isNote)
+    {
+      this.videoService.setPlaying(false);
+    }
+    else
+    {
+      this.videoService.setPlaying(true);
+    }
+
     this.videoService.setNote(!this.isNote);
   }
 
@@ -164,6 +175,17 @@ export class VideoNavbar {
     {
       this.toggleNotePage();
     }
+
+    // A videó megállitása vagy folytatása.
+    if (!this.isSettings)
+    {
+      this.videoService.setPlaying(false);
+    }
+    else
+    {
+      this.videoService.setPlaying(true);
+    }
+
     this.videoService.setSettings(!this.isSettings);
   }
 
