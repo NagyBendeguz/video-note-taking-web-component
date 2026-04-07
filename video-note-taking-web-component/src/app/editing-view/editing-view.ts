@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { Entry } from '../models/entry';
 import { EntryService } from '../services/entry';
@@ -17,6 +17,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrl: './editing-view.sass',
 })
 export class EditingView {
+  @ViewChild('inputTitle') inputTitle!: ElementRef<HTMLInputElement>;
   entry$!: Observable<Entry>;
   entry: Entry = new Entry();
   private currentEntryId!: number;
@@ -71,6 +72,15 @@ export class EditingView {
 
     this.entryService.currentEntryId$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentCurrentEntryId => {
       this.currentEntryId = currentCurrentEntryId;
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.videoService.isNote$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentIsNote => {
+      if (currentIsNote)
+      {
+        setTimeout(() => this.inputTitle.nativeElement.focus());
+      }
     });
   }
 

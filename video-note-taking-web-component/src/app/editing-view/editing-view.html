@@ -4,23 +4,23 @@
             <img [src]="(entry$ | async)?.thumbnail" [alt]="(entry$ | async)?.title" class="thumbnail">
         </div>
         <div class="time">
-            <button (click)="editingRewind()">
+            <button (click)="editingRewind()" tabindex="-1">
                 <i class="bi bi-chevron-double-left"></i>
             </button>
             <span>{{ (entry$ | async)?.timestamp }}</span>
-            <button (click)="editingForward()">
+            <button (click)="editingForward()" tabindex="-1">
                 <i class="bi bi-chevron-double-right"></i>
             </button>
         </div>
         <div class="title">
             <label for="title">{{ 'EDIT.TITLE' | translate }}</label>
-            <input type="text" name="title" id="title" placeholder="{{ 'EDIT.TITLE' | translate }}" [value]="(entry$ | async)?.title" (input)="addTitle($event)" maxlength="50" required>
+            <input type="text" name="title" id="title" placeholder="{{ 'EDIT.TITLE' | translate }}" [value]="(entry$ | async)?.title" (input)="addTitle($event)" maxlength="50" required tabindex="1" #inputTitle>
         </div>
         <div class="save-cancel">
-            <button (click)="cancelEntry()" [disabled]="(entry$ | async)?.title === '' && (entry$ | async)?.note === ''" class="cancel">
+            <button (click)="cancelEntry()" [disabled]="(entry$ | async)?.title === '' && (entry$ | async)?.note === ''" class="cancel" tabindex="-1">
                 {{ 'BUTTON.CANCEL' | translate }}
             </button>
-            <button (click)="saveEntry()" [disabled]="(entry$ | async)?.title === '' && (entry$ | async)?.note === ''" class="save">
+            <button (click)="saveEntry()" [disabled]="(entry$ | async)?.title === '' && (entry$ | async)?.note === ''" class="save" tabindex="3">
                 {{ 'EDIT.SAVE' | translate }}
             </button>
             @if (showModal)
@@ -37,32 +37,32 @@
     <div class="note">
         <div class="edit-note">
             <div class="style-buttons">
-                <button (click)="bold()">
+                <button (click)="bold()" tabindex="-1">
                     <i class="bi bi-type-bold"></i>
                 </button>
-                <button (click)="italic()">
+                <button (click)="italic()" tabindex="-1">
                     <i class="bi bi-type-italic"></i>
                 </button>
-                <button (click)="strikethrough()">
+                <button (click)="strikethrough()" tabindex="-1">
                     <i class="bi bi-type-strikethrough"></i>
                 </button>
-                <button (click)="orderedList()">
+                <button (click)="orderedList()" tabindex="-1">
                     <i class="bi bi-list-ol"></i>
                 </button>
-                <button (click)="unorderedList()">
+                <button (click)="unorderedList()" tabindex="-1">
                     <i class="bi bi-list-ul"></i>
                 </button>
-                <!--<button (click)="table()">
+                <!--<button (click)="table()" tabindex="-1">
                     <i class="bi bi-table"></i>
                 </button>-->
             </div>
             <div>
-                <button (click)="saveNote()" class="save">{{ 'EDIT.SAVE_NOTE' | translate }}</button>
-                <button (click)="exportNote()" class="export">{{ 'EDIT.EXPORT_NOTE' | translate }}</button>
+                <button (click)="saveNote()" class="save" tabindex="-1">{{ 'EDIT.SAVE_NOTE' | translate }}</button>
+                <button (click)="exportNote()" class="export" tabindex="-1">{{ 'EDIT.EXPORT_NOTE' | translate }}</button>
             </div>
         </div>
         <div class="type-note">
-            <textarea name="note" id="note" [value]="(entry$ | async)?.formattedNoteMD" (input)="addNote($event)" placeholder="{{ 'EDIT.NOTE' | translate }}" required></textarea>
+            <textarea name="note" id="note" [value]="(entry$ | async)?.formattedNoteMD" (input)="addNote($event)" placeholder="{{ 'EDIT.NOTE' | translate }}" required tabindex="2"></textarea>
         </div>
     </div>
 </div>
