@@ -76,11 +76,15 @@ export class VideoNavbar {
     this.settingsService.videoRewindRate$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentVideoRewindRate => {
       this.videoRewindRate = currentVideoRewindRate;
     });
+
+    window.addEventListener('keydown', this.keyHandler);
   }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+
+    window.removeEventListener('keydown', this.keyHandler);
   }
 
   /**
@@ -195,4 +199,14 @@ export class VideoNavbar {
   toggleFullscreen(): void {
     this.videoService.setFullscreen(!this.fullscreenRequest);
   }
+
+  // TODO: helyesen felülírni a böngésző alap billentyűkombinációját
+  private keyHandler = (e: KeyboardEvent) => {
+    if ((e.ctrlKey || e.metaKey) && e.key?.toLowerCase() === 'm')
+    {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      this.toggleNotePage();
+    }
+  };
 }

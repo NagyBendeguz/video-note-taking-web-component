@@ -144,6 +144,10 @@ export class EditingView {
     }
     this.currentOrderedListNumber = 1;
     this.entryService.resetEntry(this.entry);
+
+    // TODO: beállítástól függő
+    this.videoService.setNote(false);
+    this.videoService.setPlaying(true);
   }
 
   /**
