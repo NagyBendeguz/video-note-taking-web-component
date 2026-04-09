@@ -382,7 +382,7 @@ export class VideoPlayer {
 
       // Pica használata a képek méretének módosításához.
       this.pica.resize(canvas, outputCanvas)
-        .then(result => this.pica.toBlob(result, 'image/jpeg', (this.settings.thumbnailResolutionPercentage / 100))) // Minőség beállítása.
+        .then(result => this.pica.toBlob(result, 'image/jpeg', (this.settings.thumbnailQualityPercentage / 100))) // Minőség beállítása.
         .then(blob => this.convertBlobToBase64(blob)) // Blob konvertálása Base64-re.
         .then(dataURL =>
         {

@@ -232,11 +232,11 @@ export class VideoSettings {
 
     if (isNaN(sanitizedValue) || sanitizedValue < 0)
     {
-      this.settings.thumbnailResolutionPercentage = 100;
+      this.settings.thumbnailQualityPercentage = 100;
     }
     else
     {
-      this.settings.thumbnailResolutionPercentage = sanitizedValue;
+      this.settings.thumbnailQualityPercentage = sanitizedValue;
     }
   }
 
