@@ -65,11 +65,11 @@
         </li>
         <li>
             <label>{{ 'settings.stopVideoOnNote' | translate }}: </label>
-            <!--TODO-->
+            <button (click)="toggleStopVideoOnNote()">{{ (settings$ | async)?.stopVideoOnNote ? ('settings.turnOff' | translate) : ('settings.turnOn' | translate) }}</button>
         </li>
         <li>
             <label>{{ 'settings.startVideoOnSave' | translate }}: </label>
-            <!--TODO-->
+            <button (click)="toggleStartVideoOnSave()">{{ (settings$ | async)?.startVideoOnSave ? ('settings.turnOff' | translate) : ('settings.turnOn' | translate) }}</button>
         </li>
         <li>
             <label>{{ 'settings.thumbnail.qualityPercentage' | translate }}: </label>

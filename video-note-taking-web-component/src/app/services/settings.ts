@@ -64,9 +64,24 @@ export class SettingsService {
     this.isVisibleSource.next(!this.isVisibleSource.value);
   }
 
+  setLanguage(lang: string): void {
+    const currentSettings = this.settingsSource.getValue();
+    this.settingsSource.next({ ...currentSettings, language: lang });
+  }
+
   toggleConvertInput(): void {
     const currentSettings = this.settingsSource.getValue();
     this.settingsSource.next({ ...currentSettings, convertInput: !currentSettings.convertInput });
+  }
+
+  toggleStopVideoOnNote(): void {
+    const currentSettings = this.settingsSource.getValue();
+    this.settingsSource.next({ ...currentSettings, stopVideoOnNote: !currentSettings.stopVideoOnNote });
+  }
+
+  toggleStartVideoOnSave(): void {
+    const currentSettings = this.settingsSource.getValue();
+    this.settingsSource.next({ ...currentSettings, startVideoOnSave: !currentSettings.startVideoOnSave });
   }
 
   updateThumbnailWidth(newThumbnailWidth: number): void {
@@ -77,10 +92,5 @@ export class SettingsService {
   updateThumbnailHeight(newThumbnailHeight: number): void {
     const currentSettings = this.settingsSource.getValue();
     this.settingsSource.next({ ...currentSettings, thumbnailHeight: newThumbnailHeight });
-  }
-
-  setLanguage(lang: string): void {
-    const currentSettings = this.settingsSource.getValue();
-    this.settingsSource.next({ ...currentSettings, language: lang });
   }
 }

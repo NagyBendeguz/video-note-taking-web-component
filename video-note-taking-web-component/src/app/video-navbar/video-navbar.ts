@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { VideoService } from '../services/video';
 import { filter, Observable, Subject, takeUntil } from 'rxjs';
 import { SettingsService } from '../services/settings';
+import { Settings } from '../models/settings';
 
 @Component({
   selector: 'app-video-navbar',
@@ -24,6 +25,7 @@ export class VideoNavbar {
   private fullscreenRequest: boolean = false;
   private videoForwardRate!: number;
   private videoRewindRate!: number;
+  private settings!: Settings;
   private unsubscribe$ = new Subject<void>();
 
   constructor(private videoService: VideoService, private settingsService: SettingsService) {}
@@ -75,6 +77,10 @@ export class VideoNavbar {
 
     this.settingsService.videoRewindRate$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentVideoRewindRate => {
       this.videoRewindRate = currentVideoRewindRate;
+    });
+
+    this.settingsService.settings$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentSettings => {
+      this.settings = currentSettings;
     });
 
     window.addEventListener('keydown', this.keyHandler);
@@ -157,14 +163,10 @@ export class VideoNavbar {
       this.toggleSettingsPage();
     }
 
-    // A videó megállitása vagy folytatása.
-    if (!this.isNote)
+    // A videó megállítása vagy folytatása beállítástól függően.
+    if (this.settings.stopVideoOnNote)
     {
-      this.videoService.setPlaying(false);
-    }
-    else
-    {
-      this.videoService.setPlaying(true);
+      this.videoService.setPlaying(this.isNote ? true : false);
     }
 
     this.videoService.setNote(!this.isNote);
@@ -180,14 +182,10 @@ export class VideoNavbar {
       this.toggleNotePage();
     }
 
-    // A videó megállitása vagy folytatása.
-    if (!this.isSettings)
+    // A videó megállítása vagy folytatása beállítástól függően.
+    if (this.settings.stopVideoOnNote)
     {
-      this.videoService.setPlaying(false);
-    }
-    else
-    {
-      this.videoService.setPlaying(true);
+      this.videoService.setPlaying(this.isSettings ? true : false);
     }
 
     this.videoService.setSettings(!this.isSettings);

@@ -147,6 +147,20 @@ export class VideoSettings {
   }
 
   /**
+   * Álljon-e meg a videó ha meg lesz nyitva a jegyzetelő vagy beállítások felület.
+   */
+  toggleStopVideoOnNote(): void {
+    this.settingsService.toggleStopVideoOnNote();
+  }
+
+  /**
+   * Induljon-e el a videó (és záródjon-e be a jegyzetelő felület) egy bejegyzés mentése után.
+   */
+  toggleStartVideoOnSave(): void {
+    this.settingsService.toggleStartVideoOnSave();
+  }
+
+  /**
    * A szerkesztési nézetben az idő előretekerés mértékegységének változtatása.
    * @param event - A szerkesztési nézetben az idő előretekerésére beállítani kívánt mértékegység eseményként.
    */
