@@ -1,70 +1,71 @@
 {
-    "BUTTON":
+    "app":
     {
-        "CANCEL": "Cancel"
+        "support": "Your browser does not support the video tag."
     },
-    "EDIT":
+    "actions":
     {
-        "TITLE": "Title",
-        "NOTE": "Note",
-        "SAVE": "Save",
-        "SAVE_NOTE": "Save Note",
-        "EXPORT_NOTE": "Export Note",
-        "CONFIRM_MESSAGE_TYPE": "cancel",
-        "CONFIRM_MESSAGE_MESSAGE": "Yes Cancel"
+        "save": "Save",
+        "edit": "Edit",
+        "cancel": "Cancel",
+        "delete": "Delete"
     },
-    "CONFIRM_MESSAGE":
+    "confirmMessage":
     {
-        "WARNING": "Warning",
-        "ARE_YOU_SURE": "Are you sure you want to",
-        "IT": " it"
+        "warning": "Warning",
+        "areYouSure": "Are you sure you want to",
+        "it": " it"
     },
-    "EXTENDED":
+    "edit":
     {
-        "DELETE": "Delete",
-        "EDIT": "Edit",
-        "CONFIRM_MESSAGE_TYPE": "delete"
+        "title": "Title",
+        "note": "Note",
+        "saveNote": "Save Note",
+        "exportNote": "Export Note",
+        "confirmMessageTypeCancel": "cancel",
+        "confirmMessageTypeDelete": "delete",
+        "confirmMessageYesCancel": "Yes Cancel"
     },
-    "PLAYER":
+    "settings":
     {
-        "SUPPORT": "Your browser does not support the video tag."
-    },
-    "SETTINGS":
-    {
-        "SETTINGS": "Settings",
-        "LOAD_NOTE": "Load note",
-        "VIDEO_PLAYER_SETTINGS": "Video player settings",
-        "PLAYBACK_SPEED": "Playback speed",
-        "FORWARD_RATE_IN_SECONDS": "Forward rate in seconds",
-        "REWIND_RATE_IN_SECONDS": "Rewind rate in seconds",
-        "SUBTITLES": "Subtitles",
-        "VIDEO_NAVBAR_OFFSET": "Video navbar offset",
-        "EDITING_SETTINGS": "Editing settings",
-        "LANGUAGES": "Languages",
-        "THEME": "Theme",
-        "THUMBNAIL_QUALITY_PERCENTAGE": "Thumbnail quality percentage",
-        "THUMBNAIL_WIDTH": "Thumbnail width",
-        "THUMBNAIL_HEIGHT": "Thumbnail height",
-        "CONVERT_INPUT": "Convert input",
-        "CONFIRM_CANCEL": "Confirm cancel",
-        "CONFIRM_DELETE": "Confirm delete",
-        "THUMBNAIL_FORWARD_RATE_IN_SECONDS": "Thumbnail forward rate in seconds",
-        "THUMBNAIL_REWIND_RATE_IN_SECONDS": "Thumbnail rewind rate in seconds",
-        "SHORTCUTS": "Shortcuts",
-        "NOTE": "Note",
-        "FOCUS_ON_INPUT": "Focus on input",
-        "THUMBNAIL_MOVE_FORWARD": "Thumbnail move borward",
-        "THUMBNAIL_MOVE_BACKWARD": "Thumbnail move backward",
-        "SAVE": "Save",
-        "CANCEL": "Cancel",
-        "EDIT": "Edit",
-        "DELETE": "Delete",
-        "BOLD": "Bold",
-        "ITALIC": "Italic",
-        "STRIKETHROUGH": "Strikethrough",
-        "ORDERED_LIST": "Ordered list",
-        "UNORDERED_LIST": "Unordered list",
-        "TURN_ON": "Turn on",
-        "TURN_OFF": "Turn off"
+        "settings": "Settings",
+        "turnOn": "Turn on",
+        "turnOff": "Turn off",
+        "loadNote": "Load note",
+        "videoPlayerSettings": "Video player settings",
+        "playbackSpeed": "Playback speed",
+        "forwardRateInSeconds": "Forward rate in seconds",
+        "rewindRateInSeconds": "Rewind rate in seconds",
+        "subtitles": "Subtitles",
+        "videoNavbarOffset": "Video navbar offset",
+        "editingSettings": "Editing settings",
+        "languages": "Languages",
+        "theme": "Theme",
+        "convertInput": "Convert input",
+        "confirmCancel": "Confirm cancel",
+        "confirmDelete": "Confirm delete",
+        "stopVideoOnNote": "Stop video on note",
+        "startVideoOnSave": "Start video on save",
+        "thumbnail":
+        {
+            "qualityPercentage": "Thumbnail quality percentage",
+            "width": "Thumbnail width",
+            "height": "Thumbnail height",
+            "forwardRateInSeconds": "Thumbnail forward rate in seconds",
+            "rewindRateInSeconds": "Thumbnail rewind rate in seconds"
+        },
+        "shortcuts":
+        {
+            "shortcuts": "Shortcuts",
+            "videoMoveForward": "Video move forward",
+            "videoMoveBackward": "Video move backward",
+            "thumbnailMoveForward": "Thumbnail move forward",
+            "thumbnailMoveBackward": "Thumbnail move backward",
+            "bold": "Bold",
+            "italic": "Italic",
+            "strikethrough": "Strikethrough",
+            "orderedList": "Ordered list",
+            "unorderedList": "Unordered list"
+        }
     }
 }

@@ -4,7 +4,7 @@
             <video (loadedmetadata)="onVideoMetadataLoaded()" (timeupdate)="setCurrentTime()" #videoElement>
                 <source [src]="src$ | async" type="video/mp4">
                 <track [src]="subtitle$ | async" kind="subtitles" [srclang]="lang$ | async" [label]="label$ | async" #subtitlesTrack>
-                {{ 'PLAYER.SUPPORT' | translate }}
+                {{ 'app.support' | translate }}
             </video>
         </div>
     </div>

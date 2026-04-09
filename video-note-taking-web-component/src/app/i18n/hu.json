@@ -1,70 +1,71 @@
 {
-    "BUTTON":
+    "app":
     {
-        "CANCEL": "Mégse"
+        "support": "A böngészője nem támogatja a videó tag-et."
     },
-    "EDIT":
+    "actions":
     {
-        "TITLE": "Cím",
-        "NOTE": "Jegyzet",
-        "SAVE": "Mentés",
-        "SAVE_NOTE": "Jegyzet Mentése",
-        "EXPORT_NOTE": "Jegyzet Exportálása",
-        "CONFIRM_MESSAGE_TYPE": "visszavonja",
-        "CONFIRM_MESSAGE_MESSAGE": "Igen"
+        "save": "Mentés",
+        "edit": "Szerkesztés",
+        "cancel": "Mégse",
+        "delete": "Törlés"
     },
-    "CONFIRM_MESSAGE":
+    "confirmMessage":
     {
-        "WARNING": "Figyelem",
-        "ARE_YOU_SURE": "Biztonsan",
-        "IT": ""
+        "warning": "Figyelem",
+        "areYouSure": "Biztosan",
+        "it": ""
     },
-    "EXTENDED":
+    "edit":
     {
-        "DELETE": "Törlés",
-        "EDIT": "Szerkesztés",
-        "CONFIRM_MESSAGE_TYPE": "törli"
+        "title": "Cím",
+        "note": "Jegyzet",
+        "saveNote": "Jegyzet Mentése",
+        "exportNote": "Jegyzet Exportálása",
+        "confirmMessageTypeCancel": "vissza szeretni vonni",
+        "confirmMessageTypeDelete": "törölni szeretné ezt az elemet",
+        "confirmMessageYesCancel": "Igen"
     },
-    "PLAYER":
+    "settings":
     {
-        "SUPPORT": "A böngészője nem támogatja a videó tag-et."
-    },
-    "SETTINGS":
-    {
-        "SETTINGS": "Beállítások",
-        "LOAD_NOTE": "Jegyzet betöltése",
-        "VIDEO_PLAYER_SETTINGS": "Videó lejátszó beállításai",
-        "PLAYBACK_SPEED": "Lejátszási sebesség",
-        "FORWARD_RATE_IN_SECONDS": "Előretekerés másodpercekben",
-        "REWIND_RATE_IN_SECONDS": "Hátratekerés másodpercekben",
-        "SUBTITLES": "Feliratok",
-        "VIDEO_NAVBAR_OFFSET": "Videó vezérlősáv eltolása",
-        "EDITING_SETTINGS": "Szerkesztői beállítások",
-        "LANGUAGES": "Nyelvek",
-        "THEME": "Téma",
-        "THUMBNAIL_QUALITY_PERCENTAGE": "Képernyőkép minőségének százaléka",
-        "THUMBNAIL_WIDTH": "Képernyőkép szélessége",
-        "THUMBNAIL_HEIGHT": "Képernyőkép magassága",
-        "CONVERT_INPUT": "Bemenet konvertálása",
-        "CONFIRM_CANCEL": "Megerősítés mégse gombhoz",
-        "CONFIRM_DELETE": "Megerősítés törléshez",
-        "THUMBNAIL_FORWARD_RATE_IN_SECONDS": "Képernyőkép előretekerés másodpercekben",
-        "THUMBNAIL_REWIND_RATE_IN_SECONDS": "Képernyőkép hátratekerés másodpercekben",
-        "SHORTCUTS": "Gyorsbillentyűk",
-        "NOTE": "Jegyzet",
-        "FOCUS_ON_INPUT": "Fókuszálás bemenetkor",
-        "THUMBNAIL_MOVE_FORWARD": "Képernyőkép előretekerése",
-        "THUMBNAIL_MOVE_BACKWARD": "Képernyőkép hátratekerése",
-        "SAVE": "Mentés",
-        "CANCEL": "Mégse",
-        "EDIT": "Szerkesztés",
-        "DELETE": "Törlés",
-        "BOLD": "Félkövér",
-        "ITALIC": "Dőlt",
-        "STRIKETHROUGH": "Áthúzott",
-        "ORDERED_LIST": "Számozott lista",
-        "UNORDERED_LIST": "Számozatlan lista",
-        "TURN_ON": "Bekapcsolás",
-        "TURN_OFF": "Kikapcsolás"
+        "settings": "Beállítások",
+        "turnOn": "Bekapcsolás",
+        "turnOff": "Kikapcsolás",
+        "loadNote": "Jegyzet betöltése",
+        "videoPlayerSettings": "Videó lejátszó beállításai",
+        "playbackSpeed": "Lejátszási sebesség",
+        "forwardRateInSeconds": "Előretekerés másodpercekben",
+        "rewindRateInSeconds": "Hátratekerés másodpercekben",
+        "subtitles": "Feliratok",
+        "videoNavbarOffset": "Videó vezérlősáv eltolása",
+        "editingSettings": "Szerkesztői beállítások",
+        "languages": "Nyelvek",
+        "theme": "Téma",
+        "convertInput": "Bemenet konvertálása",
+        "confirmCancel": "Megerősítés visszavonáshoz",
+        "confirmDelete": "Megerősítés törléshez",
+        "stopVideoOnNote": "Videó megállítása jegyzeteléskor",
+        "startVideoOnSave": "Videó indítása mentéskor",
+        "thumbnail":
+        {
+            "qualityPercentage": "Képernyőkép minőségének százaléka",
+            "width": "Képernyőkép szélessége",
+            "height": "Képernyőkép magassága",
+            "forwardRateInSeconds": "Képernyőkép előretekerése másodpercekben",
+            "rewindRateInSeconds": "Képernyőkép hátratekerése másodpercekben"
+        },
+        "shortcuts":
+        {
+            "shortcuts": "Gyorsbillentyűk",
+            "videoMoveForward": "Videó előretekerése",
+            "videoMoveBackward": "Videó hátratekerése",
+            "thumbnailMoveForward": "Képernyőkép előretekerése",
+            "thumbnailMoveBackward": "Képernyőkép hátratekerése",
+            "bold": "Félkövér",
+            "italic": "Dőlt",
+            "strikethrough": "Áthúzott",
+            "orderedList": "Számozott lista",
+            "unorderedList": "Számozatlan lista"
+        }
     }
 }

@@ -13,21 +13,21 @@
             </button>
         </div>
         <div class="title">
-            <label for="title">{{ 'EDIT.TITLE' | translate }}</label>
-            <input type="text" name="title" id="title" placeholder="{{ 'EDIT.TITLE' | translate }}" [value]="(entry$ | async)?.title" (input)="addTitle($event)" maxlength="50" required tabindex="1" #inputTitle>
+            <label for="title">{{ 'edit.title' | translate }}</label>
+            <input type="text" name="title" id="title" placeholder="{{ 'edit.title' | translate }}" [value]="(entry$ | async)?.title" (input)="addTitle($event)" maxlength="50" required tabindex="1" #inputTitle>
         </div>
         <div class="save-cancel">
             <button (click)="cancelEntry()" [disabled]="(entry$ | async)?.title === '' && (entry$ | async)?.note === ''" class="cancel" tabindex="-1">
-                {{ 'BUTTON.CANCEL' | translate }}
+                {{ 'actions.cancel' | translate }}
             </button>
             <button (click)="saveEntry()" [disabled]="(entry$ | async)?.title === '' && (entry$ | async)?.note === ''" class="save" tabindex="3">
-                {{ 'EDIT.SAVE' | translate }}
+                {{ 'actions.save' | translate }}
             </button>
             @if (showModal)
             {
                 <confirm-message
-                    [message]="'EDIT.CONFIRM_MESSAGE_MESSAGE' | translate"
-                    [type]="'EDIT.CONFIRM_MESSAGE_TYPE' | translate"
+                    [message]="'edit.confirmMessageYesCancel' | translate"
+                    [type]="'edit.confirmMessageTypeCancel' | translate"
                     (confirm)="confirmCancel()"
                     (cancel)="cancelCancel()">
                 </confirm-message>
@@ -57,12 +57,12 @@
                 </button>-->
             </div>
             <div>
-                <button (click)="saveNote()" class="save" tabindex="-1">{{ 'EDIT.SAVE_NOTE' | translate }}</button>
-                <button (click)="exportNote()" class="export" tabindex="-1">{{ 'EDIT.EXPORT_NOTE' | translate }}</button>
+                <button (click)="saveNote()" class="save" tabindex="-1">{{ 'edit.saveNote' | translate }}</button>
+                <button (click)="exportNote()" class="export" tabindex="-1">{{ 'edit.exportNote' | translate }}</button>
             </div>
         </div>
         <div class="type-note">
-            <textarea name="note" id="note" [value]="(entry$ | async)?.formattedNoteMD" (input)="addNote($event)" placeholder="{{ 'EDIT.NOTE' | translate }}" required tabindex="2"></textarea>
+            <textarea name="note" id="note" [value]="(entry$ | async)?.formattedNoteMD" (input)="addNote($event)" placeholder="{{ 'edit.note' | translate }}" required tabindex="2"></textarea>
         </div>
     </div>
 </div>
