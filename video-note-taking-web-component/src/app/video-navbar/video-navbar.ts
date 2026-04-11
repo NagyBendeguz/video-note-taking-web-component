@@ -198,13 +198,43 @@ export class VideoNavbar {
     this.videoService.setFullscreen(!this.fullscreenRequest);
   }
 
-  // TODO: helyesen felülírni a böngésző alap billentyűkombinációját
+  /**
+   * Gyorsbillentyűk.
+   * @param e - Billentyű vagy billentyű kombináció esemény.
+   */
   private keyHandler = (e: KeyboardEvent) => {
-    if ((e.ctrlKey || e.metaKey) && e.key?.toLowerCase() === 'm')
+    // Jegyzetelés oldal megnyitása vagy becsukása.
+    if (e.shiftKey && e.key?.toLowerCase() === 'n')
     {
-      e.preventDefault();
-      e.stopImmediatePropagation();
+      this.setKeyboardEvent(e);
       this.toggleNotePage();
     }
+    // Beállítások oldal megnyitása vagy becsukása.
+    else if (e.shiftKey && e.key?.toLowerCase() === 'p')
+    {
+      this.setKeyboardEvent(e);
+      this.toggleSettingsPage();
+    }
+    // A videó előre tekerése.
+    else if (!e.shiftKey && e.key === 'ArrowLeft')
+    {
+      this.setKeyboardEvent(e);
+      this.onRewind();
+    }
+    // A videó hátra tekerése.
+    else if (!e.shiftKey && e.key === 'ArrowRight')
+    {
+      this.setKeyboardEvent(e);
+      this.onForward();
+    }
   };
+
+  /**
+   * Gyorsbillentyűk kezelése.
+   * @param e - Billentyű vagy billentyű kombináció esemény.
+   */
+  private setKeyboardEvent(e: KeyboardEvent): void {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+  }
 }

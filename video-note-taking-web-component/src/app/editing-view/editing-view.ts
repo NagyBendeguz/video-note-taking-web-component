@@ -73,6 +73,8 @@ export class EditingView {
     this.entryService.currentEntryId$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentCurrentEntryId => {
       this.currentEntryId = currentCurrentEntryId;
     });
+
+    window.addEventListener('keydown', this.keyHandler);
   }
 
   ngAfterViewInit(): void {
@@ -87,17 +89,19 @@ export class EditingView {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+
+    window.removeEventListener('keydown', this.keyHandler);
   }
 
   /**
-   * A thumbnail időbeli előre mozgatása.
+   * A thumbnail időbeli hátra mozgatása.
    */
   editingRewind(): void {
     this.videoService.emitRewind(this.settings.thumbnailRewindRate);
   }
 
   /**
-   * A thumbnail időbeli hátra mozgatása.
+   * A thumbnail időbeli előre mozgatása.
    */
   editingForward(): void {
     this.videoService.emitForward(this.settings.thumbnailForwardRate);
@@ -392,5 +396,76 @@ export class EditingView {
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
+  }
+
+  /**
+   * Gyorsbillentyűk.
+   * @param e - Billentyű vagy billentyű kombináció esemény.
+   */
+  private keyHandler = (e: KeyboardEvent) => {
+    // A videó képernyőképének előre mozgatása.
+    if (e.shiftKey && e.key?.toLowerCase() === 'r')
+    {
+      this.setKeyboardEvent(e);
+      this.editingRewind();
+    }
+    // A videó képernyőképének hátra mozgatása.
+    else if (e.shiftKey && e.key?.toLowerCase() === 'f')
+    {
+      this.setKeyboardEvent(e);
+      this.editingForward();
+    }
+    // A bejegyzés mentése vagy szerkesztői módban a szerkesztése.
+    else if (e.shiftKey && e.key?.toLowerCase() === 's')
+    {
+      this.setKeyboardEvent(e);
+      this.saveEntry();
+    }
+    // A bejegyzés törlése vagy szerkesztői módban a módosítások visszavonása.
+    else if (e.shiftKey && e.key?.toLowerCase() === 'c')
+    {
+      // TODO: fix confirm modal
+      this.setKeyboardEvent(e);
+      this.cancelEntry();
+    }
+    // Félkövér formázás.
+    else if (e.shiftKey && e.key?.toLowerCase() === 'b')
+    {
+      this.setKeyboardEvent(e);
+      this.bold();
+    }
+    // Dőlt formázás.
+    else if (e.shiftKey && e.key?.toLowerCase() === 'i')
+    {
+      this.setKeyboardEvent(e);
+      this.italic();
+    }
+    // Áthúzott formázás.
+    else if (e.shiftKey && e.key?.toLowerCase() === 'h')
+    {
+      this.setKeyboardEvent(e);
+      this.strikethrough();
+    }
+    // Számozott lista formázás.
+    else if (e.shiftKey && e.key?.toLowerCase() === 'o')
+    {
+      this.setKeyboardEvent(e);
+      this.orderedList();
+    }
+    // Felsorolás formázás.
+    else if (e.shiftKey && e.key?.toLowerCase() === 'u')
+    {
+      this.setKeyboardEvent(e);
+      this.unorderedList();
+    }
+  };
+
+  /**
+   * Gyorsbillentyűk kezelése.
+   * @param e - Billentyű vagy billentyű kombináció esemény.
+   */
+  private setKeyboardEvent(e: KeyboardEvent): void {
+    e.preventDefault();
+    e.stopImmediatePropagation();
   }
 }
