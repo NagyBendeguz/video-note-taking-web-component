@@ -284,6 +284,7 @@ export class VideoPlayer {
     video.currentTime = event.detail;
   }
 
+  // TODO: az ESC billentyűvel a navbar offset beállítás az nem marad meg
   /**
    * A teljes képernyős módba való belépés és kilépés.
    */

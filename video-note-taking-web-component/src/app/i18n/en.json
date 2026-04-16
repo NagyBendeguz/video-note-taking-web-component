@@ -57,8 +57,7 @@
         "shortcuts":
         {
             "shortcuts": "Shortcuts",
-            "videoMoveForward": "Video move forward",
-            "videoMoveBackward": "Video move backward",
+            "attention": "Attention! The keyboard shortcuts you set will not override the default browser shortcut combinations.",
             "thumbnailMoveForward": "Thumbnail move forward",
             "thumbnailMoveBackward": "Thumbnail move backward",
             "bold": "Bold",

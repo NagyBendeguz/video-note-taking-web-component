@@ -1,5 +1,7 @@
 <div class="settings-div">
     <!--TODO: kinézet-->
+    <!--TODO: súgó-->
+    <!--TODO: gombok felhasználóbarátabbá tétele-->
     <h2>{{ 'settings.settings' | translate }}</h2>
     <h3>{{ 'settings.loadNote' | translate }}</h3>
     <ul>
@@ -78,10 +80,14 @@
         <li>
             <label>{{ 'settings.thumbnail.width' | translate }}: </label>
             <input type="number" [value]="(settings$ | async)?.thumbnailWidth" (input)="setThumbnailWidth($event)">
+            <!--TODO: opció, hogy összekapcsolva, méretarányosan lehessen változatani a méretet-->
+            <!--TODO: legyen egy vissza az alapértékek gomb is-->
         </li>
         <li>
             <label>{{ 'settings.thumbnail.height' | translate }}: </label>
             <input type="number" [value]="(settings$ | async)?.thumbnailHeight" (input)="setThumbnailHeight($event)">
+            <!--TODO: opció, hogy összekapcsolva, méretarányosan lehessen változatani a méretet-->
+            <!--TODO: legyen egy vissza az alapértékek gomb is-->
         </li>
         <li>
             <label>{{ 'settings.thumbnail.forwardRateInSeconds' | translate }}: </label>
@@ -93,6 +99,7 @@
         </li>
     </ul>
     <h3>{{ 'settings.shortcuts.shortcuts' | translate }}</h3>
+    <p>{{ 'settings.shortcuts.attention' | translate }}</p>
     <ul>
         <li>
             <label>{{ 'edit.note' | translate }}: </label>
@@ -100,14 +107,6 @@
         </li>
         <li>
             <label>{{ 'settings.settings' | translate }}: </label>
-            <!--TODO-->
-        </li>
-        <li>
-            <label>{{ 'settings.shortcuts.videoMoveForward' | translate }}: </label>
-            <!--TODO-->
-        </li>
-        <li>
-            <label>{{ 'settings.shortcuts.videoMoveBackward' | translate }}: </label>
             <!--TODO-->
         </li>
         <li>
@@ -123,15 +122,7 @@
             <!--TODO-->
         </li>
         <li>
-            <label>{{ 'actions.edit' | translate }}: </label>
-            <!--TODO-->
-        </li>
-        <li>
             <label>{{ 'actions.cancel' | translate }}: </label>
-            <!--TODO-->
-        </li>
-        <li>
-            <label>{{ 'actions.delete' | translate }}: </label>
             <!--TODO-->
         </li>
         <li>

@@ -8,6 +8,12 @@ export class PdfService {
 
   constructor() {}
 
+  // TODO: ne csússzon át és vágódjanak le a túl hosszú bejegyzések
+  // TODO: a jegyzet formázottan történő elmentésére is legyen lehetőség
+  /**
+   * Egy PDF fájl generálása a jegyzetből.
+   * @param jsonData - A jegyzet JSON fájl formátumban.
+   */
   async generatePDF(jsonData: any[]) {
     const doc = new jsPDF();
 

@@ -57,8 +57,7 @@
         "shortcuts":
         {
             "shortcuts": "Gyorsbillentyűk",
-            "videoMoveForward": "Videó előretekerése",
-            "videoMoveBackward": "Videó hátratekerése",
+            "attention": "Figyelem! A beállított gyorsbillentyűk nem írják felül az alapértelmezett böngésző gyorsbillentyű kombinációkat.",
             "thumbnailMoveForward": "Képernyőkép előretekerése",
             "thumbnailMoveBackward": "Képernyőkép hátratekerése",
             "bold": "Félkövér",

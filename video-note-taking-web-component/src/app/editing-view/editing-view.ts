@@ -424,7 +424,7 @@ export class EditingView {
     // A bejegyzés törlése vagy szerkesztői módban a módosítások visszavonása.
     else if (e.shiftKey && e.key?.toLowerCase() === 'c')
     {
-      // TODO: fix confirm modal
+      // TODO: megjavítani ha a gyorsbillentyűvel lesz aktiválva a mégse funkció
       this.setKeyboardEvent(e);
       this.cancelEntry();
     }
