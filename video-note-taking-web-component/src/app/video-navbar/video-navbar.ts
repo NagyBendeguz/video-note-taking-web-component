@@ -199,6 +199,24 @@ export class VideoNavbar {
   }
 
   /**
+   * Megvizsgálja, hogy a jelenlegi aktív elem az egy bemeneti mező-e.
+   * @returns - Az aktív elem az egy bemeneti mező-e vagy sem.
+   */
+  private isTypingInField(): boolean {
+    const activeElement = document.activeElement as HTMLElement | null;
+    if (!activeElement)
+    {
+      return false;
+    }
+    const tag = activeElement.tagName?.toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || activeElement.isContentEditable)
+    {
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * Gyorsbillentyűk.
    * @param e - Billentyű vagy billentyű kombináció esemény.
    */
@@ -216,13 +234,13 @@ export class VideoNavbar {
       this.toggleSettingsPage();
     }
     // A videó előre tekerése.
-    else if (!e.shiftKey && e.key === 'ArrowLeft')
+    else if (!this.isTypingInField() && e.key === 'ArrowLeft')
     {
       this.setKeyboardEvent(e);
       this.onRewind();
     }
     // A videó hátra tekerése.
-    else if (!e.shiftKey && e.key === 'ArrowRight')
+    else if (!this.isTypingInField() && e.key === 'ArrowRight')
     {
       this.setKeyboardEvent(e);
       this.onForward();
