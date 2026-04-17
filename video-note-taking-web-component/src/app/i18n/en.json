@@ -59,7 +59,7 @@
             "shortcuts": "Shortcuts",
             "attention": "Attention! The keyboard shortcuts you set will not override the default browser shortcut combinations.",
             "thumbnailMoveForward": "Thumbnail move forward",
-            "thumbnailMoveBackward": "Thumbnail move backward",
+            "thumbnailMoveRewind": "Thumbnail move backward",
             "bold": "Bold",
             "italic": "Italic",
             "strikethrough": "Strikethrough",

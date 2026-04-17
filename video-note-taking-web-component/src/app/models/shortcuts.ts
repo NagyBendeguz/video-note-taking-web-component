@@ -1,13 +1,13 @@
 export class Shortcuts {
-    note: string = '';
-    settings: string = '';
-    thumbnailMoveForward: string = '';
-    thumbnailMoveBackward: string = '';
-    save: string = '';
-    cancel: string = '';
-    bold: string = '';
-    italic: string = '';
-    strikethrough: string = '';
-    orderedList: string = '';
-    unorderedList: string = '';
+    note: string = 'n';
+    settings: string = 'q';
+    thumbnailMoveForward: string = 'f';
+    thumbnailMoveRewind: string = 'r';
+    save: string = 's';
+    cancel: string = 'c';
+    bold: string = 'b';
+    italic: string = 'i';
+    strikethrough: string = 'h';
+    orderedList: string = 'o';
+    unorderedList: string = 'u';
 }

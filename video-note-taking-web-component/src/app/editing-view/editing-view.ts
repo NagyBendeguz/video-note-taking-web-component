@@ -403,57 +403,57 @@ export class EditingView {
    * @param e - Billentyű vagy billentyű kombináció esemény.
    */
   private keyHandler = (e: KeyboardEvent) => {
-    // A videó képernyőképének előre mozgatása.
-    if (e.shiftKey && e.key?.toLowerCase() === 'r')
+    // A videó képernyőképének hátra mozgatása.
+    if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.thumbnailMoveRewind)
     {
       this.setKeyboardEvent(e);
       this.editingRewind();
     }
-    // A videó képernyőképének hátra mozgatása.
-    else if (e.shiftKey && e.key?.toLowerCase() === 'f')
+    // A videó képernyőképének előre mozgatása.
+    else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.thumbnailMoveForward)
     {
       this.setKeyboardEvent(e);
       this.editingForward();
     }
     // A bejegyzés mentése vagy szerkesztői módban a szerkesztése.
-    else if (e.shiftKey && e.key?.toLowerCase() === 's')
+    else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.save)
     {
       this.setKeyboardEvent(e);
       this.saveEntry();
     }
     // A bejegyzés törlése vagy szerkesztői módban a módosítások visszavonása.
-    else if (e.shiftKey && e.key?.toLowerCase() === 'c')
+    else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.cancel)
     {
       // TODO: megjavítani ha a gyorsbillentyűvel lesz aktiválva a mégse funkció
       this.setKeyboardEvent(e);
       this.cancelEntry();
     }
     // Félkövér formázás.
-    else if (e.shiftKey && e.key?.toLowerCase() === 'b')
+    else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.bold)
     {
       this.setKeyboardEvent(e);
       this.bold();
     }
     // Dőlt formázás.
-    else if (e.shiftKey && e.key?.toLowerCase() === 'i')
+    else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.italic)
     {
       this.setKeyboardEvent(e);
       this.italic();
     }
     // Áthúzott formázás.
-    else if (e.shiftKey && e.key?.toLowerCase() === 'h')
+    else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.strikethrough)
     {
       this.setKeyboardEvent(e);
       this.strikethrough();
     }
     // Számozott lista formázás.
-    else if (e.shiftKey && e.key?.toLowerCase() === 'o')
+    else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.orderedList)
     {
       this.setKeyboardEvent(e);
       this.orderedList();
     }
     // Felsorolás formázás.
-    else if (e.shiftKey && e.key?.toLowerCase() === 'u')
+    else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.unorderedList)
     {
       this.setKeyboardEvent(e);
       this.unorderedList();

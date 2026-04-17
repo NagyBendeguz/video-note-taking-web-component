@@ -4,9 +4,9 @@ import { Settings } from '../models/settings';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { EntryService } from '../services/entry';
 import { VideoService } from '../services/video';
+import { TranslateService } from '@ngx-translate/core';
 import Ajv from 'ajv';
 import DOMPurify from 'dompurify';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-video-settings',
@@ -48,6 +48,7 @@ export class VideoSettings {
     }
   };
 
+  // A beállítható nyelvek.
   langs = [
     { code: 'en', label: 'English' },
     { code: 'hu', label: 'Magyar' }
@@ -91,10 +92,51 @@ export class VideoSettings {
     this.unsubscribe$.complete();
   }
 
-  changeLang(event: Event) {
-    const code = (event.target as HTMLSelectElement).value;
-    this.settingsService.setLanguage(code);
-    this.translate.use(code);
+  /**
+   * A kiválasztott JSON fájl betöltése.
+   * @param event - A betölteni kívánt JSON fájl.
+   */
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length)
+    {
+      const file = input.files[0];
+      const reader = new FileReader();
+
+      reader.onload = (e: ProgressEvent<FileReader>) =>
+      {
+        try
+        {
+          const jsonData = JSON.parse(e.target?.result as string);
+          
+          // A JSON fájl struktúra ellenőrzése.
+          const valid = this.ajv.validate(this.jsonSchema, jsonData);
+          if (!valid)
+          {
+            console.error('Invalid JSON structure: ', this.ajv.errors);
+            return;
+          }
+
+          // A JSON fájlban található minden bejegyzés tisztítása.
+          const sanitizedData = jsonData.map((entry: any) => this.sanitizeInput(entry));
+
+          // A megtisztított jegyzet betöltése.
+          this.entryService.setArrayEntry(sanitizedData);
+
+          // Megtalálni a legnagyobb bejegyzés id-t.
+          const highestEntryId = Math.max(...sanitizedData.map((entry: any) => entry.entryId));
+
+          // A legnagyobb bejegyzés id-t beállítani a jelenlegi id-re, hogy innentől számítsa az új bejegyzésekhez az id-t.
+          this.entryService.setCurrentEntryId(highestEntryId);
+        }
+        catch (error) {
+          console.error('Error parsing JSON: ', error);
+        }
+      };
+
+      reader.readAsText(file);
+    }
   }
 
   /**
@@ -105,97 +147,6 @@ export class VideoSettings {
     const target = event.target as HTMLSelectElement;
     const speed = parseFloat(target.value);
     this.settingsService.setPlaybackRate(speed);
-  }
-
-  /**
-   * A videó feliratok ki és be kapcsolása.
-   */
-  toggleSubtitles(): void {
-    this.settingsService.toggleSubtitles();
-    this.isSubtitleVisible = !this.isSubtitleVisible;
-  }
-
-  /**
-   * A videó vezérlősávjának a videóval való átfedésének ki és be kapcsolása.
-   */
-  toggleOffset(): void {
-    if (!this.isFullscreen)
-    {
-      this.settingsService.toggleVideoNavbarOffset();
-    }
-  }
-
-  /**
-   * A szerkesztői felületen a mégse gomb megnyomására a megerősítő üzenet ki-be kapcsolása.
-   */
-  toggleConfirmCancel(): void {
-    this.settings.confirmCancel = !this.settings.confirmCancel;
-  }
-
-  /**
-   * A bővített nézeten a törlés gomb megnyomására a megerősítő üzenet ki-be kapcsolása.
-   */
-  toggleConfirmDelete(): void {
-    this.settings.confirmDelete = !this.settings.confirmDelete;
-  }
-
-  /**
-   * A jegyzet le legyen-e renderelve.
-   */
-  toggleConvertInput(): void {
-    this.settingsService.toggleConvertInput();
-  }
-
-  /**
-   * Álljon-e meg a videó ha meg lesz nyitva a jegyzetelő vagy beállítások felület.
-   */
-  toggleStopVideoOnNote(): void {
-    this.settingsService.toggleStopVideoOnNote();
-  }
-
-  /**
-   * Induljon-e el a videó (és záródjon-e be a jegyzetelő felület) egy bejegyzés mentése után.
-   */
-  toggleStartVideoOnSave(): void {
-    this.settingsService.toggleStartVideoOnSave();
-  }
-
-  /**
-   * A szerkesztési nézetben az idő előretekerés mértékegységének változtatása.
-   * @param event - A szerkesztési nézetben az idő előretekerésére beállítani kívánt mértékegység eseményként.
-   */
-  setThumbnailForwardRate(event: Event): void {
-    const dirtyThumbnailForwardRate = (event.target as HTMLInputElement).value;
-    const sanitizedValue = Number(DOMPurify.sanitize(dirtyThumbnailForwardRate)) || 1;
-
-    // Ellenőrizni, hogy a bemenet az egy érvényes szám-e.
-    if (isNaN(sanitizedValue) || sanitizedValue <= 0)
-    {
-      this.settings.thumbnailForwardRate = 1;
-    }
-    else
-    {
-      this.settings.thumbnailForwardRate = sanitizedValue;
-    }
-  }
-
-  /**
-   * A szerkesztési nézetben az idő hátratekerés mértékegységének változtatása.
-   * @param event - A szerkesztési nézetben az idő hátratekerésére beállítani kívánt mértékegység eseményként.
-   */
-  setThumbnailRewindRate(event: Event): void {
-    const dirtyThumbnailRewindRate = (event.target as HTMLInputElement).value;
-    const sanitizedValue = Number(DOMPurify.sanitize(dirtyThumbnailRewindRate)) || 1;
-
-    // Ellenőrizni, hogy a bemenet az egy érvényes szám-e.
-    if (isNaN(sanitizedValue) || sanitizedValue <= 0)
-    {
-      this.settings.thumbnailRewindRate = 1;
-    }
-    else
-    {
-      this.settings.thumbnailRewindRate = sanitizedValue;
-    }
   }
 
   /**
@@ -234,6 +185,69 @@ export class VideoSettings {
     {
       this.settingsService.setVideoRewindRate(sanitizedValue);
     }
+  }
+
+  /**
+   * A videó feliratok ki és be kapcsolása.
+   */
+  toggleSubtitles(): void {
+    this.settingsService.toggleSubtitles();
+    this.isSubtitleVisible = !this.isSubtitleVisible;
+  }
+
+  /**
+   * A videó vezérlősávjának a videóval való átfedésének ki és be kapcsolása.
+   */
+  toggleOffset(): void {
+    if (!this.isFullscreen)
+    {
+      this.settingsService.toggleVideoNavbarOffset();
+    }
+  }
+
+  /**
+   * A nyelv beállítása.
+   * @param event - A beállítandó nylev.
+   */
+  changeLang(event: Event) {
+    const code = (event.target as HTMLSelectElement).value;
+    this.settingsService.setLanguage(code);
+    this.translate.use(code);
+  }
+
+  /**
+   * A jegyzet le legyen-e renderelve.
+   */
+  toggleConvertInput(): void {
+    this.settingsService.toggleConvertInput();
+  }
+
+  /**
+   * A szerkesztői felületen a mégse gomb megnyomására a megerősítő üzenet ki-be kapcsolása.
+   */
+  toggleConfirmCancel(): void {
+    this.settings.confirmCancel = !this.settings.confirmCancel;
+  }
+
+  /**
+   * A bővített nézeten a törlés gomb megnyomására a megerősítő üzenet ki-be kapcsolása.
+   */
+  toggleConfirmDelete(): void {
+    this.settings.confirmDelete = !this.settings.confirmDelete;
+  }
+
+  /**
+   * Álljon-e meg a videó ha meg lesz nyitva a jegyzetelő vagy beállítások felület.
+   */
+  toggleStopVideoOnNote(): void {
+    this.settingsService.toggleStopVideoOnNote();
+  }
+
+  /**
+   * Induljon-e el a videó (és záródjon-e be a jegyzetelő felület) egy bejegyzés mentése után.
+   */
+  toggleStartVideoOnSave(): void {
+    this.settingsService.toggleStartVideoOnSave();
   }
 
   /**
@@ -291,50 +305,140 @@ export class VideoSettings {
   }
 
   /**
-   * A kiválasztott JSON fájl betöltése.
-   * @param event - A betölteni kívánt JSON fájl.
+   * A szerkesztési nézetben az idő előretekerés mértékegységének változtatása.
+   * @param event - A szerkesztési nézetben az idő előretekerésére beállítani kívánt mértékegység eseményként.
    */
-  onFileChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
+  setThumbnailForwardRate(event: Event): void {
+    const dirtyThumbnailForwardRate = (event.target as HTMLInputElement).value;
+    const sanitizedValue = Number(DOMPurify.sanitize(dirtyThumbnailForwardRate)) || 1;
 
-    if (input.files && input.files.length)
+    // Ellenőrizni, hogy a bemenet az egy érvényes szám-e.
+    if (isNaN(sanitizedValue) || sanitizedValue <= 0)
     {
-      const file = input.files[0];
-      const reader = new FileReader();
-
-      reader.onload = (e: ProgressEvent<FileReader>) =>
-      {
-        try
-        {
-          const jsonData = JSON.parse(e.target?.result as string);
-          
-          // A JSON fájl struktúra ellenőrzése.
-          const valid = this.ajv.validate(this.jsonSchema, jsonData);
-          if (!valid)
-          {
-            console.error('Invalid JSON structure: ', this.ajv.errors);
-            return;
-          }
-
-          // A JSON fájlban található minden bejegyzés tisztítása.
-          const sanitizedData = jsonData.map((entry: any) => this.sanitizeInput(entry));
-
-          // A megtisztított jegyzet betöltése.
-          this.entryService.setArrayEntry(sanitizedData);
-
-          // Megtalálni a legnagyobb bejegyzés id-t.
-          const highestEntryId = Math.max(...sanitizedData.map((entry: any) => entry.entryId));
-
-          // A legnagyobb bejegyzés id-t beállítani a jelenlegi id-re, hogy innentől számítsa az új bejegyzésekhez az id-t.
-          this.entryService.setCurrentEntryId(highestEntryId);
-        }
-        catch (error) {
-          console.error('Error parsing JSON: ', error);
-        }
-      };
-
-      reader.readAsText(file);
+      this.settings.thumbnailForwardRate = 1;
     }
+    else
+    {
+      this.settings.thumbnailForwardRate = sanitizedValue;
+    }
+  }
+
+  /**
+   * A szerkesztési nézetben az idő hátratekerés mértékegységének változtatása.
+   * @param event - A szerkesztési nézetben az idő hátratekerésére beállítani kívánt mértékegység eseményként.
+   */
+  setThumbnailRewindRate(event: Event): void {
+    const dirtyThumbnailRewindRate = (event.target as HTMLInputElement).value;
+    const sanitizedValue = Number(DOMPurify.sanitize(dirtyThumbnailRewindRate)) || 1;
+
+    // Ellenőrizni, hogy a bemenet az egy érvényes szám-e.
+    if (isNaN(sanitizedValue) || sanitizedValue <= 0)
+    {
+      this.settings.thumbnailRewindRate = 1;
+    }
+    else
+    {
+      this.settings.thumbnailRewindRate = sanitizedValue;
+    }
+  }
+
+  /**
+   * A jegyzetelés gyorsbillentyű beállítása.
+   * @param event - A megadott gyorsbillentyű.
+   */
+  setShortcutNote(event: Event): void {
+    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'n';
+    this.settings.shortcuts.note = value;
+  }
+
+  /**
+   * A beállítások gyorsbillentyű beállítása.
+   * @param event - A megadott gyorsbillentyű.
+   */
+  setShortcutSettings(event: Event): void {
+    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'q';
+    this.settings.shortcuts.settings = value;
+  }
+
+  /**
+   * A képernyőkép előretekerése gyorsbillentyű beállítása.
+   * @param event - A megadott gyorsbillentyű.
+   */
+  setShortcutThumbnailMoveForward(event: Event): void {
+    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'f';
+    this.settings.shortcuts.thumbnailMoveForward = value;
+  }
+
+  /**
+   * A képernyőkép hátratekerése gyorsbillentyű beállítása.
+   * @param event - A megadott gyorsbillentyű.
+   */
+  setShortcutThumbnailMoveRewind(event: Event): void {
+    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'r';
+    this.settings.shortcuts.thumbnailMoveRewind = value;
+  }
+
+  /**
+   * A mentés gyorsbillentyű beállítása.
+   * @param event - A megadott gyorsbillentyű.
+   */
+  setShortcutSave(event: Event): void {
+    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 's';
+    this.settings.shortcuts.save = value;
+  }
+
+  /**
+   * A mégse gyorsbillentyű beállítása.
+   * @param event - A megadott gyorsbillentyű.
+   */
+  setShortcutCancel(event: Event): void {
+    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'c';
+    this.settings.shortcuts.cancel = value;
+  }
+
+  /**
+   * A félkövér gyorsbillentyű beállítása.
+   * @param event - A megadott gyorsbillentyű.
+   */
+  setShortcutBold(event: Event): void {
+    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'b';
+    this.settings.shortcuts.bold = value;
+  }
+
+  /**
+   * A dőlt gyorsbillentyű beállítása.
+   * @param event - A megadott gyorsbillentyű.
+   */
+  setShortcutItalic(event: Event): void {
+    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'i';
+    this.settings.shortcuts.italic = value;
+  }
+
+  /**
+   * A áthúzott gyorsbillentyű beállítása.
+   * @param event - A megadott gyorsbillentyű.
+   */
+  setShortcutStrikethrough(event: Event): void {
+    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'h';
+    this.settings.shortcuts.strikethrough = value;
+  }
+
+  /**
+   * A számozott lista gyorsbillentyű beállítása.
+   * @param event - A megadott gyorsbillentyű.
+   */
+  setShortcutOrderedList(event: Event): void {
+    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'o';
+    this.settings.shortcuts.orderedList = value;
+  }
+
+  /**
+   * A számozatlan lista gyorsbillentyű beállítása.
+   * @param event - A megadott gyorsbillentyű.
+   */
+  setShortcutUnorderedList(event: Event): void {
+    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'u';
+    this.settings.shortcuts.unorderedList = value;
   }
 
   /**

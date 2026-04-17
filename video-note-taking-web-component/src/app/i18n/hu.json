@@ -59,7 +59,7 @@
             "shortcuts": "Gyorsbillentyűk",
             "attention": "Figyelem! A beállított gyorsbillentyűk nem írják felül az alapértelmezett böngésző gyorsbillentyű kombinációkat.",
             "thumbnailMoveForward": "Képernyőkép előretekerése",
-            "thumbnailMoveBackward": "Képernyőkép hátratekerése",
+            "thumbnailMoveRewind": "Képernyőkép hátratekerése",
             "bold": "Félkövér",
             "italic": "Dőlt",
             "strikethrough": "Áthúzott",

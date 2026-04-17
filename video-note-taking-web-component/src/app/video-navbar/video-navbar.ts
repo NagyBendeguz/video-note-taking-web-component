@@ -222,13 +222,13 @@ export class VideoNavbar {
    */
   private keyHandler = (e: KeyboardEvent) => {
     // Jegyzetelés oldal megnyitása vagy becsukása.
-    if (e.shiftKey && e.key?.toLowerCase() === 'n')
+    if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.note)
     {
       this.setKeyboardEvent(e);
       this.toggleNotePage();
     }
     // Beállítások oldal megnyitása vagy becsukása.
-    else if (e.shiftKey && e.key?.toLowerCase() === 'p')
+    else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.settings)
     {
       this.setKeyboardEvent(e);
       this.toggleSettingsPage();

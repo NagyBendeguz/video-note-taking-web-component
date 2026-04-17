@@ -103,47 +103,47 @@
     <ul>
         <li>
             <label>{{ 'edit.note' | translate }}: </label>
-            <!--TODO-->
+            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.note" (input)="setShortcutNote($event)">
         </li>
         <li>
             <label>{{ 'settings.settings' | translate }}: </label>
-            <!--TODO-->
+            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.settings" (input)="setShortcutSettings($event)">
         </li>
         <li>
             <label>{{ 'settings.shortcuts.thumbnailMoveForward' | translate }}: </label>
-            <!--TODO-->
+            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.thumbnailMoveForward" (input)="setShortcutThumbnailMoveForward($event)">
         </li>
         <li>
-            <label>{{ 'settings.shortcuts.thumbnailMoveBackward' | translate }}: </label>
-            <!--TODO-->
+            <label>{{ 'settings.shortcuts.thumbnailMoveRewind' | translate }}: </label>
+            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.thumbnailMoveRewind" (input)="setShortcutThumbnailMoveRewind($event)">
         </li>
         <li>
             <label>{{ 'actions.save' | translate }}: </label>
-            <!--TODO-->
+            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.save" (input)="setShortcutSave($event)">
         </li>
         <li>
             <label>{{ 'actions.cancel' | translate }}: </label>
-            <!--TODO-->
+            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.cancel" (input)="setShortcutCancel($event)">
         </li>
         <li>
             <label>{{ 'settings.shortcuts.bold' | translate }}: </label>
-            <!--TODO-->
+            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.bold" (input)="setShortcutBold($event)">
         </li>
         <li>
             <label>{{ 'settings.shortcuts.italic' | translate }}: </label>
-            <!--TODO-->
+            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.italic" (input)="setShortcutItalic($event)">
         </li>
         <li>
             <label>{{ 'settings.shortcuts.strikethrough' | translate }}: </label>
-            <!--TODO-->
+            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.strikethrough" (input)="setShortcutStrikethrough($event)">
         </li>
         <li>
             <label>{{ 'settings.shortcuts.orderedList' | translate }}: </label>
-            <!--TODO-->
+            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.orderedList" (input)="setShortcutOrderedList($event)">
         </li>
         <li>
             <label>{{ 'settings.shortcuts.unorderedList' | translate }}: </label>
-            <!--TODO-->
+            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.unorderedList" (input)="setShortcutUnorderedList($event)">
         </li>
     </ul>
 </div>
