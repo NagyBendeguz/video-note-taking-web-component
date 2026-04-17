@@ -215,6 +215,11 @@ export class VideoSettings {
     this.translate.use(code);
   }
 
+  changeTheme(event: Event): void {
+    const theme = (event.target as HTMLSelectElement).value;
+    this.settingsService.setTheme(theme);
+  }
+
   /**
    * A jegyzet le legyen-e renderelve.
    */

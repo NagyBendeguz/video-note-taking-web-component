@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { DOCUMENT, Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Settings } from '../models/settings';
 
@@ -6,6 +6,10 @@ import { Settings } from '../models/settings';
   providedIn: 'root',
 })
 export class SettingsService {
+  constructor(@Inject(DOCUMENT) private doc: Document) {}
+
+  private prefix = 'theme-';
+
   private settingsSource = new BehaviorSubject<Settings>(new Settings());
   settings$ = this.settingsSource.asObservable();
 
@@ -67,6 +71,19 @@ export class SettingsService {
   setLanguage(lang: string): void {
     const currentSettings = this.settingsSource.getValue();
     this.settingsSource.next({ ...currentSettings, language: lang });
+  }
+
+  setTheme(name: string): void {
+    const currentSettings = this.settingsSource.getValue();
+    this.settingsSource.next({ ...currentSettings, theme: name });
+
+    const body = this.doc.body;
+
+    Array.from(body.classList)
+      .filter(c => c.startsWith(this.prefix))
+      .forEach(c => body.classList.remove(c));
+
+    body.classList.add(this.prefix + name);
   }
 
   toggleConvertInput(): void {

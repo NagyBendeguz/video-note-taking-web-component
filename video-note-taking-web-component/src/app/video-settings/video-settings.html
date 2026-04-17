@@ -51,7 +51,10 @@
         </li>
         <li>
             <label>{{ 'settings.theme' | translate }}: </label>
-            <!--TODO-->
+            <select [value]="(settings$ | async)?.theme" (change)="changeTheme($event)">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+            </select>
         </li>
         <li>
             <label>{{ 'settings.convertInput' | translate }}: </label>

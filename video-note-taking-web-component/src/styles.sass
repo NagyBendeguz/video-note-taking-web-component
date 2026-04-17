@@ -4,6 +4,30 @@
 :root
     --video-height: 0
     --video-navbar-offset: -65px
+    --icon-color: black
+    --text-color: black
+    --background-color: lightgrey
+    --video-navbar-background-color: rgba(0, 0, 0, 0.8)
+    --input-color: black
+    --input-background-color: white
+
+body.theme-dark
+    background-color: black
+    --icon-color: #dedede
+    --text-color: #dedede
+    --background-color: #393939
+    --video-navbar-background-color: rgba(64, 64, 64, 0.8)
+    --input-color: white
+    --input-background-color: rgb(68, 68, 68)
+
+body.theme-light
+    background-color: light
+    --icon-color: black
+    --text-color: black
+    --background-color: lightgrey
+    --video-navbar-background-color: rgba(0, 0, 0, 0.8)
+    --input-color: black
+    --input-background-color: white
 
 .hidden
     display: none
@@ -12,10 +36,10 @@
     width: 50%
 
 .full-width
-  width: 100%
+    width: 100%
 
 .half-width
-  width: 50%
+    width: 50%
 
 .element-0
     .compressed-view
@@ -23,3 +47,9 @@
 
     .extended-view
         @include border(true, true, false, true)
+
+/* Az alábbi a Bootstrap ikonok színének megváltoztatásához kell ha változik a téma. */
+.bi
+    color: var(--icon-color)
+    fill: currentColor
+    transition: color .2s, fill .2s

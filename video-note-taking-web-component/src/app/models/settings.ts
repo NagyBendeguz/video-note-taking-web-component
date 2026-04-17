@@ -2,7 +2,7 @@ import { Shortcuts } from "./shortcuts";
 
 export class Settings {
     language: string = 'en';
-    theme: string = '';
+    theme: string = 'light';
     convertInput: boolean = true;
     confirmCancel: boolean = false;
     confirmDelete: boolean = true;
