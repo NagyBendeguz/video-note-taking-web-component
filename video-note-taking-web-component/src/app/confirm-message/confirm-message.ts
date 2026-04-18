@@ -15,10 +15,16 @@ export class ConfirmMessage {
 
   constructor(private translate: TranslateService) {}
 
+  /**
+   * A megerősítő funkció emitálása.
+   */
   confirmButton(): void {
     this.confirm.emit();
   }
 
+  /**
+   * A mégse funkció emitálása.
+   */
   cancelButton(): void {
     this.cancel.emit();
   }
