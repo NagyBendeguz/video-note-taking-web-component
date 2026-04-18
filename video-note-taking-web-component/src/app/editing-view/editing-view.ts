@@ -7,8 +7,8 @@ import { PdfService } from '../services/pdf';
 import { SettingsService } from '../services/settings';
 import { Settings } from '../models/settings';
 import { marked } from 'marked';
-import DOMPurify from 'dompurify';
 import { TranslateService } from '@ngx-translate/core';
+import DOMPurify from 'dompurify';
 
 @Component({
   selector: 'app-editing-view',
@@ -241,13 +241,6 @@ export class EditingView {
   unorderedList(): void {
     this.modifyText('\n- ', '\n');
   }
-
-  /**
-   * Táblázat formázás.
-   */
-  /*table(): void {
-    this.modifyText('\n| Header | Header |\n| --- | --- |\n| ', 'Cell | Cell |');
-  }*/
 
   /**
    * A markdown szintaxis gombokkal való hozzáadása a kijeleölt szöveghez.
