@@ -26,10 +26,16 @@ export class CompressedView {
     this.settings$ = this.settingsSerivce.getSettings();
   }
 
+  /**
+   * A bővített és tömörített nézet közötti váltás.
+   */
   toggle(): void {
     this.onToggle.emit();
   }
 
+  /**
+   * Az időbélyeg által mutatott időpontra állítani a videó jelenlegi idejét.
+   */
   jumpToTimestamp(): void {
     this.videoService.setTimestamp(this.entry.timestamp);
     this.videoService.emitJumpToTimestamp();
