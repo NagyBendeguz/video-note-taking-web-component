@@ -3,8 +3,8 @@ import { VideoService } from '../services/video';
 import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
 import { SettingsService } from '../services/settings';
 import { Settings } from '../models/settings';
-import pica from 'pica';
 import { TranslateService } from '@ngx-translate/core';
+import pica from 'pica';
 
 @Component({
   selector: 'app-video-player',

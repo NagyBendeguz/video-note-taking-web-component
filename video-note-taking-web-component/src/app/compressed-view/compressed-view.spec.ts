@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CompressedView } from './compressed-view';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('CompressedView', () => {
   let component: CompressedView;
@@ -8,7 +8,8 @@ describe('CompressedView', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CompressedView]
+      declarations: [CompressedView],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
 
