@@ -52,9 +52,13 @@
         <li>
             <label>{{ 'settings.theme' | translate }}: </label>
             <select [value]="(settings$ | async)?.theme" (change)="changeTheme($event)">
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
+                <option value="light">{{ 'settings.light' | translate }}</option>
+                <option value="dark">{{ 'settings.dark' | translate }}</option>
             </select>
+        </li>
+        <li>
+            <label>{{ 'settings.saveSettings' | translate }}: </label>
+            <button (click)="toggleSaveSettings()">{{ (settings$ | async)?.saveSettings ? ('settings.turnOff' | translate) : ('settings.turnOn' | translate) }}</button>
         </li>
         <li>
             <label>{{ 'settings.convertInput' | translate }}: </label>

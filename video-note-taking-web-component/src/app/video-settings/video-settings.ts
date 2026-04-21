@@ -27,6 +27,7 @@ export class VideoSettings {
   private unsubscribe$ = new Subject<void>();
   private ajv = new Ajv();
 
+  // TODO: beállítások elfogadása
   // A betölteni kívánt JSON fájl struktúrája.
   private jsonSchema =
   {
@@ -215,9 +216,17 @@ export class VideoSettings {
     this.translate.use(code);
   }
 
+  /**
+   * A téma beállítása.
+   * @param event - A beállítandó téma.
+   */
   changeTheme(event: Event): void {
     const theme = (event.target as HTMLSelectElement).value;
     this.settingsService.setTheme(theme);
+  }
+
+  toggleSaveSettings(): void {
+    this.settingsService.toggleSaveSettings();
   }
 
   /**

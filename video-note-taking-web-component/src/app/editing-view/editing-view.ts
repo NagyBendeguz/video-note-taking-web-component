@@ -375,6 +375,7 @@ export class EditingView {
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}.${formattedMilliseconds}`;
   }
 
+  // TODO: beállítástól függően elmenteni a beállításokat is a lementendő JSON fájlba
   /**
    * A jegyzet mentése JSON fájlba.
    * @param data - A jelenlegi mentésre kerülő jegyzet.

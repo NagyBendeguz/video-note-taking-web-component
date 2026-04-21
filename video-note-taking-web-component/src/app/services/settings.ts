@@ -86,6 +86,11 @@ export class SettingsService {
     body.classList.add(this.prefix + name);
   }
 
+  toggleSaveSettings(): void {
+    const currentSettings = this.settingsSource.getValue();
+    this.settingsSource.next({ ...currentSettings, saveSettings: !currentSettings.saveSettings });
+  }
+
   toggleConvertInput(): void {
     const currentSettings = this.settingsSource.getValue();
     this.settingsSource.next({ ...currentSettings, convertInput: !currentSettings.convertInput });
