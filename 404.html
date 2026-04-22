@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en" data-beasties-container>
+    <head>
+        <meta charset="utf-8">
+        <title>Video Note-Taking Web Component</title>
+        <base href="/">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/x-icon" href="favicon.png">
+    <style>:root{--video-height:0;--video-navbar-offset:-65px;--icon-color:black;--text-color:black;--background-color:lightgrey;--video-navbar-background-color:rgba(0, 0, 0, .8);--input-color:black;--input-background-color:white}</style><link rel="stylesheet" href="styles-6N6NL6MW.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles-6N6NL6MW.css"></noscript></head>
+    <body>
+        <video-player src="video.mp4" subtitle="subtitle.vtt" lang="en"></video-player>
+
+        <!--Az 'ng build'-hez példának.-->
+        <!--
+        <br><br><br>
+
+        <select id="videoSelect">
+            <option value="video.mp4">Video 1</option>
+            <option value="video2.mp4">Video 2</option>
+            <option value="video3.mp4">Video 3</option>
+        </select>
+        -->
+
+        <!--Nincs oldal újratöltés!-->
+        <!--
+        <script>
+            const select = document.getElementById('videoSelect');
+            const videoPlayer = document.querySelector("video-player");
+
+            select.addEventListener('change', (e) => {
+                videoPlayer.src = e.target.value;
+            });
+        </script>
+        -->
+
+        <!--Van oldal újratöltés!-->
+        <!--
+        <script>
+            document.addEventListener('DOMContentLoaded', () =>
+            {
+                const select = document.getElementById('videoSelect');
+                const videoPlayer = document.querySelector("video-player");
+                const STORAGE_KEY = 'selectedVideo';
+
+                // A korábban kiválasztott videó visszaállítása vagy az alapértelmezett videó használata.
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved)
+                {
+                    select.value = saved;
+                    videoPlayer.src = saved;
+                }
+                else
+                {
+                    // Ellenőrzés, hogy a lejátszó megegyezik-e a kiválasztott alapértelmezett videóval.
+                    videoPlayer.src = select.value;
+                }
+
+                // Amikor új videó lesz kiválasztva akkor mentse le a videót és töltse újra az oldalt.
+                select.addEventListener('change', (e) =>
+                {
+                    localStorage.setItem(STORAGE_KEY, e.target.value);
+                    // Egy kis késleltetés beállítása, hogy biztonsan elmentse a kiválasztott videót.
+                    setTimeout(() => location.reload(), 10);
+                });
+            });
+        </script>
+        -->
+    <link rel="modulepreload" href="chunk-ZXQGESBO.js"><link rel="modulepreload" href="chunk-FK6H3RFT.js"><link rel="modulepreload" href="chunk-E6TGZIGP.js"><script src="main-4ON7RHAF.js" type="module"></script></body>
+</html>
