@@ -48,6 +48,7 @@
     "@angular/compiler-cli": "^21.1.0",
     "@types/jasmine": "^6.0.0",
     "@types/pica": "^9.0.5",
+    "angular-cli-ghpages": "^3.0.2",
     "jasmine-core": "^6.2.0",
     "jsdom": "^27.1.0",
     "karma": "^6.4.4",
