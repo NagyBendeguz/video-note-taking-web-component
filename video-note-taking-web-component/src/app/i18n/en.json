@@ -61,6 +61,7 @@
         {
             "shortcuts": "Shortcuts",
             "attention": "Attention! The keyboard shortcuts you set will not override the default browser shortcut combinations.",
+            "explanation": "You can use the following keyboard shortcuts by pressing the SHIFT key along with the selected key combinations.",
             "thumbnailMoveForward": "Thumbnail move forward",
             "thumbnailMoveRewind": "Thumbnail move backward",
             "bold": "Bold",

@@ -159,7 +159,7 @@ export class VideoSettings {
     const sanitizedValue = Number(DOMPurify.sanitize(dirtyVideoForwardRate)) || 10;
 
     // Ellenőrizni, hogy a bemenet az egy érvényes szám-e.
-    if (isNaN(sanitizedValue) || sanitizedValue <= 0)
+    if (isNaN(sanitizedValue) || sanitizedValue <= 0 || sanitizedValue > 10000)
     {
       this.settingsService.setVideoForwardRate(10);
     }
@@ -178,7 +178,7 @@ export class VideoSettings {
     const sanitizedValue = Number(DOMPurify.sanitize(dirtyVideoForwardRate)) || 10;
 
     // Ellenőrizni, hogy a bemenet az egy érvényes szám-e.
-    if (isNaN(sanitizedValue) || sanitizedValue <= 0)
+    if (isNaN(sanitizedValue) || sanitizedValue <= 0 || sanitizedValue > 10000)
     {
       this.settingsService.setVideoRewindRate(10);
     }
@@ -225,6 +225,9 @@ export class VideoSettings {
     this.settingsService.setTheme(theme);
   }
 
+  /**
+   * A beállítások mentése vagy sem.
+   */
   toggleSaveSettings(): void {
     this.settingsService.toggleSaveSettings();
   }
@@ -290,7 +293,7 @@ export class VideoSettings {
     const dirtyThumbnailWidth = (event.target as HTMLInputElement).value;
     const sanitizedValue = Number(DOMPurify.sanitize(dirtyThumbnailWidth)) || 1;
 
-    if (isNaN(sanitizedValue) || sanitizedValue < 0)
+    if (isNaN(sanitizedValue) || sanitizedValue < 0 || sanitizedValue > 2048)
     {
       this.settings.thumbnailWidth = 1;
     }
@@ -308,7 +311,7 @@ export class VideoSettings {
     const dirtyThumbnailHeight = (event.target as HTMLInputElement).value;
     const sanitizedValue = Number(DOMPurify.sanitize(dirtyThumbnailHeight)) || 1;
 
-    if (isNaN(sanitizedValue) || sanitizedValue < 0)
+    if (isNaN(sanitizedValue) || sanitizedValue < 0 || sanitizedValue > 2048)
     {
       this.settings.thumbnailHeight = 1;
     }
@@ -327,7 +330,7 @@ export class VideoSettings {
     const sanitizedValue = Number(DOMPurify.sanitize(dirtyThumbnailForwardRate)) || 1;
 
     // Ellenőrizni, hogy a bemenet az egy érvényes szám-e.
-    if (isNaN(sanitizedValue) || sanitizedValue <= 0)
+    if (isNaN(sanitizedValue) || sanitizedValue <= 0 || sanitizedValue > 10000)
     {
       this.settings.thumbnailForwardRate = 1;
     }
@@ -346,7 +349,7 @@ export class VideoSettings {
     const sanitizedValue = Number(DOMPurify.sanitize(dirtyThumbnailRewindRate)) || 1;
 
     // Ellenőrizni, hogy a bemenet az egy érvényes szám-e.
-    if (isNaN(sanitizedValue) || sanitizedValue <= 0)
+    if (isNaN(sanitizedValue) || sanitizedValue <= 0 || sanitizedValue > 10000)
     {
       this.settings.thumbnailRewindRate = 1;
     }

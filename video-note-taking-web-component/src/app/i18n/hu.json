@@ -61,6 +61,7 @@
         {
             "shortcuts": "Gyorsbillentyűk",
             "attention": "Figyelem! A beállított gyorsbillentyűk nem írják felül az alapértelmezett böngésző gyorsbillentyű kombinációkat.",
+            "explanation": "A SHIFT és a kiválasztott billentyűkombinációjával lehet használni a kívánt az alábbi gyorsbillentyűket.",
             "thumbnailMoveForward": "Képernyőkép előretekerése",
             "thumbnailMoveRewind": "Képernyőkép hátratekerése",
             "bold": "Félkövér",
