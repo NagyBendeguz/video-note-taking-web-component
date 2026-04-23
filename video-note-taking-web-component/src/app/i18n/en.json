@@ -29,8 +29,8 @@
     "settings":
     {
         "settings": "Settings",
-        "turnOn": "Turn on",
-        "turnOff": "Turn off",
+        "on": "On",
+        "off": "Off",
         "loadNote": "Load note",
         "videoPlayerSettings": "Video player settings",
         "playbackSpeed": "Playback speed",
@@ -69,6 +69,45 @@
             "strikethrough": "Strikethrough",
             "orderedList": "Ordered list",
             "unorderedList": "Unordered list"
+        },
+        "help":
+        {
+            "loadNote": "You can load your saved note. A valid JSON file is required.",
+            "playbackSpeed": "Changing the video playback speed.",
+            "forwardRateInSeconds": "The amount of time to fast-forward the video in seconds.",
+            "rewindRateInSeconds": "The amount of time to rewind the video in seconds.",
+            "subtitles": "If subtitles are available, toggle them on or off.",
+            "videoNavbarOffset": "Set the position of the video control bar so that it appears below or at the bottom of the video.",
+            "languages": "Changing the interface language.",
+            "theme": "Changing the appearance of the interface.",
+            "saveSettings": "When an entry is saved, the settings are saved along with it. When you load the note, the saved settings are automatically applied.",
+            "convertInput": "Display the created entries in their formatted state.",
+            "confirmCancel": "Display a confirmation message when canceling the creation or editing of an entry.",
+            "confirmDelete": "Display a confirmation message when deleting an entry.",
+            "stopVideoOnNote": "Pause the video automatically when the note-taking page opens.",
+            "startVideoOnSave": "When an entry is saved, the note-taking page closes automatically and the video starts playing automatically.",
+            "thumbnail":
+            {
+                "qualityPercentage": "Adjusting the quality of screenshots.",
+                "width": "Adjusting the width of the screenshots.",
+                "height": "Adjusting the height of the screenshots.",
+                "forwardRateInSeconds": "In the editor view, set the fast-forward duration for the screenshot in seconds.",
+                "rewindRateInSeconds": "In the editor view, set the rewind duration for the screenshot in seconds."
+            },
+            "shortcuts":
+            {
+                "note": "Open the note-taking page.",
+                "settings": "Open the settings page.",
+                "thumbnailMoveForward": "In the editor view, fast-forward the screenshot in seconds.",
+                "thumbnailMoveRewind": "In the editor view, rewind the screenshot in seconds.",
+                "save": "Saving an entry.",
+                "cancel": "Cancel the creation or editing of an entry.",
+                "bold": "Formatting the selected content of the entry in bold using Markdown syntax.",
+                "italic": "Formatting the selected content of the entry in italic using Markdown syntax.",
+                "strikethrough": "Formatting the selected content of the entry in strikethrough using Markdown syntax.",
+                "orderedList": "Formatting the selected content of the entry in ordered list using Markdown syntax.",
+                "unorderedList": "Formatting the selected content of the entry in unordered list using Markdown syntax."
+            }
         }
     }
 }

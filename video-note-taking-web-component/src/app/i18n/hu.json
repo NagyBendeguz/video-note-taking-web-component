@@ -29,8 +29,8 @@
     "settings":
     {
         "settings": "Beállítások",
-        "turnOn": "Bekapcsolás",
-        "turnOff": "Kikapcsolás",
+        "on": "Be",
+        "off": "Ki",
         "loadNote": "Jegyzet betöltése",
         "videoPlayerSettings": "Videó lejátszó beállításai",
         "playbackSpeed": "Lejátszási sebesség",
@@ -69,6 +69,45 @@
             "strikethrough": "Áthúzott",
             "orderedList": "Számozott lista",
             "unorderedList": "Számozatlan lista"
+        },
+        "help":
+        {
+            "loadNote": "Az elmentett jegyzet betöltése. A betöltéshez érvényes JSON fájlra van szükség.",
+            "playbackSpeed": "A videó lejátszási sebességének megváltoztatása.",
+            "forwardRateInSeconds": "A videó előretekerés mértékének megadása másodpercekben.",
+            "rewindRateInSeconds": "A videó hátratekerés mértékének megadása másodpercekben.",
+            "subtitles": "Ha van felirat akkor annak a ki-be kapcsolása.",
+            "videoNavbarOffset": "A videó vezérlősáv elhelyezkedésének beállítása, hogy a videó alatt vagy alján helyezkedjen el.",
+            "languages": "A felület nyelvének megváltoztatása.",
+            "theme": "A felület kinézetének megváltoztatása.",
+            "saveSettings": "A jegyzet mentéskor a beállítások mentése a jegyzettel együtt. A jegyzet betöltéskor automatikusan aktiválódnak az elmentett beállítások.",
+            "convertInput": "Az elkészített bejegyzések formázottan jelenjenek meg.",
+            "confirmCancel": "Bejegyzés készítésének vagy szerkesztésének visszavonásakor megerősítő üzenet megjelenítése.",
+            "confirmDelete": "Bejegyzés törlésekor megerősítő üzenet megjelenítése.",
+            "stopVideoOnNote": "A videó automatikusan megállítása a jegyzetelő felület megnyitásakor.",
+            "startVideoOnSave": "Bejegyzés mentésekor a jegyzetelő felület automatikus bezárása és a videó automatikusan indítása.",
+            "thumbnail":
+            {
+                "qualityPercentage": "A képernyőképek minőségének módosítása.",
+                "width": "A képernyőképek szélességének módosítása.",
+                "height": "A képernyőképek magasságának módosítása.",
+                "forwardRateInSeconds": "A szerkesztői felületen a képernyőképhez az előretekerés mértékének beállítása másodpercekben.",
+                "rewindRateInSeconds": "A szerkesztői felületen a képernyőképhez a hátratekerés mértékének beállítása másodpercekben."
+            },
+            "shortcuts":
+            {
+                "note": "A jegyzetelő felület megnyitása.",
+                "settings": "A beállítások felület megnyitása.",
+                "thumbnailMoveForward": "A szerkesztői felületen a képernyőkép előretekerése másodpercekben.",
+                "thumbnailMoveRewind": "A szerkesztői felületen a képernyőkép hátratekerése másodpercekben.",
+                "save": "Egy bejegyzés mentése.",
+                "cancel": "Egy bejegyzés készítésének vagy szerkesztésének visszavonása.",
+                "bold": "Az adott bejegyzés kijelölt tartalmának félkövér formázása Markdown szintaxis alapján.",
+                "italic": "Az adott bejegyzés kijelölt tartalmának dőlt formázása Markdown szintaxis alapján.",
+                "strikethrough": "Az adott bejegyzés kijelölt tartalmának áthúzott formázása Markdown szintaxis alapján.",
+                "orderedList": "Az adott bejegyzés kijelölt tartalmának számozott listakénti formázása Markdown szintaxis alapján.",
+                "unorderedList": "Az adott bejegyzés kijelölt tartalmának számozatlan listakénti formázása Markdown szintaxis alapján."
+            }
         }
     }
 }
