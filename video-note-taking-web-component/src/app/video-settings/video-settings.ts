@@ -4,9 +4,14 @@ import { Settings } from '../models/settings';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { EntryService } from '../services/entry';
 import { VideoService } from '../services/video';
+import { Shortcuts } from '../models/shortcuts';
 import { TranslateService } from '@ngx-translate/core';
 import Ajv from 'ajv';
 import DOMPurify from 'dompurify';
+
+// A gyorsbillentyűkhöz.
+interface ShortcutField { key: keyof Shortcuts; label: string; help: string }
+type ShortcutKey = keyof Shortcuts;
 
 @Component({
   selector: 'app-video-settings',
@@ -428,105 +433,6 @@ export class VideoSettings {
   }
 
   /**
-   * A jegyzetelés gyorsbillentyű beállítása.
-   * @param event - A megadott gyorsbillentyű.
-   */
-  setShortcutNote(event: Event): void {
-    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'n';
-    this.settings.shortcuts.note = value;
-  }
-
-  /**
-   * A beállítások gyorsbillentyű beállítása.
-   * @param event - A megadott gyorsbillentyű.
-   */
-  setShortcutSettings(event: Event): void {
-    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'q';
-    this.settings.shortcuts.settings = value;
-  }
-
-  /**
-   * A képernyőkép előretekerése gyorsbillentyű beállítása.
-   * @param event - A megadott gyorsbillentyű.
-   */
-  setShortcutThumbnailMoveForward(event: Event): void {
-    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'f';
-    this.settings.shortcuts.thumbnailMoveForward = value;
-  }
-
-  /**
-   * A képernyőkép hátratekerése gyorsbillentyű beállítása.
-   * @param event - A megadott gyorsbillentyű.
-   */
-  setShortcutThumbnailMoveRewind(event: Event): void {
-    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'r';
-    this.settings.shortcuts.thumbnailMoveRewind = value;
-  }
-
-  /**
-   * A mentés gyorsbillentyű beállítása.
-   * @param event - A megadott gyorsbillentyű.
-   */
-  setShortcutSave(event: Event): void {
-    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 's';
-    this.settings.shortcuts.save = value;
-  }
-
-  /**
-   * A mégse gyorsbillentyű beállítása.
-   * @param event - A megadott gyorsbillentyű.
-   */
-  setShortcutCancel(event: Event): void {
-    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'c';
-    this.settings.shortcuts.cancel = value;
-  }
-
-  /**
-   * A félkövér gyorsbillentyű beállítása.
-   * @param event - A megadott gyorsbillentyű.
-   */
-  setShortcutBold(event: Event): void {
-    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'b';
-    this.settings.shortcuts.bold = value;
-  }
-
-  /**
-   * A dőlt gyorsbillentyű beállítása.
-   * @param event - A megadott gyorsbillentyű.
-   */
-  setShortcutItalic(event: Event): void {
-    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'i';
-    this.settings.shortcuts.italic = value;
-  }
-
-  /**
-   * A áthúzott gyorsbillentyű beállítása.
-   * @param event - A megadott gyorsbillentyű.
-   */
-  setShortcutStrikethrough(event: Event): void {
-    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'h';
-    this.settings.shortcuts.strikethrough = value;
-  }
-
-  /**
-   * A számozott lista gyorsbillentyű beállítása.
-   * @param event - A megadott gyorsbillentyű.
-   */
-  setShortcutOrderedList(event: Event): void {
-    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'o';
-    this.settings.shortcuts.orderedList = value;
-  }
-
-  /**
-   * A számozatlan lista gyorsbillentyű beállítása.
-   * @param event - A megadott gyorsbillentyű.
-   */
-  setShortcutUnorderedList(event: Event): void {
-    const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'u';
-    this.settings.shortcuts.unorderedList = value;
-  }
-
-  /**
    * A súgó ki-be kapcsolása.
    * @param key - A súgó kulcsa.
    */
@@ -573,5 +479,42 @@ export class VideoSettings {
   private changeOffset(offset: boolean): void {
     const value = offset ? '-65px' : '0px';
     document.documentElement.style.setProperty('--video-navbar-offset', value);
+  }
+
+  // SHORTCUTS
+
+  shortcutFields: ShortcutField[] = [
+    { key: 'note', label: 'edit.note', help: 'settings.help.shortcuts.note' },
+    { key: 'settings', label: 'settings.settings', help: 'settings.help.shortcuts.settings' },
+    { key: 'thumbnailMoveForward', label: 'settings.shortcuts.thumbnailMoveForward', help: 'settings.help.shortcuts.thumbnailMoveForward' },
+    { key: 'thumbnailMoveRewind', label: 'settings.shortcuts.thumbnailMoveRewind', help: 'settings.help.shortcuts.thumbnailMoveRewind' },
+    { key: 'save', label: 'actions.save', help: 'settings.help.shortcuts.save' },
+    { key: 'cancel', label: 'actions.cancel', help: 'settings.help.shortcuts.cancel' },
+    { key: 'bold', label: 'settings.shortcuts.bold', help: 'settings.help.shortcuts.bold' },
+    { key: 'italic', label: 'settings.shortcuts.italic', help: 'settings.help.shortcuts.italic' },
+    { key: 'strikethrough', label: 'settings.shortcuts.strikethrough', help: 'settings.help.shortcuts.strikethrough' },
+    { key: 'orderedList', label: 'settings.shortcuts.orderedList', help: 'settings.help.shortcuts.orderedList' },
+    { key: 'unorderedList', label: 'settings.shortcuts.unorderedList', help: 'settings.help.shortcuts.unorderedList' }
+  ];
+
+  private defaultShortcuts: Record<ShortcutKey, string> = {
+    note: 'n',
+    settings: 'q',
+    thumbnailMoveForward: 'f',
+    thumbnailMoveRewind: 'r',
+    save: 's',
+    cancel: 'c',
+    bold: 'b',
+    italic: 'i',
+    strikethrough: 'h',
+    orderedList: 'o',
+    unorderedList: 'u'
+  };
+
+  setShortcut(key: ShortcutKey, event: Event): void {
+    const raw = (event.target as HTMLInputElement).value || '';
+    const sanitized = DOMPurify.sanitize(raw) as string;
+    const value = (sanitized.charAt(0) || this.defaultShortcuts[key]).toString();
+    this.settings.shortcuts[key] = value;
   }
 }

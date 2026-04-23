@@ -318,170 +318,29 @@
         <p>{{ 'settings.shortcuts.explanation' | translate }}</p>
     </div>
     <ul>
-        <li>
-            <label>
-                {{ 'edit.note' | translate }}:
-                <help-toggle
-                    [key]="'shortcuts.note'"
-                    [isActive]="isHelpOpen('shortcuts.note')"
-                    (toggle)="toggleHelp('shortcuts.note')">
-                </help-toggle>
-            </label>
-            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.note" (input)="setShortcutNote($event)">
-            @if (isHelpOpen("shortcuts.note"))
-            {
-                <p class="help">{{ 'settings.help.shortcuts.note' | translate }}</p>
-            }
-        </li>
-        <li>
-            <label>
-                {{ 'settings.settings' | translate }}:
-                <help-toggle
-                    [key]="'shortcuts.settings'"
-                    [isActive]="isHelpOpen('shortcuts.settings')"
-                    (toggle)="toggleHelp('shortcuts.settings')">
-                </help-toggle>
-            </label>
-            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.settings" (input)="setShortcutSettings($event)">
-            @if (isHelpOpen("shortcuts.settings"))
-            {
-                <p class="help">{{ 'settings.help.shortcuts.settings' | translate }}</p>
-            }
-        </li>
-        <li>
-            <label>
-                {{ 'settings.shortcuts.thumbnailMoveForward' | translate }}:
-                <help-toggle
-                    [key]="'shortcuts.thumbnailMoveForward'"
-                    [isActive]="isHelpOpen('shortcuts.thumbnailMoveForward')"
-                    (toggle)="toggleHelp('shortcuts.thumbnailMoveForward')">
-                </help-toggle>
-            </label>
-            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.thumbnailMoveForward" (input)="setShortcutThumbnailMoveForward($event)">
-            @if (isHelpOpen("shortcuts.thumbnailMoveForward"))
-            {
-                <p class="help">{{ 'settings.help.shortcuts.thumbnailMoveForward' | translate }}</p>
-            }
-        </li>
-        <li>
-            <label>
-                {{ 'settings.shortcuts.thumbnailMoveRewind' | translate }}:
-                <help-toggle
-                    [key]="'shortcuts.thumbnailMoveRewind'"
-                    [isActive]="isHelpOpen('shortcuts.thumbnailMoveRewind')"
-                    (toggle)="toggleHelp('shortcuts.thumbnailMoveRewind')">
-                </help-toggle>
-            </label>
-            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.thumbnailMoveRewind" (input)="setShortcutThumbnailMoveRewind($event)">
-            @if (isHelpOpen("shortcuts.thumbnailMoveRewind"))
-            {
-                <p class="help">{{ 'settings.help.shortcuts.thumbnailMoveRewind' | translate }}</p>
-            }
-        </li>
-        <li>
-            <label>
-                {{ 'actions.save' | translate }}:
-                <help-toggle
-                    [key]="'shortcuts.save'"
-                    [isActive]="isHelpOpen('shortcuts.save')"
-                    (toggle)="toggleHelp('shortcuts.save')">
-                </help-toggle>
-            </label>
-            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.save" (input)="setShortcutSave($event)">
-            @if (isHelpOpen("shortcuts.save"))
-            {
-                <p class="help">{{ 'settings.help.shortcuts.save' | translate }}</p>
-            }
-        </li>
-        <li>
-            <label>
-                {{ 'actions.cancel' | translate }}:
-                <help-toggle
-                    [key]="'shortcuts.cancel'"
-                    [isActive]="isHelpOpen('shortcuts.cancel')"
-                    (toggle)="toggleHelp('shortcuts.cancel')">
-                </help-toggle>
-            </label>
-            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.cancel" (input)="setShortcutCancel($event)">
-            @if (isHelpOpen("shortcuts.cancel"))
-            {
-                <p class="help">{{ 'settings.help.shortcuts.cancel' | translate }}</p>
-            }
-        </li>
-        <li>
-            <label>
-                {{ 'settings.shortcuts.bold' | translate }}:
-                <help-toggle
-                    [key]="'shortcuts.bold'"
-                    [isActive]="isHelpOpen('shortcuts.bold')"
-                    (toggle)="toggleHelp('shortcuts.bold')">
-                </help-toggle>
-            </label>
-            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.bold" (input)="setShortcutBold($event)">
-            @if (isHelpOpen("shortcuts.bold"))
-            {
-                <p class="help">{{ 'settings.help.shortcuts.bold' | translate }}</p>
-            }
-        </li>
-        <li>
-            <label>
-                {{ 'settings.shortcuts.italic' | translate }}:
-                <help-toggle
-                    [key]="'shortcuts.italic'"
-                    [isActive]="isHelpOpen('shortcuts.italic')"
-                    (toggle)="toggleHelp('shortcuts.italic')">
-                </help-toggle>
-            </label>
-            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.italic" (input)="setShortcutItalic($event)">
-            @if (isHelpOpen("shortcuts.italic"))
-            {
-                <p class="help">{{ 'settings.help.shortcuts.italic' | translate }}</p>
-            }
-        </li>
-        <li>
-            <label>
-                {{ 'settings.shortcuts.strikethrough' | translate }}:
-                <help-toggle
-                    [key]="'shortcuts.strikethrough'"
-                    [isActive]="isHelpOpen('shortcuts.strikethrough')"
-                    (toggle)="toggleHelp('shortcuts.strikethrough')">
-                </help-toggle>
-            </label>
-            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.strikethrough" (input)="setShortcutStrikethrough($event)">
-            @if (isHelpOpen("shortcuts.strikethrough"))
-            {
-                <p class="help">{{ 'settings.help.shortcuts.strikethrough' | translate }}</p>
-            }
-        </li>
-        <li>
-            <label>
-                {{ 'settings.shortcuts.orderedList' | translate }}:
-                <help-toggle
-                    [key]="'shortcuts.orderedList'"
-                    [isActive]="isHelpOpen('shortcuts.orderedList')"
-                    (toggle)="toggleHelp('shortcuts.orderedList')">
-                </help-toggle>
-            </label>
-            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.orderedList" (input)="setShortcutOrderedList($event)">
-            @if (isHelpOpen("shortcuts.orderedList"))
-            {
-                <p class="help">{{ 'settings.help.shortcuts.orderedList' | translate }}</p>
-            }            
-        </li>
-        <li>
-            <label>
-                {{ 'settings.shortcuts.unorderedList' | translate }}:
-                <help-toggle
-                    [key]="'shortcuts.unorderedList'"
-                    [isActive]="isHelpOpen('shortcuts.unorderedList')"
-                    (toggle)="toggleHelp('shortcuts.unorderedList')">
-                </help-toggle>
-            </label>
-            <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.unorderedList" (input)="setShortcutUnorderedList($event)">
-            @if (isHelpOpen("shortcuts.unorderedList"))
-            {
-                <p class="help">{{ 'settings.help.shortcuts.unorderedList' | translate }}</p>
-            }
-        </li>
+        @for (f of shortcutFields; track $index)
+        {
+            <li>
+                <label>
+                    {{ f.label | translate }}:
+                    <help-toggle
+                        [key]="f.key"
+                        [isActive]="isHelpOpen(f.key)"
+                        (toggle)="toggleHelp(f.key)">
+                    </help-toggle>
+                </label>
+
+                <input
+                    type="text"
+                    maxlength="1"
+                    [value]="(settings$ | async)?.shortcuts?.[f.key]"
+                    (input)="setShortcut(f.key, $event)">
+
+                @if (isHelpOpen(f.key))
+                {
+                    <p class="help">{{ f.help | translate }}</p>
+                }
+            </li>
+        }
     </ul>
 </div>
