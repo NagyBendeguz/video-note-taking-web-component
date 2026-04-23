@@ -1,13 +1,12 @@
 <div class="settings-div">
-    <!--TODO: kinézet-->
     <!--TODO: súgó-->
-    <!--TODO: gombok felhasználóbarátabbá tétele-->
     <h2>{{ 'settings.settings' | translate }}</h2>
     <h3>{{ 'settings.loadNote' | translate }}</h3>
     <ul>
         <li>
             <label>{{ 'settings.loadNote' | translate }}: </label>
             <input type="file" (change)="onFileChange($event)" accept=".json">
+            <p class="help">{{ 'settings.help.loadNote' | translate }}</p>
         </li>
     </ul>
     <h3>{{ 'settings.videoPlayerSettings' | translate }}</h3>
@@ -20,22 +19,27 @@
                     <option [value]="speed" [selected]="speed === 1">{{speed}}x</option>
                 }
             </select>
+            <p class="help">{{ 'settings.help.playbackSpeed' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.forwardRateInSeconds' | translate }}: </label>
-            <input type="number" [value]="(videoForwardRate$ | async)" (input)="setVideoForwardRate($event)">
+            <input type="number" min="1" max="10000" [value]="(videoForwardRate$ | async)" (input)="setVideoForwardRate($event)">
+            <p class="help">{{ 'settings.help.forwardRateInSeconds' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.rewindRateInSeconds' | translate }}: </label>
-            <input type="number" [value]="(videoRewindRate$ | async)" (input)="setVideoRewindRate($event)">
+            <input type="number" min="1" max="10000" [value]="(videoRewindRate$ | async)" (input)="setVideoRewindRate($event)">
+            <p class="help">{{ 'settings.help.rewindRateInSeconds' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.subtitles' | translate }}: </label>
-            <button (click)="toggleSubtitles()">{{ isSubtitleVisible ? ('settings.turnOff' | translate) : ('settings.turnOn' | translate) }}</button>
+            <button (click)="toggleSubtitles()">{{ isSubtitleVisible ? ('settings.on' | translate) : ('settings.off' | translate) }}</button>
+            <p class="help">{{ 'settings.help.subtitles' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.videoNavbarOffset' | translate }}: </label>
-            <button (click)="toggleOffset()" [disabled]="isFullscreen$ | async">{{ (isOffsetNegative$ | async) ? ('settings.turnOff' | translate) : ('settings.turnOn' | translate) }}</button>
+            <button (click)="toggleOffset()" [disabled]="isFullscreen$ | async">{{ (isOffsetNegative$ | async) ? ('settings.on' | translate) : ('settings.off' | translate) }}</button>
+            <p class="help">{{ 'settings.help.videoNavbarOffset' | translate }}</p>
         </li>
     </ul>
     <h3>{{ 'settings.editingSettings' | translate }}</h3>
@@ -48,6 +52,7 @@
                     <option [value]="lang.code">{{ lang.label }}</option>
                 }
             </select>
+            <p class="help">{{ 'settings.help.languages' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.theme' | translate }}: </label>
@@ -55,103 +60,128 @@
                 <option value="light">{{ 'settings.light' | translate }}</option>
                 <option value="dark">{{ 'settings.dark' | translate }}</option>
             </select>
+            <p class="help">{{ 'settings.help.theme' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.saveSettings' | translate }}: </label>
-            <button (click)="toggleSaveSettings()">{{ (settings$ | async)?.saveSettings ? ('settings.turnOff' | translate) : ('settings.turnOn' | translate) }}</button>
+            <button (click)="toggleSaveSettings()">{{ (settings$ | async)?.saveSettings ? ('settings.on' | translate) : ('settings.off' | translate) }}</button>
+            <p class="help">{{ 'settings.help.saveSettings' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.convertInput' | translate }}: </label>
-            <button (click)="toggleConvertInput()">{{ (settings$ | async)?.convertInput ? ('settings.turnOff' | translate) : ('settings.turnOn' | translate) }}</button>
+            <button (click)="toggleConvertInput()">{{ (settings$ | async)?.convertInput ? ('settings.on' | translate) : ('settings.off' | translate) }}</button>
+            <p class="help">{{ 'settings.help.convertInput' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.confirmCancel' | translate }}: </label>
-            <button (click)="toggleConfirmCancel()">{{ (settings$ | async)?.confirmCancel ? ('settings.turnOff' | translate) : ('settings.turnOn' | translate) }}</button>
+            <button (click)="toggleConfirmCancel()">{{ (settings$ | async)?.confirmCancel ? ('settings.on' | translate) : ('settings.off' | translate) }}</button>
+            <p class="help">{{ 'settings.help.confirmCancel' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.confirmDelete' | translate }}: </label>
-            <button (click)="toggleConfirmDelete()">{{ (settings$ | async)?.confirmDelete ? ('settings.turnOff' | translate) : ('settings.turnOn' | translate) }}</button>
+            <button (click)="toggleConfirmDelete()">{{ (settings$ | async)?.confirmDelete ? ('settings.on' | translate) : ('settings.off' | translate) }}</button>
+            <p class="help">{{ 'settings.help.confirmDelete' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.stopVideoOnNote' | translate }}: </label>
-            <button (click)="toggleStopVideoOnNote()">{{ (settings$ | async)?.stopVideoOnNote ? ('settings.turnOff' | translate) : ('settings.turnOn' | translate) }}</button>
+            <button (click)="toggleStopVideoOnNote()">{{ (settings$ | async)?.stopVideoOnNote ? ('settings.on' | translate) : ('settings.off' | translate) }}</button>
+            <p class="help">{{ 'settings.help.stopVideoOnNote' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.startVideoOnSave' | translate }}: </label>
-            <button (click)="toggleStartVideoOnSave()">{{ (settings$ | async)?.startVideoOnSave ? ('settings.turnOff' | translate) : ('settings.turnOn' | translate) }}</button>
+            <button (click)="toggleStartVideoOnSave()">{{ (settings$ | async)?.startVideoOnSave ? ('settings.on' | translate) : ('settings.off' | translate) }}</button>
+            <p class="help">{{ 'settings.help.startVideoOnSave' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.thumbnail.qualityPercentage' | translate }}: </label>
             <input type="range" min="1" max="100" [value]="(settings$ | async)?.thumbnailQualityPercentage" (input)="setThumbnailQualityPercentage($event)"/>
+            <p class="help">{{ 'settings.help.thumbnail.qualityPercentage' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.thumbnail.width' | translate }}: </label>
-            <input type="number" [value]="(settings$ | async)?.thumbnailWidth" (input)="setThumbnailWidth($event)">
+            <input type="number" min="1" max="2048" [value]="(settings$ | async)?.thumbnailWidth" (input)="setThumbnailWidth($event)">
+            <p class="help">{{ 'settings.help.thumbnail.width' | translate }}</p>
             <!--TODO: opció, hogy összekapcsolva, méretarányosan lehessen változatani a méretet-->
             <!--TODO: legyen egy vissza az alapértékek gomb is-->
         </li>
         <li>
             <label>{{ 'settings.thumbnail.height' | translate }}: </label>
-            <input type="number" [value]="(settings$ | async)?.thumbnailHeight" (input)="setThumbnailHeight($event)">
+            <input type="number" min="1" max="2048" [value]="(settings$ | async)?.thumbnailHeight" (input)="setThumbnailHeight($event)">
+            <p class="help">{{ 'settings.help.thumbnail.height' | translate }}</p>
             <!--TODO: opció, hogy összekapcsolva, méretarányosan lehessen változatani a méretet-->
             <!--TODO: legyen egy vissza az alapértékek gomb is-->
         </li>
         <li>
             <label>{{ 'settings.thumbnail.forwardRateInSeconds' | translate }}: </label>
-            <input type="number" [value]="(settings$ | async)?.thumbnailForwardRate" (input)="setThumbnailForwardRate($event)">
+            <input type="number" min="1" max="10000" [value]="(settings$ | async)?.thumbnailForwardRate" (input)="setThumbnailForwardRate($event)">
+            <p class="help">{{ 'settings.help.thumbnail.forwardRateInSeconds' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.thumbnail.rewindRateInSeconds' | translate }}: </label>
-            <input type="number" [value]="(settings$ | async)?.thumbnailRewindRate" (input)="setThumbnailRewindRate($event)">
+            <input type="number" min="1" max="10000" [value]="(settings$ | async)?.thumbnailRewindRate" (input)="setThumbnailRewindRate($event)">
+            <p class="help">{{ 'settings.help.thumbnail.rewindRateInSeconds' | translate }}</p>
         </li>
     </ul>
     <h3>{{ 'settings.shortcuts.shortcuts' | translate }}</h3>
-    <p>{{ 'settings.shortcuts.attention' | translate }}</p>
-    <p>{{ 'settings.shortcuts.explanation' | translate }}</p>
+    <div class="attention">
+        <p>{{ 'settings.shortcuts.attention' | translate }}</p>
+        <p>{{ 'settings.shortcuts.explanation' | translate }}</p>
+    </div>
     <ul>
         <li>
             <label>{{ 'edit.note' | translate }}: </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.note" (input)="setShortcutNote($event)">
+            <p class="help">{{ 'settings.help.shortcuts.note' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.settings' | translate }}: </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.settings" (input)="setShortcutSettings($event)">
+            <p class="help">{{ 'settings.help.shortcuts.settings' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.shortcuts.thumbnailMoveForward' | translate }}: </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.thumbnailMoveForward" (input)="setShortcutThumbnailMoveForward($event)">
+            <p class="help">{{ 'settings.help.shortcuts.thumbnailMoveForward' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.shortcuts.thumbnailMoveRewind' | translate }}: </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.thumbnailMoveRewind" (input)="setShortcutThumbnailMoveRewind($event)">
+            <p class="help">{{ 'settings.help.shortcuts.thumbnailMoveRewind' | translate }}</p>
         </li>
         <li>
             <label>{{ 'actions.save' | translate }}: </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.save" (input)="setShortcutSave($event)">
+            <p class="help">{{ 'settings.help.shortcuts.save' | translate }}</p>
         </li>
         <li>
             <label>{{ 'actions.cancel' | translate }}: </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.cancel" (input)="setShortcutCancel($event)">
+            <p class="help">{{ 'settings.help.shortcuts.cancel' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.shortcuts.bold' | translate }}: </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.bold" (input)="setShortcutBold($event)">
+            <p class="help">{{ 'settings.help.shortcuts.bold' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.shortcuts.italic' | translate }}: </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.italic" (input)="setShortcutItalic($event)">
+            <p class="help">{{ 'settings.help.shortcuts.italic' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.shortcuts.strikethrough' | translate }}: </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.strikethrough" (input)="setShortcutStrikethrough($event)">
+            <p class="help">{{ 'settings.help.shortcuts.strikethrough' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.shortcuts.orderedList' | translate }}: </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.orderedList" (input)="setShortcutOrderedList($event)">
+            <p class="help">{{ 'settings.help.shortcuts.orderedList' | translate }}</p>
         </li>
         <li>
             <label>{{ 'settings.shortcuts.unorderedList' | translate }}: </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.unorderedList" (input)="setShortcutUnorderedList($event)">
+            <p class="help">{{ 'settings.help.shortcuts.unorderedList' | translate }}</p>
         </li>
     </ul>
 </div>
