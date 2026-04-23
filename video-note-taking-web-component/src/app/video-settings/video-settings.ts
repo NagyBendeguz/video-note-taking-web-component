@@ -26,6 +26,7 @@ export class VideoSettings {
   private isFullscreen!: boolean;
   private unsubscribe$ = new Subject<void>();
   private ajv = new Ajv();
+  private helpOpen: Record<string, boolean> = {};
 
   // A betölteni kívánt JSON fájl struktúrája.
   private jsonSchema = {
@@ -523,6 +524,23 @@ export class VideoSettings {
   setShortcutUnorderedList(event: Event): void {
     const value = (DOMPurify.sanitize((event.target as HTMLInputElement).value) || '').charAt(0) || 'u';
     this.settings.shortcuts.unorderedList = value;
+  }
+
+  /**
+   * A súgó ki-be kapcsolása.
+   * @param key - A súgó kulcsa.
+   */
+  toggleHelp(key: string) {
+    this.helpOpen[key] = !this.helpOpen[key];
+  }
+
+  /**
+   * Megnézi, hogy az adott kulcsú súgó nyitva van-e.
+   * @param key - A súgó kulcsa.
+   * @returns - Nyitva van-e.
+   */
+  isHelpOpen(key: string) {
+    return !!this.helpOpen[key];
   }
 
   /**

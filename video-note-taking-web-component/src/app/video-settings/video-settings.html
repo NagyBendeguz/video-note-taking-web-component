@@ -1,125 +1,315 @@
 <div class="settings-div">
-    <!--TODO: súgó-->
+    <!--TODO: kód refaktorálása-->
     <h2>{{ 'settings.settings' | translate }}</h2>
     <h3>{{ 'settings.loadNote' | translate }}</h3>
     <ul>
         <li>
-            <label>{{ 'settings.loadNote' | translate }}: </label>
+            <label>
+                {{ 'settings.loadNote' | translate }}:
+                <help-toggle
+                    [key]="'loadNote'"
+                    [isActive]="isHelpOpen('loadNote')"
+                    (toggle)="toggleHelp('loadNote')">
+                </help-toggle>
+            </label>
             <input type="file" (change)="onFileChange($event)" accept=".json">
-            <p class="help">{{ 'settings.help.loadNote' | translate }}</p>
+            @if (isHelpOpen("loadNote"))
+            {
+                <p class="help">{{ 'settings.help.loadNote' | translate }}</p>
+            }
         </li>
     </ul>
     <h3>{{ 'settings.videoPlayerSettings' | translate }}</h3>
     <ul>
         <li>
-            <label>{{ 'settings.playbackSpeed' | translate }}: </label>
+            <label>
+                {{ 'settings.playbackSpeed' | translate }}:
+                <help-toggle
+                    [key]="'playbackSpeed'"
+                    [isActive]="isHelpOpen('playbackSpeed')"
+                    (toggle)="toggleHelp('playbackSpeed')">
+                </help-toggle>
+            </label>
             <select (change)="changePlaybackSpeed($event)">
                 @for (speed of playbackSpeeds; track $index)
                 {
                     <option [value]="speed" [selected]="speed === 1">{{speed}}x</option>
                 }
             </select>
-            <p class="help">{{ 'settings.help.playbackSpeed' | translate }}</p>
+            @if (isHelpOpen("playbackSpeed"))
+            {
+                <p class="help">{{ 'settings.help.playbackSpeed' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.forwardRateInSeconds' | translate }}: </label>
+            <label>
+                {{ 'settings.forwardRateInSeconds' | translate }}:
+                <help-toggle
+                    [key]="'forwardRateInSeconds'"
+                    [isActive]="isHelpOpen('forwardRateInSeconds')"
+                    (toggle)="toggleHelp('forwardRateInSeconds')">
+                </help-toggle>
+            </label>
             <input type="number" min="1" max="10000" [value]="(videoForwardRate$ | async)" (input)="setVideoForwardRate($event)">
-            <p class="help">{{ 'settings.help.forwardRateInSeconds' | translate }}</p>
+            @if (isHelpOpen("forwardRateInSeconds"))
+            {
+                <p class="help">{{ 'settings.help.forwardRateInSeconds' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.rewindRateInSeconds' | translate }}: </label>
+            <label>
+                {{ 'settings.rewindRateInSeconds' | translate }}:
+                <help-toggle
+                    [key]="'rewindRateInSeconds'"
+                    [isActive]="isHelpOpen('rewindRateInSeconds')"
+                    (toggle)="toggleHelp('rewindRateInSeconds')">
+                </help-toggle>
+            </label>
             <input type="number" min="1" max="10000" [value]="(videoRewindRate$ | async)" (input)="setVideoRewindRate($event)">
-            <p class="help">{{ 'settings.help.rewindRateInSeconds' | translate }}</p>
+            @if (isHelpOpen("rewindRateInSeconds"))
+            {
+                <p class="help">{{ 'settings.help.rewindRateInSeconds' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.subtitles' | translate }}: </label>
+            <label>
+                {{ 'settings.subtitles' | translate }}:
+                <help-toggle
+                    [key]="'subtitles'"
+                    [isActive]="isHelpOpen('subtitles')"
+                    (toggle)="toggleHelp('subtitles')">
+                </help-toggle>
+            </label>
             <button (click)="toggleSubtitles()">{{ isSubtitleVisible ? ('settings.on' | translate) : ('settings.off' | translate) }}</button>
-            <p class="help">{{ 'settings.help.subtitles' | translate }}</p>
+            @if (isHelpOpen("subtitles"))
+            {
+                <p class="help">{{ 'settings.help.subtitles' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.videoNavbarOffset' | translate }}: </label>
+            <label>
+                {{ 'settings.videoNavbarOffset' | translate }}:
+                <help-toggle
+                    [key]="'videoNavbarOffset'"
+                    [isActive]="isHelpOpen('videoNavbarOffset')"
+                    (toggle)="toggleHelp('videoNavbarOffset')">
+                </help-toggle>
+            </label>
             <button (click)="toggleOffset()" [disabled]="isFullscreen$ | async">{{ (isOffsetNegative$ | async) ? ('settings.on' | translate) : ('settings.off' | translate) }}</button>
-            <p class="help">{{ 'settings.help.videoNavbarOffset' | translate }}</p>
+            @if (isHelpOpen("videoNavbarOffset"))
+            {
+                <p class="help">{{ 'settings.help.videoNavbarOffset' | translate }}</p>
+            }
         </li>
     </ul>
     <h3>{{ 'settings.editingSettings' | translate }}</h3>
     <ul>
         <li>
-            <label>{{ 'settings.languages' | translate }}: </label>
+            <label>
+                {{ 'settings.languages' | translate }}:
+                <help-toggle
+                    [key]="'languages'"
+                    [isActive]="isHelpOpen('languages')"
+                    (toggle)="toggleHelp('languages')">
+                </help-toggle>
+            </label>
             <select [value]="(settings$ | async)?.language" (change)="changeLang($event)">
                 @for (lang of langs; track $index)
                 {
                     <option [value]="lang.code">{{ lang.label }}</option>
                 }
             </select>
-            <p class="help">{{ 'settings.help.languages' | translate }}</p>
+            @if (isHelpOpen("languages"))
+            {
+                <p class="help">{{ 'settings.help.languages' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.theme' | translate }}: </label>
+            <label>
+                {{ 'settings.theme' | translate }}:
+                <help-toggle
+                    [key]="'theme'"
+                    [isActive]="isHelpOpen('theme')"
+                    (toggle)="toggleHelp('theme')">
+                </help-toggle>
+            </label>
             <select [value]="(settings$ | async)?.theme" (change)="changeTheme($event)">
                 <option value="light">{{ 'settings.light' | translate }}</option>
                 <option value="dark">{{ 'settings.dark' | translate }}</option>
             </select>
-            <p class="help">{{ 'settings.help.theme' | translate }}</p>
+            @if (isHelpOpen("theme"))
+            {
+                <p class="help">{{ 'settings.help.theme' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.saveSettings' | translate }}: </label>
+            <label>
+                {{ 'settings.saveSettings' | translate }}:
+                <help-toggle
+                    [key]="'saveSettings'"
+                    [isActive]="isHelpOpen('saveSettings')"
+                    (toggle)="toggleHelp('saveSettings')">
+                </help-toggle>
+            </label>
             <button (click)="toggleSaveSettings()">{{ (settings$ | async)?.saveSettings ? ('settings.on' | translate) : ('settings.off' | translate) }}</button>
-            <p class="help">{{ 'settings.help.saveSettings' | translate }}</p>
+            @if (isHelpOpen("saveSettings"))
+            {
+                <p class="help">{{ 'settings.help.saveSettings' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.convertInput' | translate }}: </label>
+            <label>
+                {{ 'settings.convertInput' | translate }}:
+                <help-toggle
+                    [key]="'convertInput'"
+                    [isActive]="isHelpOpen('convertInput')"
+                    (toggle)="toggleHelp('convertInput')">
+                </help-toggle>
+            </label>
             <button (click)="toggleConvertInput()">{{ (settings$ | async)?.convertInput ? ('settings.on' | translate) : ('settings.off' | translate) }}</button>
-            <p class="help">{{ 'settings.help.convertInput' | translate }}</p>
+            @if (isHelpOpen("convertInput"))
+            {
+                <p class="help">{{ 'settings.help.convertInput' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.confirmCancel' | translate }}: </label>
+            <label>
+                {{ 'settings.confirmCancel' | translate }}:
+                <help-toggle
+                    [key]="'confirmCancel'"
+                    [isActive]="isHelpOpen('confirmCancel')"
+                    (toggle)="toggleHelp('confirmCancel')">
+                </help-toggle>
+            </label>
             <button (click)="toggleConfirmCancel()">{{ (settings$ | async)?.confirmCancel ? ('settings.on' | translate) : ('settings.off' | translate) }}</button>
-            <p class="help">{{ 'settings.help.confirmCancel' | translate }}</p>
+            @if (isHelpOpen("confirmCancel"))
+            {
+                <p class="help">{{ 'settings.help.confirmCancel' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.confirmDelete' | translate }}: </label>
+            <label>
+                {{ 'settings.confirmDelete' | translate }}:
+                <help-toggle
+                    [key]="'confirmDelete'"
+                    [isActive]="isHelpOpen('confirmDelete')"
+                    (toggle)="toggleHelp('confirmDelete')">
+                </help-toggle>
+            </label>
             <button (click)="toggleConfirmDelete()">{{ (settings$ | async)?.confirmDelete ? ('settings.on' | translate) : ('settings.off' | translate) }}</button>
-            <p class="help">{{ 'settings.help.confirmDelete' | translate }}</p>
+            @if (isHelpOpen("confirmDelete"))
+            {
+                <p class="help">{{ 'settings.help.confirmDelete' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.stopVideoOnNote' | translate }}: </label>
+            <label>
+                {{ 'settings.stopVideoOnNote' | translate }}:
+                <help-toggle
+                    [key]="'stopVideoOnNote'"
+                    [isActive]="isHelpOpen('stopVideoOnNote')"
+                    (toggle)="toggleHelp('stopVideoOnNote')">
+                </help-toggle>
+            </label>
             <button (click)="toggleStopVideoOnNote()">{{ (settings$ | async)?.stopVideoOnNote ? ('settings.on' | translate) : ('settings.off' | translate) }}</button>
-            <p class="help">{{ 'settings.help.stopVideoOnNote' | translate }}</p>
+            @if (isHelpOpen("stopVideoOnNote"))
+            {
+                <p class="help">{{ 'settings.help.stopVideoOnNote' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.startVideoOnSave' | translate }}: </label>
+            <label>
+                {{ 'settings.startVideoOnSave' | translate }}:
+                <help-toggle
+                    [key]="'startVideoOnSave'"
+                    [isActive]="isHelpOpen('startVideoOnSave')"
+                    (toggle)="toggleHelp('startVideoOnSave')">
+                </help-toggle>
+            </label>
             <button (click)="toggleStartVideoOnSave()">{{ (settings$ | async)?.startVideoOnSave ? ('settings.on' | translate) : ('settings.off' | translate) }}</button>
-            <p class="help">{{ 'settings.help.startVideoOnSave' | translate }}</p>
+            @if (isHelpOpen("startVideoOnSave"))
+            {
+                <p class="help">{{ 'settings.help.startVideoOnSave' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.thumbnail.qualityPercentage' | translate }}: </label>
+            <label>
+                {{ 'settings.thumbnail.qualityPercentage' | translate }}:
+                <help-toggle
+                    [key]="'thumbnail.qualityPercentage'"
+                    [isActive]="isHelpOpen('thumbnail.qualityPercentage')"
+                    (toggle)="toggleHelp('thumbnail.qualityPercentage')">
+                </help-toggle>
+            </label>
             <input type="range" min="1" max="100" [value]="(settings$ | async)?.thumbnailQualityPercentage" (input)="setThumbnailQualityPercentage($event)"/>
-            <p class="help">{{ 'settings.help.thumbnail.qualityPercentage' | translate }}</p>
+            @if (isHelpOpen("thumbnail.qualityPercentage"))
+            {
+                <p class="help">{{ 'settings.help.thumbnail.qualityPercentage' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.thumbnail.width' | translate }}: </label>
+            <label>
+                {{ 'settings.thumbnail.width' | translate }}:
+                <help-toggle
+                    [key]="'thumbnail.width'"
+                    [isActive]="isHelpOpen('thumbnail.width')"
+                    (toggle)="toggleHelp('thumbnail.width')">
+                </help-toggle>
+            </label>
             <input type="number" min="1" max="2048" [value]="(settings$ | async)?.thumbnailWidth" (input)="setThumbnailWidth($event)">
-            <p class="help">{{ 'settings.help.thumbnail.width' | translate }}</p>
+            @if (isHelpOpen("thumbnail.width"))
+            {
+                <p class="help">{{ 'settings.help.thumbnail.width' | translate }}</p>
+            }
             <!--TODO: opció, hogy összekapcsolva, méretarányosan lehessen változatani a méretet-->
             <!--TODO: legyen egy vissza az alapértékek gomb is-->
         </li>
         <li>
-            <label>{{ 'settings.thumbnail.height' | translate }}: </label>
+            <label>
+                {{ 'settings.thumbnail.height' | translate }}:
+                <help-toggle
+                    [key]="'thumbnail.height'"
+                    [isActive]="isHelpOpen('thumbnail.height')"
+                    (toggle)="toggleHelp('thumbnail.height')">
+                </help-toggle>
+            </label>
             <input type="number" min="1" max="2048" [value]="(settings$ | async)?.thumbnailHeight" (input)="setThumbnailHeight($event)">
-            <p class="help">{{ 'settings.help.thumbnail.height' | translate }}</p>
+            @if (isHelpOpen("thumbnail.height"))
+            {
+                <p class="help">{{ 'settings.help.thumbnail.height' | translate }}</p>
+            }
             <!--TODO: opció, hogy összekapcsolva, méretarányosan lehessen változatani a méretet-->
             <!--TODO: legyen egy vissza az alapértékek gomb is-->
         </li>
         <li>
-            <label>{{ 'settings.thumbnail.forwardRateInSeconds' | translate }}: </label>
+            <label>
+                {{ 'settings.thumbnail.forwardRateInSeconds' | translate }}:
+                <help-toggle
+                    [key]="'thumbnail.forwardRateInSeconds'"
+                    [isActive]="isHelpOpen('thumbnail.forwardRateInSeconds')"
+                    (toggle)="toggleHelp('thumbnail.forwardRateInSeconds')">
+                </help-toggle>
+            </label>
             <input type="number" min="1" max="10000" [value]="(settings$ | async)?.thumbnailForwardRate" (input)="setThumbnailForwardRate($event)">
-            <p class="help">{{ 'settings.help.thumbnail.forwardRateInSeconds' | translate }}</p>
+            @if (isHelpOpen("thumbnail.forwardRateInSeconds"))
+            {
+                <p class="help">{{ 'settings.help.thumbnail.forwardRateInSeconds' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.thumbnail.rewindRateInSeconds' | translate }}: </label>
+            <label>
+                {{ 'settings.thumbnail.rewindRateInSeconds' | translate }}:
+                <help-toggle
+                    [key]="'thumbnail.rewindRateInSeconds'"
+                    [isActive]="isHelpOpen('thumbnail.rewindRateInSeconds')"
+                    (toggle)="toggleHelp('thumbnail.rewindRateInSeconds')">
+                </help-toggle>
+            </label>
             <input type="number" min="1" max="10000" [value]="(settings$ | async)?.thumbnailRewindRate" (input)="setThumbnailRewindRate($event)">
-            <p class="help">{{ 'settings.help.thumbnail.rewindRateInSeconds' | translate }}</p>
+            @if (isHelpOpen("thumbnail.rewindRateInSeconds"))
+            {
+                <p class="help">{{ 'settings.help.thumbnail.rewindRateInSeconds' | translate }}</p>
+            }
         </li>
     </ul>
     <h3>{{ 'settings.shortcuts.shortcuts' | translate }}</h3>
@@ -129,59 +319,169 @@
     </div>
     <ul>
         <li>
-            <label>{{ 'edit.note' | translate }}: </label>
+            <label>
+                {{ 'edit.note' | translate }}:
+                <help-toggle
+                    [key]="'shortcuts.note'"
+                    [isActive]="isHelpOpen('shortcuts.note')"
+                    (toggle)="toggleHelp('shortcuts.note')">
+                </help-toggle>
+            </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.note" (input)="setShortcutNote($event)">
-            <p class="help">{{ 'settings.help.shortcuts.note' | translate }}</p>
+            @if (isHelpOpen("shortcuts.note"))
+            {
+                <p class="help">{{ 'settings.help.shortcuts.note' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.settings' | translate }}: </label>
+            <label>
+                {{ 'settings.settings' | translate }}:
+                <help-toggle
+                    [key]="'shortcuts.settings'"
+                    [isActive]="isHelpOpen('shortcuts.settings')"
+                    (toggle)="toggleHelp('shortcuts.settings')">
+                </help-toggle>
+            </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.settings" (input)="setShortcutSettings($event)">
-            <p class="help">{{ 'settings.help.shortcuts.settings' | translate }}</p>
+            @if (isHelpOpen("shortcuts.settings"))
+            {
+                <p class="help">{{ 'settings.help.shortcuts.settings' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.shortcuts.thumbnailMoveForward' | translate }}: </label>
+            <label>
+                {{ 'settings.shortcuts.thumbnailMoveForward' | translate }}:
+                <help-toggle
+                    [key]="'shortcuts.thumbnailMoveForward'"
+                    [isActive]="isHelpOpen('shortcuts.thumbnailMoveForward')"
+                    (toggle)="toggleHelp('shortcuts.thumbnailMoveForward')">
+                </help-toggle>
+            </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.thumbnailMoveForward" (input)="setShortcutThumbnailMoveForward($event)">
-            <p class="help">{{ 'settings.help.shortcuts.thumbnailMoveForward' | translate }}</p>
+            @if (isHelpOpen("shortcuts.thumbnailMoveForward"))
+            {
+                <p class="help">{{ 'settings.help.shortcuts.thumbnailMoveForward' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.shortcuts.thumbnailMoveRewind' | translate }}: </label>
+            <label>
+                {{ 'settings.shortcuts.thumbnailMoveRewind' | translate }}:
+                <help-toggle
+                    [key]="'shortcuts.thumbnailMoveRewind'"
+                    [isActive]="isHelpOpen('shortcuts.thumbnailMoveRewind')"
+                    (toggle)="toggleHelp('shortcuts.thumbnailMoveRewind')">
+                </help-toggle>
+            </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.thumbnailMoveRewind" (input)="setShortcutThumbnailMoveRewind($event)">
-            <p class="help">{{ 'settings.help.shortcuts.thumbnailMoveRewind' | translate }}</p>
+            @if (isHelpOpen("shortcuts.thumbnailMoveRewind"))
+            {
+                <p class="help">{{ 'settings.help.shortcuts.thumbnailMoveRewind' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'actions.save' | translate }}: </label>
+            <label>
+                {{ 'actions.save' | translate }}:
+                <help-toggle
+                    [key]="'shortcuts.save'"
+                    [isActive]="isHelpOpen('shortcuts.save')"
+                    (toggle)="toggleHelp('shortcuts.save')">
+                </help-toggle>
+            </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.save" (input)="setShortcutSave($event)">
-            <p class="help">{{ 'settings.help.shortcuts.save' | translate }}</p>
+            @if (isHelpOpen("shortcuts.save"))
+            {
+                <p class="help">{{ 'settings.help.shortcuts.save' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'actions.cancel' | translate }}: </label>
+            <label>
+                {{ 'actions.cancel' | translate }}:
+                <help-toggle
+                    [key]="'shortcuts.cancel'"
+                    [isActive]="isHelpOpen('shortcuts.cancel')"
+                    (toggle)="toggleHelp('shortcuts.cancel')">
+                </help-toggle>
+            </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.cancel" (input)="setShortcutCancel($event)">
-            <p class="help">{{ 'settings.help.shortcuts.cancel' | translate }}</p>
+            @if (isHelpOpen("shortcuts.cancel"))
+            {
+                <p class="help">{{ 'settings.help.shortcuts.cancel' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.shortcuts.bold' | translate }}: </label>
+            <label>
+                {{ 'settings.shortcuts.bold' | translate }}:
+                <help-toggle
+                    [key]="'shortcuts.bold'"
+                    [isActive]="isHelpOpen('shortcuts.bold')"
+                    (toggle)="toggleHelp('shortcuts.bold')">
+                </help-toggle>
+            </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.bold" (input)="setShortcutBold($event)">
-            <p class="help">{{ 'settings.help.shortcuts.bold' | translate }}</p>
+            @if (isHelpOpen("shortcuts.bold"))
+            {
+                <p class="help">{{ 'settings.help.shortcuts.bold' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.shortcuts.italic' | translate }}: </label>
+            <label>
+                {{ 'settings.shortcuts.italic' | translate }}:
+                <help-toggle
+                    [key]="'shortcuts.italic'"
+                    [isActive]="isHelpOpen('shortcuts.italic')"
+                    (toggle)="toggleHelp('shortcuts.italic')">
+                </help-toggle>
+            </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.italic" (input)="setShortcutItalic($event)">
-            <p class="help">{{ 'settings.help.shortcuts.italic' | translate }}</p>
+            @if (isHelpOpen("shortcuts.italic"))
+            {
+                <p class="help">{{ 'settings.help.shortcuts.italic' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.shortcuts.strikethrough' | translate }}: </label>
+            <label>
+                {{ 'settings.shortcuts.strikethrough' | translate }}:
+                <help-toggle
+                    [key]="'shortcuts.strikethrough'"
+                    [isActive]="isHelpOpen('shortcuts.strikethrough')"
+                    (toggle)="toggleHelp('shortcuts.strikethrough')">
+                </help-toggle>
+            </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.strikethrough" (input)="setShortcutStrikethrough($event)">
-            <p class="help">{{ 'settings.help.shortcuts.strikethrough' | translate }}</p>
+            @if (isHelpOpen("shortcuts.strikethrough"))
+            {
+                <p class="help">{{ 'settings.help.shortcuts.strikethrough' | translate }}</p>
+            }
         </li>
         <li>
-            <label>{{ 'settings.shortcuts.orderedList' | translate }}: </label>
+            <label>
+                {{ 'settings.shortcuts.orderedList' | translate }}:
+                <help-toggle
+                    [key]="'shortcuts.orderedList'"
+                    [isActive]="isHelpOpen('shortcuts.orderedList')"
+                    (toggle)="toggleHelp('shortcuts.orderedList')">
+                </help-toggle>
+            </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.orderedList" (input)="setShortcutOrderedList($event)">
-            <p class="help">{{ 'settings.help.shortcuts.orderedList' | translate }}</p>
+            @if (isHelpOpen("shortcuts.orderedList"))
+            {
+                <p class="help">{{ 'settings.help.shortcuts.orderedList' | translate }}</p>
+            }            
         </li>
         <li>
-            <label>{{ 'settings.shortcuts.unorderedList' | translate }}: </label>
+            <label>
+                {{ 'settings.shortcuts.unorderedList' | translate }}:
+                <help-toggle
+                    [key]="'shortcuts.unorderedList'"
+                    [isActive]="isHelpOpen('shortcuts.unorderedList')"
+                    (toggle)="toggleHelp('shortcuts.unorderedList')">
+                </help-toggle>
+            </label>
             <input type="text" maxlength="1" [value]="(settings$ | async)?.shortcuts?.unorderedList" (input)="setShortcutUnorderedList($event)">
-            <p class="help">{{ 'settings.help.shortcuts.unorderedList' | translate }}</p>
+            @if (isHelpOpen("shortcuts.unorderedList"))
+            {
+                <p class="help">{{ 'settings.help.shortcuts.unorderedList' | translate }}</p>
+            }
         </li>
     </ul>
 </div>

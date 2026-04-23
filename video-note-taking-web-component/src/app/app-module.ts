@@ -1,6 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Injector, NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { createCustomElement } from '@angular/elements';
@@ -12,6 +11,7 @@ import { CompressedView } from './compressed-view/compressed-view';
 import { ExtendedView } from './extended-view/extended-view';
 import { EditingView } from './editing-view/editing-view';
 import { ConfirmMessage } from './confirm-message/confirm-message';
+import { HelpToggle } from './help-toggle/help-toggle';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import InlineTranslateLoader from './i18n/inline-translate-loader';
 import en from './i18n/en.json';
@@ -27,7 +27,8 @@ import hu from './i18n/hu.json';
     CompressedView,
     ExtendedView,
     EditingView,
-    ConfirmMessage
+    ConfirmMessage,
+    HelpToggle
   ],
   imports: [
     BrowserModule,
@@ -54,6 +55,7 @@ export class AppModule {
     const extendedViewElement = createCustomElement(ExtendedView, { injector });
     const editingViewElement = createCustomElement(EditingView, { injector });
     const confirmMessageElement = createCustomElement(ConfirmMessage, { injector });
+    const helpToggleElement = createCustomElement(HelpToggle, { injector });
 
     // Lehessen használni egyedi web komponensként.
     customElements.define('video-player', videoPlayerElement);
@@ -64,6 +66,7 @@ export class AppModule {
     customElements.define('extended-view', extendedViewElement);
     customElements.define('editing-view', editingViewElement);
     customElements.define('confirm-message', confirmMessageElement);
+    customElements.define('help-toggle', helpToggleElement);
   }
 
   ngDoBootstrap() {}
