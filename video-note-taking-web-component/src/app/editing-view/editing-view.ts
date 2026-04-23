@@ -6,8 +6,9 @@ import { VideoService } from '../services/video';
 import { PdfService } from '../services/pdf';
 import { SettingsService } from '../services/settings';
 import { Settings } from '../models/settings';
-import { marked } from 'marked';
+import { Note } from '../models/note';
 import { TranslateService } from '@ngx-translate/core';
+import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 
 @Component({
@@ -193,10 +194,20 @@ export class EditingView {
   }
 
   /**
-   * A jegyzet mentése JSON fájlba.
+   * A jegyzet mentése JSON fájlba, beállítástól függően a beállításokkal.
    */
   saveNote(): void {
-    this.downloadJSON(this.note);
+    if (this.settings.saveSettings)
+    {
+      let noteWithSettings = new Note();
+      noteWithSettings.entries = this.note;
+      noteWithSettings.settings = this.settings;
+      this.downloadJSON(noteWithSettings);
+    }
+    else
+    {
+      this.downloadJSON(this.note);
+    }
   }
 
   /**
@@ -375,7 +386,6 @@ export class EditingView {
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}.${formattedMilliseconds}`;
   }
 
-  // TODO: beállítástól függően elmenteni a beállításokat is a lementendő JSON fájlba
   /**
    * A jegyzet mentése JSON fájlba.
    * @param data - A jelenlegi mentésre kerülő jegyzet.

@@ -27,25 +27,69 @@ export class VideoSettings {
   private unsubscribe$ = new Subject<void>();
   private ajv = new Ajv();
 
-  // TODO: beállítások elfogadása
   // A betölteni kívánt JSON fájl struktúrája.
-  private jsonSchema =
-  {
-    type: "array",
-    items: {
-      type: "object",
-      properties: {
-        entryId: { type: "integer" },
-        title: { type: "string" },
-        timestamp: { type: "string" },
-        note: { type: "string" },
-        noteWithBr: { type: "string" },
-        formattedNoteHTML: { type: "string" },
-        formattedNoteMD: { type: "string" },
-        thumbnail: { type: "string" }
+  private jsonSchema = {
+    oneOf: [
+      // Beállítások nélküli struktúra.
+      {
+        type: "array",
+        items: { $ref: "#/definitions/entry" }
       },
-      required: ["entryId", "title", "timestamp", "note", "thumbnail"],
-      additionalProperties: false,
+
+      // Beállításokkal a struktúra.
+      {
+        type: "object",
+        properties: {
+          settings: {
+            type: "object",
+            properties: {
+              language: { type: "string" },
+              theme: { type: "string" },
+              saveSettings: { type: "boolean" },
+              convertInput: { type: "boolean" },
+              confirmCancel: { type: "boolean" },
+              confirmDelete: { type: "boolean" },
+              stopVideoOnNote: { type: "boolean" },
+              startVideoOnSave: { type: "boolean" },
+              thumbnailQualityPercentage: { type: "integer" },
+              thumbnailWidth: { type: "integer" },
+              thumbnailHeight: { type: "integer" },
+              thumbnailForwardRate: { type: "number" },
+              thumbnailRewindRate: { type: "number" },
+              shortcuts: {
+                type: "object",
+                additionalProperties: { type: "string" }
+              }
+            },
+            required: ["language", "theme"],
+            additionalProperties: false
+          },
+          entries: {
+            type: "array",
+            items: { $ref: "#/definitions/entry" }
+          }
+        },
+        required: ["entries"],
+        additionalProperties: false
+      }
+    ],
+
+    definitions: {
+      entry: {
+        type: "object",
+        properties: {
+          entryId: { type: "integer" },
+          title: { type: "string" },
+          timestamp: { type: "string" },
+          note: { type: "string" },
+          noteWithBr: { type: "string" },
+          formattedNoteHTML: { type: "string" },
+          formattedNoteMD: { type: "string" },
+          thumbnail: { type: "string" }
+        },
+        required: ["entryId", "title", "timestamp", "note", "thumbnail"],
+        additionalProperties: false
+      }
     }
   };
 
@@ -70,6 +114,9 @@ export class VideoSettings {
 
     this.settingsService.settings$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentSettings => {
       this.settings = currentSettings;
+
+      // Frissítse a nyelvet.
+      this.translate.use(currentSettings.language);
     });
 
     this.isOffsetNegative$ = this.settingsService.getVideoNavbarOffset();
@@ -120,18 +167,38 @@ export class VideoSettings {
           }
 
           // A JSON fájlban található minden bejegyzés tisztítása.
-          const sanitizedData = jsonData.map((entry: any) => this.sanitizeInput(entry));
+          const entriesArray = Array.isArray(jsonData)
+            ? jsonData
+            : Array.isArray((jsonData as any)?.entries)
+              ? (jsonData as any).entries
+              : [];
+
+          const sanitizedData = entriesArray.map((entry: any) => this.sanitizeInput(entry));
+
+          // Beállítás kinyerése ha van.
+          const settings = !Array.isArray(jsonData) && (jsonData as any)?.settings && typeof (jsonData as any).settings === 'object'
+          ? (jsonData as any).settings
+          : undefined;
+
+          // Ha van beállítás akkor állítsa be a beállításokat.
+          if (settings)
+          {
+            this.settingsService.setSettings(settings);
+          }
 
           // A megtisztított jegyzet betöltése.
           this.entryService.setArrayEntry(sanitizedData);
 
           // Megtalálni a legnagyobb bejegyzés id-t.
-          const highestEntryId = Math.max(...sanitizedData.map((entry: any) => entry.entryId));
+          const highestEntryId = sanitizedData.length
+            ? Math.max(...sanitizedData.map((e: any) => Number.isFinite(e.entryId) ? e.entryId : 0))
+            : 0;
 
           // A legnagyobb bejegyzés id-t beállítani a jelenlegi id-re, hogy innentől számítsa az új bejegyzésekhez az id-t.
           this.entryService.setCurrentEntryId(highestEntryId);
         }
-        catch (error) {
+        catch (error)
+        {
           console.error('Error parsing JSON: ', error);
         }
       };

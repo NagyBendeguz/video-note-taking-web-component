@@ -32,8 +32,19 @@ export class SettingsService {
     return this.settings$;
   }
 
-  setSettings(settings: Settings): void {
-    this.settingsSource.next(settings);
+  setSettings(settings: Partial<Settings>): void {
+    const current = this.settingsSource.getValue() || {} as Settings;
+    const updated: Settings = { ...current, ...settings } as Settings;
+    this.settingsSource.next(updated);
+
+    if (settings.theme)
+    {
+      const body = this.doc.body;
+      Array.from(body.classList)
+        .filter(c => c.startsWith(this.prefix))
+        .forEach(c => body.classList.remove(c));
+      body.classList.add(this.prefix + settings.theme);
+    }
   }
 
   setPlaybackRate(speed: number): void {
