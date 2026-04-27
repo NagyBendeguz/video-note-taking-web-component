@@ -1,0 +1,11 @@
+# Generated web assets.
+main-*.js
+chunk-*.js
+styles-*.css
+main-*.js.map
+chunk-*.js.map
+styles-*.css.map
+
+# Media produced by build.
+media/
+favicon.png

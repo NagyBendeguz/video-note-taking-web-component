@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Video note-taking",
+  "version": "1.0",
+  "permissions": [
+    "scripting",
+    "activeTab"
+  ],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-inject.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "page-replacer.js",
+        "main-IJ76T4K7.js",
+        "chunk-ZXQGESBO.js",
+        "chunk-FK6H3RFT.js",
+        "chunk-E6TGZIGP.js",
+        "styles-5VODSUGZ.css",
+        "media/bootstrap-icons-VQNJTM6Q.woff",
+        "media/bootstrap-icons-CVBWLLHT.woff2",
+        "favicon.png"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
