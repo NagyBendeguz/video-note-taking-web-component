@@ -145,6 +145,7 @@ export class VideoPlayer {
       if (changes['src'].previousValue)
       {
         const video = this.videoElement.nativeElement;
+        video.crossOrigin = 'anonymous';
         video.src = changes['src'].currentValue;
       }
     }

@@ -1,7 +1,7 @@
 <div class="video-player" #videoPlayerDiv>
-    <div class="video-outer-div" [ngClass]="{'open-page video-outer-div-open-page': (isSettings$ | async) || (isNote$ | async)}">
+    <div class="video-outer-div" [ngClass]="{'video-outer-div-open-page': (isSettings$ | async) || (isNote$ | async)}">
         <div (click)="togglePlay()" class="video-div">
-            <video (loadedmetadata)="onVideoMetadataLoaded()" (timeupdate)="setCurrentTime()" #videoElement>
+            <video (loadedmetadata)="onVideoMetadataLoaded()" (timeupdate)="setCurrentTime()" [ngClass]="{'video-left': (isSettings$ | async) || (isNote$ | async)}" #videoElement>
                 <source [src]="src$ | async" type="video/mp4">
                 <track [src]="subtitle$ | async" kind="subtitles" [srclang]="lang$ | async" [label]="label$ | async" #subtitlesTrack>
                 {{ 'app.support' | translate }}
