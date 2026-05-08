@@ -1,0 +1,17 @@
+{
+  "name": "video-note-taking-web-component",
+  "version": "1.0.0",
+  "description": "Video note-taking web component.",
+  "main": "video-note-taking.umd.js",
+  "module": "video-note-taking.esm.js",
+  "files": [
+    "video-note-taking.umd.js",
+    "video-note-taking.umd.js.map",
+    "video-note-taking.esm.js",
+    "video-note-taking.esm.js.map",
+    "styles.css",
+    "media/",
+    "README.md"
+  ],
+  "scripts": { "build": "rollup -c" }
+}
