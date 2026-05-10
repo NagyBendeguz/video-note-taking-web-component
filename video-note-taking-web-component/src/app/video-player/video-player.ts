@@ -75,8 +75,9 @@ export class VideoPlayer {
     // Bootstrap ikonok importálása.
     const sr = (this.el.nativeElement as HTMLElement).shadowRoot!;
     const link = document.createElement('link');
+    const base = document.querySelector('base')?.getAttribute('href') ?? '/';
     link.rel = 'stylesheet';
-    link.href = '/assets/bootstrap-icons/bootstrap-icons.css';
+    link.href = base + 'assets/bootstrap-icons/bootstrap-icons.css';
     sr.appendChild(link);
 
     // Nyelv beállítása.
