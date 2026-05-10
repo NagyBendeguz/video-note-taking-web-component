@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-confirm-message',
+  selector: 'confirm-message',
   standalone: false,
   templateUrl: './confirm-message.html',
   styleUrl: './confirm-message.sass',

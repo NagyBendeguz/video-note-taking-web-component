@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +31,12 @@ export class VideoService {
 
   private timestampSource = new BehaviorSubject<string>('00:00:00.000');
   timestamp$ = this.timestampSource.asObservable();
+
+  private timeSubject = new Subject<number>();
+  time$ = this.timeSubject.asObservable();
+
+  private isActiveSubject = new Subject<boolean>();
+  isActive$ = this.isActiveSubject.asObservable();
 
   togglePlay = new EventEmitter<void>();
   rewind = new EventEmitter<number>();
@@ -123,5 +129,13 @@ export class VideoService {
 
   setTimestamp(timestamp: string): void {
     this.timestampSource.next(timestamp);
+  }
+
+  setTime(t: number) {
+    this.timeSubject.next(t);
+  }
+
+  setIsActive(isActive: boolean) {
+    this.isActiveSubject.next(isActive);
   }
 }

@@ -28,6 +28,9 @@ export class SettingsService {
   private videoRewindRateSource = new BehaviorSubject<number>(10);
   videoRewindRate$ = this.videoRewindRateSource.asObservable();
 
+  private offset$ = new BehaviorSubject<string>('-65px');
+  offsetChanges = this.offset$.asObservable();
+
   getSettings(): Observable<Settings> {
     return this.settings$;
   }
@@ -87,14 +90,6 @@ export class SettingsService {
   setTheme(name: string): void {
     const currentSettings = this.settingsSource.getValue();
     this.settingsSource.next({ ...currentSettings, theme: name });
-
-    const body = this.doc.body;
-
-    Array.from(body.classList)
-      .filter(c => c.startsWith(this.prefix))
-      .forEach(c => body.classList.remove(c));
-
-    body.classList.add(this.prefix + name);
   }
 
   toggleSaveSettings(): void {
@@ -125,5 +120,9 @@ export class SettingsService {
   updateThumbnailHeight(newThumbnailHeight: number): void {
     const currentSettings = this.settingsSource.getValue();
     this.settingsSource.next({ ...currentSettings, thumbnailHeight: newThumbnailHeight });
+  }
+
+  setOffset(v: string): void {
+    this.offset$.next(v);
   }
 }

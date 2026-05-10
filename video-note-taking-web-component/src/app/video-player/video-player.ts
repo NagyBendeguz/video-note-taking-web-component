@@ -1,14 +1,29 @@
-import { ChangeDetectorRef, Component, ElementRef, HostListener, Input, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Input, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { VideoService } from '../services/video';
 import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
 import { SettingsService } from '../services/settings';
 import { Settings } from '../models/settings';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateLoader, TranslateService, TranslateStore } from '@ngx-translate/core';
 import pica from 'pica';
+import { EntryService } from '../services/entry';
+import { PdfService } from '../services/pdf';
+import InlineTranslateLoader from '.././i18n/inline-translate-loader';
+import en from '.././i18n/en.json';
+import hu from '.././i18n/hu.json';
 
 @Component({
-  selector: 'app-video-player',
+  selector: 'video-player',
   standalone: false,
+  encapsulation: ViewEncapsulation.ShadowDom,
+  providers: [
+    EntryService,
+    VideoService,
+    SettingsService,
+    PdfService,
+    TranslateService,
+    TranslateStore,
+    { provide: TranslateLoader, useFactory: () => new InlineTranslateLoader({ en, hu }) },
+  ],
   templateUrl: './video-player.html',
   styleUrl: './video-player.sass',
 })
@@ -35,7 +50,6 @@ export class VideoPlayer {
 
   // Videó elemei.
   @ViewChild('videoPlayerDiv') videoPlayerDiv!: ElementRef<HTMLDivElement>;
-  @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
   @ViewChild('subtitlesTrack') subtitlesTrack!: ElementRef<HTMLTrackElement>;
   @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
 
@@ -49,15 +63,40 @@ export class VideoPlayer {
   private settings: Settings = new Settings();
   private unsubscribe$ = new Subject<void>();
   private pica = new pica();
+  private prefix = 'theme-';
 
   constructor(
+    private el: ElementRef,
     private cdr: ChangeDetectorRef,
     private videoService: VideoService,
     private settingsService: SettingsService,
     private translate: TranslateService
-  ) {}
+  ) {
+    // Bootstrap ikonok importálása.
+    const sr = (this.el.nativeElement as HTMLElement).shadowRoot!;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/assets/bootstrap-icons/bootstrap-icons.css';
+    sr.appendChild(link);
+
+    // Nyelv beállítása.
+    this.translate.use('en');
+  }
 
   ngOnInit(): void {
+    // CSS változók beállítása.
+    const host = this.el.nativeElement as HTMLElement;
+    const computed = getComputedStyle(document.documentElement);
+    const vars = [
+      '--video-height','--video-navbar-offset','--icon-color','--text-color',
+      '--background-color','--video-navbar-background-color','--input-color',
+      '--input-background-color','--help-color'
+    ];
+    vars.forEach(v => {
+      const val = computed.getPropertyValue(v).trim();
+      if (val) host.style.setProperty(v, val);
+    });
+
     this.checkFullscreen();
   }
 
@@ -88,8 +127,8 @@ export class VideoPlayer {
     });
 
     // A videó jelenlegi idejének beállítása egy egyedi eseménnyel.
-    document.addEventListener('setVideoTime', (event: CustomEvent) => {
-      this.setVideoTimeByClick(event);
+    this.videoService.time$.pipe(takeUntil(this.unsubscribe$)).subscribe(t => {
+      this.setVideoTimeByClick(t);
     });
 
     this.isNote$ = this.videoService.getNote();
@@ -134,6 +173,14 @@ export class VideoPlayer {
     this.settingsService.settings$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentSettings => {
       this.settings = currentSettings;
     });
+
+    this.settingsService.offsetChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(v => {
+      (this.el.nativeElement as HTMLElement).style.setProperty('--video-navbar-offset', v);
+    });
+
+    this.settingsService.settings$.subscribe(s => {
+      this.applyThemeToHost(s.theme);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -144,7 +191,7 @@ export class VideoPlayer {
       // Ha nem ez az első alkalom a forrás beállítására.
       if (changes['src'].previousValue)
       {
-        const video = this.videoElement.nativeElement;
+        const video: HTMLVideoElement = (this.el.nativeElement as HTMLElement).shadowRoot!.querySelector('video')!;
         video.crossOrigin = 'anonymous';
         video.src = changes['src'].currentValue;
       }
@@ -178,7 +225,6 @@ export class VideoPlayer {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-    document.removeEventListener('setVideoTime', this.setVideoTimeByClick);
   }
 
   @HostListener('window:resize')
@@ -187,7 +233,7 @@ export class VideoPlayer {
   }
 
   setPlay(isPlaying: boolean): void {
-    const video = this.videoElement.nativeElement;
+    const video: HTMLVideoElement = (this.el.nativeElement as HTMLElement).shadowRoot!.querySelector('video')!;
     if (isPlaying)
     {
       video.play();
@@ -202,7 +248,7 @@ export class VideoPlayer {
    * A videó indítása vagy megállítása.
    */
   togglePlay(): void {
-    const video = this.videoElement.nativeElement;
+    const video: HTMLVideoElement = (this.el.nativeElement as HTMLElement).shadowRoot!.querySelector('video')!;
     if (video.paused)
     {
       video.play();
@@ -219,7 +265,7 @@ export class VideoPlayer {
    * A videó hátra tekerése.
    */
   rewind(moveRate: number): void {
-    const video = this.videoElement.nativeElement;
+    const video: HTMLVideoElement = (this.el.nativeElement as HTMLElement).shadowRoot!.querySelector('video')!;
     video.currentTime = Math.max(video.currentTime - moveRate, 0);
   }
 
@@ -227,7 +273,7 @@ export class VideoPlayer {
    * A videó előre tekerése.
    */
   forward(moveRate: number): void {
-    const video = this.videoElement.nativeElement;
+    const video: HTMLVideoElement = (this.el.nativeElement as HTMLElement).shadowRoot!.querySelector('video')!;
     video.currentTime = Math.min(video.currentTime + moveRate, video.duration);
     if (video.currentTime === video.duration)
     {
@@ -240,7 +286,7 @@ export class VideoPlayer {
    * A videó hangerejének változtatása.
    */
   changeVolume(volumePercentage: number = 100): void {
-    const video = this.videoElement.nativeElement;
+    const video: HTMLVideoElement = (this.el.nativeElement as HTMLElement).shadowRoot!.querySelector('video')!;
     video.volume = volumePercentage / 100;
   }
 
@@ -257,7 +303,7 @@ export class VideoPlayer {
    * A videó hosszának beállítása.
    */
   setDuration(): void {
-    const video = this.videoElement.nativeElement;
+    const video: HTMLVideoElement = (this.el.nativeElement as HTMLElement).shadowRoot!.querySelector('video')!;
     this.videoService.setDuration(video.duration);
   }
 
@@ -266,7 +312,7 @@ export class VideoPlayer {
    * Jegyzetelő módban képernyőképet készít a videó jelenlegi képkockájáról.
    */
   setCurrentTime(): void {
-    const video = this.videoElement.nativeElement;
+    const video: HTMLVideoElement = (this.el.nativeElement as HTMLElement).shadowRoot!.querySelector('video')!;
     this.videoService.setCurrentTime(video.currentTime);
 
     // Ha a jegyzetelő felület van megnyitva akkor készítsen képernyőképet a videó jelenlegi képkockájáról.
@@ -278,11 +324,11 @@ export class VideoPlayer {
 
   /**
    * A videó jelenlegi idejének beállítása egér kattintásra a progress bar-on.
-   * @param event - Egyedi esemény a videó jelenlegi idejéről.
+   * @param time - A videó jelenlegi ideje.
    */
-  setVideoTimeByClick(event: CustomEvent): void {
-    const video = this.videoElement.nativeElement;
-    video.currentTime = event.detail;
+  setVideoTimeByClick(time: number): void {
+    const video: HTMLVideoElement = (this.el.nativeElement as HTMLElement).shadowRoot!.querySelector('video')!;
+    video.currentTime = time;
   }
 
   // TODO: az ESC billentyűvel a navbar offset beállítás az nem marad meg
@@ -332,7 +378,7 @@ export class VideoPlayer {
    * A videó eredeti magasságának beállítása.
    */
   private setVideoHeight(): void {
-    const video = this.videoElement.nativeElement;
+    const video: HTMLVideoElement = (this.el.nativeElement as HTMLElement).shadowRoot!.querySelector('video')!;
     // (Az alsó margó miatt plusz 5 pixel.)
     if (!this.isSettings && !this.isNote)
     {
@@ -349,7 +395,9 @@ export class VideoPlayer {
    * @param height - A videó eredeti magassága.
    */
   private setSassVariable(height: number): void {
-    document.documentElement.style.setProperty('--video-height', `${height}px`);
+    const heightPx = `${height}px`;
+    const host = this.el.nativeElement as HTMLElement;
+    host.style.setProperty('--video-height', heightPx);
   }
 
   /**
@@ -365,7 +413,7 @@ export class VideoPlayer {
    * A videó jelenlegi képkockájáról elkészíteni egy képernyőképet a megfelelő minőségben.
    */
   private createCurrentThumbnail(): void {
-    const video = this.videoElement.nativeElement;
+    const video: HTMLVideoElement = (this.el.nativeElement as HTMLElement).shadowRoot!.querySelector('video')!;
     const canvas = this.canvasElement.nativeElement;
     const context = canvas.getContext('2d');
 
@@ -418,7 +466,7 @@ export class VideoPlayer {
    * A metaadatok betöltésekor beállítani az alapértelmezett képernyőkép szélességét és magasságát a beállításokba.
    */
   private setThumbnailSettings(): void {
-    const video = this.videoElement.nativeElement;
+    const video: HTMLVideoElement = (this.el.nativeElement as HTMLElement).shadowRoot!.querySelector('video')!;
     this.settingsService.updateThumbnailWidth(video.videoWidth);
     this.settingsService.updateThumbnailHeight(video.videoHeight);
   }
@@ -427,7 +475,7 @@ export class VideoPlayer {
    * A tömörített vagy bővített nézetben a időbélyegre kattintva ugorjon a videó a megfelelő pillanatára.
    */
   private jumpToTimestamp(): void {
-    const video = this.videoElement.nativeElement;
+    const video: HTMLVideoElement = (this.el.nativeElement as HTMLElement).shadowRoot!.querySelector('video')!;
 
     // Másodpercekké alakítás.
     const timeParts = this.timestamp.split(/[:.]+/).map(Number);
@@ -441,7 +489,7 @@ export class VideoPlayer {
    * @param rate - A beállítani kívánt lejátszási sebesség.
    */
   private setVideoPlaybackRate(rate: number): void {
-    const video = this.videoElement.nativeElement;
+    const video: HTMLVideoElement = (this.el.nativeElement as HTMLElement).shadowRoot!.querySelector('video')!;
     video.playbackRate = rate;
   }
 
@@ -457,5 +505,21 @@ export class VideoPlayer {
     catch (error) {
       return 'Unknown Language';
     }
+  }
+
+  activate(): void {
+    this.videoService.setIsActive(true);
+  }
+
+  deactivate(): void {
+    this.videoService.setIsActive(false);
+  }
+
+  private applyThemeToHost(name: string): void {
+    const host = this.el.nativeElement as HTMLElement;
+    Array.from(host.classList)
+      .filter(c => c.startsWith(this.prefix))
+      .forEach(c => host.classList.remove(c));
+    host.classList.add(this.prefix + name);
   }
 }

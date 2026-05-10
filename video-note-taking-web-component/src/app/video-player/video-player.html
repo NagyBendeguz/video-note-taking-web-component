@@ -1,4 +1,4 @@
-<div class="video-player" #videoPlayerDiv>
+<div class="video-player" #videoPlayerDiv tabindex="0" (focusin)="activate()" (focusout)="deactivate()" (click)="activate()">
     <div class="video-outer-div" [ngClass]="{'video-outer-div-open-page': (isSettings$ | async) || (isNote$ | async)}">
         <div (click)="togglePlay()" class="video-div">
             <video (loadedmetadata)="onVideoMetadataLoaded()" (timeupdate)="setCurrentTime()" [ngClass]="{'video-left': (isSettings$ | async) || (isNote$ | async)}" #videoElement>

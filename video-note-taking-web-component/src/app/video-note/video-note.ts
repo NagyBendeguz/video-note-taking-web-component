@@ -4,7 +4,7 @@ import { Entry } from '../models/entry';
 import { EntryService } from '../services/entry';
 
 @Component({
-  selector: 'app-video-note',
+  selector: 'video-note',
   standalone: false,
   templateUrl: './video-note.html',
   styleUrl: './video-note.sass',

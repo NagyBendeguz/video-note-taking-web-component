@@ -12,13 +12,15 @@ import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 
 @Component({
-  selector: 'app-editing-view',
+  selector: 'editing-view',
   standalone: false,
   templateUrl: './editing-view.html',
   styleUrl: './editing-view.sass',
 })
 export class EditingView {
   @ViewChild('inputTitle') inputTitle!: ElementRef<HTMLInputElement>;
+  @ViewChild('inputContent') textarea!: ElementRef<HTMLTextAreaElement>;
+  private isActive = false;
   entry$!: Observable<Entry>;
   entry: Entry = new Entry();
   private currentEntryId!: number;
@@ -73,6 +75,10 @@ export class EditingView {
 
     this.entryService.currentEntryId$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentCurrentEntryId => {
       this.currentEntryId = currentCurrentEntryId;
+    });
+
+    this.videoService.isActive$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentIsActive => {
+      this.isActive = currentIsActive;
     });
 
     window.addEventListener('keydown', this.keyHandler);
@@ -260,7 +266,7 @@ export class EditingView {
    * @param end - A kijelölt szöveg mögé beszurandó karakterek.
    */
   private modifyText(start: string, end: string): void {
-    const textarea = document.getElementById('note') as HTMLTextAreaElement;
+    const textarea = this.textarea.nativeElement;
     // A kurzor aktuális pozíciója.
     const cursorPos = textarea.selectionStart;
     // A kiválasztás végső pozíciója.
@@ -407,60 +413,63 @@ export class EditingView {
    * @param e - Billentyű vagy billentyű kombináció esemény.
    */
   private keyHandler = (e: KeyboardEvent) => {
-    // A videó képernyőképének hátra mozgatása.
-    if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.thumbnailMoveRewind)
+    if (this.isActive)
     {
-      this.setKeyboardEvent(e);
-      this.editingRewind();
-    }
-    // A videó képernyőképének előre mozgatása.
-    else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.thumbnailMoveForward)
-    {
-      this.setKeyboardEvent(e);
-      this.editingForward();
-    }
-    // A bejegyzés mentése vagy szerkesztői módban a szerkesztése.
-    else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.save)
-    {
-      this.setKeyboardEvent(e);
-      this.saveEntry();
-    }
-    // A bejegyzés törlése vagy szerkesztői módban a módosítások visszavonása.
-    else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.cancel)
-    {
-      // TODO: megjavítani ha a gyorsbillentyűvel lesz aktiválva a mégse funkció
-      this.setKeyboardEvent(e);
-      this.cancelEntry();
-    }
-    // Félkövér formázás.
-    else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.bold)
-    {
-      this.setKeyboardEvent(e);
-      this.bold();
-    }
-    // Dőlt formázás.
-    else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.italic)
-    {
-      this.setKeyboardEvent(e);
-      this.italic();
-    }
-    // Áthúzott formázás.
-    else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.strikethrough)
-    {
-      this.setKeyboardEvent(e);
-      this.strikethrough();
-    }
-    // Számozott lista formázás.
-    else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.orderedList)
-    {
-      this.setKeyboardEvent(e);
-      this.orderedList();
-    }
-    // Felsorolás formázás.
-    else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.unorderedList)
-    {
-      this.setKeyboardEvent(e);
-      this.unorderedList();
+      // A videó képernyőképének hátra mozgatása.
+      if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.thumbnailMoveRewind)
+      {
+        this.setKeyboardEvent(e);
+        this.editingRewind();
+      }
+      // A videó képernyőképének előre mozgatása.
+      else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.thumbnailMoveForward)
+      {
+        this.setKeyboardEvent(e);
+        this.editingForward();
+      }
+      // A bejegyzés mentése vagy szerkesztői módban a szerkesztése.
+      else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.save)
+      {
+        this.setKeyboardEvent(e);
+        this.saveEntry();
+      }
+      // A bejegyzés törlése vagy szerkesztői módban a módosítások visszavonása.
+      else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.cancel)
+      {
+        // TODO: megjavítani ha a gyorsbillentyűvel lesz aktiválva a mégse funkció
+        this.setKeyboardEvent(e);
+        this.cancelEntry();
+      }
+      // Félkövér formázás.
+      else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.bold)
+      {
+        this.setKeyboardEvent(e);
+        this.bold();
+      }
+      // Dőlt formázás.
+      else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.italic)
+      {
+        this.setKeyboardEvent(e);
+        this.italic();
+      }
+      // Áthúzott formázás.
+      else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.strikethrough)
+      {
+        this.setKeyboardEvent(e);
+        this.strikethrough();
+      }
+      // Számozott lista formázás.
+      else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.orderedList)
+      {
+        this.setKeyboardEvent(e);
+        this.orderedList();
+      }
+      // Felsorolás formázás.
+      else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.unorderedList)
+      {
+        this.setKeyboardEvent(e);
+        this.unorderedList();
+      }
     }
   };
 

@@ -8,7 +8,7 @@ import { Settings } from '../models/settings';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-extended-view',
+  selector: 'extended-view',
   standalone: false,
   templateUrl: './extended-view.html',
   styleUrl: './extended-view.sass',

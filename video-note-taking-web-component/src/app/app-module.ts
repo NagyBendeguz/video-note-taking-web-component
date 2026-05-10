@@ -1,7 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Injector, NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing-module';
-import { App } from './app';
 import { createCustomElement } from '@angular/elements';
 import { VideoPlayer } from './video-player/video-player';
 import { VideoNavbar } from './video-navbar/video-navbar';
@@ -19,7 +18,6 @@ import hu from './i18n/hu.json';
 
 @NgModule({
   declarations: [
-    App,
     VideoPlayer,
     VideoNavbar,
     VideoNote,
@@ -40,33 +38,16 @@ import hu from './i18n/hu.json';
   providers: [
     provideBrowserGlobalErrorListeners(),
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  //bootstrap: [App] // Alapértelmezett bootstrap kikapcsolása.
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {
 
   constructor(private injector: Injector) {
-    // Átalakítani egy egyedi web komponensre.
+    // Átalakítani egy egyedi webkomponensre.
     const videoPlayerElement = createCustomElement(VideoPlayer, { injector });
-    const videoNavbarElement = createCustomElement(VideoNavbar, { injector });
-    const videoNoteElement = createCustomElement(VideoNote, { injector });
-    const videoSettingsElement = createCustomElement(VideoSettings, { injector });
-    const compressedViewElement = createCustomElement(CompressedView, { injector });
-    const extendedViewElement = createCustomElement(ExtendedView, { injector });
-    const editingViewElement = createCustomElement(EditingView, { injector });
-    const confirmMessageElement = createCustomElement(ConfirmMessage, { injector });
-    const helpToggleElement = createCustomElement(HelpToggle, { injector });
 
-    // Lehessen használni egyedi web komponensként.
+    // Lehessen használni egyedi webkomponensként.
     customElements.define('video-player', videoPlayerElement);
-    customElements.define('video-navbar', videoNavbarElement);
-    customElements.define('video-note', videoNoteElement);
-    customElements.define('video-settings', videoSettingsElement);
-    customElements.define('compressed-view', compressedViewElement);
-    customElements.define('extended-view', extendedViewElement);
-    customElements.define('editing-view', editingViewElement);
-    customElements.define('confirm-message', confirmMessageElement);
-    customElements.define('help-toggle', helpToggleElement);
   }
 
   ngDoBootstrap() {}

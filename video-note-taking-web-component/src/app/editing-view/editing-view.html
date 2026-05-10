@@ -59,7 +59,7 @@
             </div>
         </div>
         <div class="type-note">
-            <textarea name="note" id="note" [value]="(entry$ | async)?.formattedNoteMD" (input)="addNote($event)" placeholder="{{ 'edit.note' | translate }}" required tabindex="2"></textarea>
+            <textarea name="note" id="note" [value]="(entry$ | async)?.formattedNoteMD" (input)="addNote($event)" placeholder="{{ 'edit.note' | translate }}" required tabindex="2" #inputContent></textarea>
         </div>
     </div>
 </div>

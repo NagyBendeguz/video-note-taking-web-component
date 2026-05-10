@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-help-toggle',
+  selector: 'help-toggle',
   standalone: false,
   templateUrl: './help-toggle.html',
   styleUrl: './help-toggle.sass',

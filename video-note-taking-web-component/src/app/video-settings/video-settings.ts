@@ -14,7 +14,7 @@ interface ShortcutField { key: keyof Shortcuts; label: string; help: string }
 type ShortcutKey = keyof Shortcuts;
 
 @Component({
-  selector: 'app-video-settings',
+  selector: 'video-settings',
   standalone: false,
   templateUrl: './video-settings.html',
   styleUrl: './video-settings.sass',
@@ -478,7 +478,7 @@ export class VideoSettings {
    */
   private changeOffset(offset: boolean): void {
     const value = offset ? '-65px' : '0px';
-    document.documentElement.style.setProperty('--video-navbar-offset', value);
+    this.settingsService.setOffset(value);
   }
 
   // SHORTCUTS

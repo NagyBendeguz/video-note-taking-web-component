@@ -6,7 +6,7 @@ import { Settings } from '../models/settings';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-compressed-view',
+  selector: 'compressed-view',
   standalone: false,
   templateUrl: './compressed-view.html',
   styleUrl: './compressed-view.sass',

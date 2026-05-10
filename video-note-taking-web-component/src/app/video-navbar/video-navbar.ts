@@ -5,12 +5,13 @@ import { SettingsService } from '../services/settings';
 import { Settings } from '../models/settings';
 
 @Component({
-  selector: 'app-video-navbar',
+  selector: 'video-navbar',
   standalone: false,
   templateUrl: './video-navbar.html',
   styleUrl: './video-navbar.sass',
 })
 export class VideoNavbar {
+  private isActive = false;
   isPlaying$!: Observable<boolean>;
   volumePercentage$!: Observable<number>;
   private previousVolume: number = 100;
@@ -83,6 +84,10 @@ export class VideoNavbar {
       this.settings = currentSettings;
     });
 
+    this.videoService.isActive$.pipe(takeUntil(this.unsubscribe$)).subscribe(currentIsActive => {
+      this.isActive = currentIsActive;
+    });
+
     window.addEventListener('keydown', this.keyHandler);
   }
 
@@ -150,7 +155,7 @@ export class VideoNavbar {
     // Az új idő kiszámítása.
     const newTime = (clickPosition / barWidth) * this.duration;
 
-    document.dispatchEvent(new CustomEvent('setVideoTime', { detail: newTime }));
+    this.videoService.setTime(newTime);
   }
 
   /**
@@ -221,29 +226,32 @@ export class VideoNavbar {
    * @param e - Billentyű vagy billentyű kombináció esemény.
    */
   private keyHandler = (e: KeyboardEvent) => {
-    // Jegyzetelés oldal megnyitása vagy becsukása.
-    if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.note)
+    if (this.isActive)
     {
-      this.setKeyboardEvent(e);
-      this.toggleNotePage();
-    }
-    // Beállítások oldal megnyitása vagy becsukása.
-    else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.settings)
-    {
-      this.setKeyboardEvent(e);
-      this.toggleSettingsPage();
-    }
-    // A videó előre tekerése.
-    else if (!this.isTypingInField() && e.key === 'ArrowLeft')
-    {
-      this.setKeyboardEvent(e);
-      this.onRewind();
-    }
-    // A videó hátra tekerése.
-    else if (!this.isTypingInField() && e.key === 'ArrowRight')
-    {
-      this.setKeyboardEvent(e);
-      this.onForward();
+      // Jegyzetelés oldal megnyitása vagy becsukása.
+      if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.note)
+      {
+        this.setKeyboardEvent(e);
+        this.toggleNotePage();
+      }
+      // Beállítások oldal megnyitása vagy becsukása.
+      else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.settings)
+      {
+        this.setKeyboardEvent(e);
+        this.toggleSettingsPage();
+      }
+      // A videó előre tekerése.
+      else if (!this.isTypingInField() && e.key === 'ArrowLeft')
+      {
+        this.setKeyboardEvent(e);
+        this.onRewind();
+      }
+      // A videó hátra tekerése.
+      else if (!this.isTypingInField() && e.key === 'ArrowRight')
+      {
+        this.setKeyboardEvent(e);
+        this.onForward();
+      }
     }
   };
 
