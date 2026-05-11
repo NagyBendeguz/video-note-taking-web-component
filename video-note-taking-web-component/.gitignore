@@ -46,6 +46,6 @@ Thumbs.db
 # Output 'lib' folder
 lib/*.js
 lib/*.js.map
-lib/*.css
 lib/*.tgz
+lib/assets/*
 lib/media/*

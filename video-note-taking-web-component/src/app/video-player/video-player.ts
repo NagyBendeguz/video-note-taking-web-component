@@ -74,10 +74,55 @@ export class VideoPlayer {
   ) {
     // Bootstrap ikonok importálása.
     const sr = (this.el.nativeElement as HTMLElement).shadowRoot!;
+
+    function absoluteBase(baseCandidate: string | null | undefined): string {
+      if (!baseCandidate)
+      {
+        return document.baseURI || location.href;
+      }
+      // Ha már abszolút útvonal akkor vissaadás.
+      try
+      {
+        new URL(baseCandidate);
+        return baseCandidate;
+      }
+      catch {}
+      // Ha '/'-rel kezdődik, akkor az eredeti domainhez hozzárendelés.
+      if (baseCandidate.startsWith('/'))
+      {
+        return location.origin + baseCandidate;
+      }
+      // Ellenkező esetben a document.baseURI-hez viszonyítva feloldani.
+      return new URL(baseCandidate, document.baseURI || location.href).href;
+    }
+
+    function getCssUrl(): string {
+      // A böngésző bővítmény futtatása ideje.
+      try
+      {
+        const maybeChrome = (globalThis as any).chrome;
+        if (maybeChrome && maybeChrome.runtime && typeof maybeChrome.runtime.getURL === 'function') {
+          return maybeChrome.runtime.getURL('assets/bootstrap-icons/bootstrap-icons.css');
+        }
+      }
+      catch {}
+
+      // A jelenlegi script (bundle).
+      const cs = document.currentScript as HTMLScriptElement | null;
+      if (cs && cs.src)
+      {
+        return new URL('./assets/bootstrap-icons/bootstrap-icons.css', cs.src).href;
+      }
+
+      // Az alapértelmezett href / document.baseURI használata.
+      const baseHref = document.querySelector('base')?.getAttribute('href') ?? document.baseURI ?? location.origin + '/';
+      const absBase = absoluteBase(baseHref);
+      return new URL('assets/bootstrap-icons/bootstrap-icons.css', absBase).href;
+    }
+
     const link = document.createElement('link');
-    const base = document.querySelector('base')?.getAttribute('href') ?? '/';
     link.rel = 'stylesheet';
-    link.href = base + 'assets/bootstrap-icons/bootstrap-icons.css';
+    link.href = getCssUrl();
     sr.appendChild(link);
 
     // Nyelv beállítása.

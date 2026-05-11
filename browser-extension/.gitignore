@@ -6,6 +6,6 @@ main-*.js.map
 chunk-*.js.map
 styles-*.css.map
 
-# Media produced by build.
+# Assets produced by build.
+assets/
 media/
-favicon.png

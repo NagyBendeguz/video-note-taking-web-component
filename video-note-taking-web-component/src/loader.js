@@ -1,5 +1,5 @@
 // handled by rollup plugin to inline or emit file
-import '../dist/video-note-taking-web-component/browser/styles-5VODSUGZ.css';
+import '../dist/video-note-taking-web-component/browser/styles-IRV2JRNT.css';
 
 // original angular elements bootstrap
-import '../dist/video-note-taking-web-component/browser/main-IJ76T4K7.js';
+import '../dist/video-note-taking-web-component/browser/main-6TKFQ2YJ.js';

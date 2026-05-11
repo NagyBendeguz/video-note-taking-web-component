@@ -2,8 +2,8 @@
 
 (function() {
   const pageScriptUrl = chrome.runtime.getURL('page-replacer.js');
-  const moduleUrl = chrome.runtime.getURL('main-IJ76T4K7.js');
-  const styleUrl = chrome.runtime.getURL('styles-5VODSUGZ.css');
+  const moduleUrl = chrome.runtime.getURL('main-6TKFQ2YJ.js');
+  const styleUrl = chrome.runtime.getURL('styles-IRV2JRNT.css');
 
   // 1) Inject stylesheet into page.
   if (!document.querySelector('link[data-ext-video-player]')) {

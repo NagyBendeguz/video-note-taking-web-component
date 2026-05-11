@@ -9,7 +9,7 @@
     "video-note-taking.umd.js.map",
     "video-note-taking.esm.js",
     "video-note-taking.esm.js.map",
-    "styles.css",
+    "assets/bootstrap-icons/",
     "media/",
     "README.md"
   ],

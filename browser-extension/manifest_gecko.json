@@ -20,13 +20,13 @@
   ],
   "web_accessible_resources": [
     "page-replacer.js",
-    "main-IJ76T4K7.js",
+    "main-6TKFQ2YJ.js",
     "chunk-ZXQGESBO.js",
     "chunk-FK6H3RFT.js",
     "chunk-E6TGZIGP.js",
-    "styles-5VODSUGZ.css",
+    "styles-IRV2JRNT.css",
+    "assets/bootstrap-icons/bootstrap-icons.css",
     "media/bootstrap-icons-VQNJTM6Q.woff",
-    "media/bootstrap-icons-CVBWLLHT.woff2",
-    "favicon.png"
+    "media/bootstrap-icons-CVBWLLHT.woff2"
   ]
 }

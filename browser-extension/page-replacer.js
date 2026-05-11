@@ -125,19 +125,12 @@ function replacePreserveReference(video) {
   whenDefined('video-player').then(() => {
     try {
       // Set host-scoped CSS var so the component uses it (safer for multiple videos).
-      vp.style.setProperty('--video-height', 'calc(100vh - 75px)');
-      // Also set explicit host height so layout matches immediately.
-      vp.style.height = 'calc(100vh - 75px)';
+      vp.style.setProperty('--video-height', '100vh');
       // Ensure width fills the original element's area.
       if (!vp.style.width) vp.style.width = '100%';
       // Ensure box sizing prevents collapse.
       vp.style.boxSizing = 'border-box';
 
-      // Trigger one resize-like event so component re-measures once.
-      void vp.offsetHeight;
-      window.dispatchEvent(new Event('resize'));
-      requestAnimationFrame(() => void vp.getBoundingClientRect());
-    
       // Restore playback state.
       if (video.hasAttribute('autoplay')) vp.setAttribute('autoplay', '');
       if (video.muted) vp.setAttribute('muted', '');
