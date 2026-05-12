@@ -4,9 +4,9 @@ import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
 import { SettingsService } from '../services/settings';
 import { Settings } from '../models/settings';
 import { TranslateLoader, TranslateService, TranslateStore } from '@ngx-translate/core';
-import pica from 'pica';
 import { EntryService } from '../services/entry';
 import { PdfService } from '../services/pdf';
+import pica from 'pica';
 import InlineTranslateLoader from '.././i18n/inline-translate-loader';
 import en from '.././i18n/en.json';
 import hu from '.././i18n/hu.json';
@@ -64,6 +64,7 @@ export class VideoPlayer {
   private unsubscribe$ = new Subject<void>();
   private pica = new pica();
   private prefix = 'theme-';
+  private outsideListener = (e: Event) => this.onGlobalPointer(e);
 
   constructor(
     private el: ElementRef,
@@ -271,6 +272,7 @@ export class VideoPlayer {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    document.removeEventListener('pointerdown', this.outsideListener, { capture: true });
   }
 
   @HostListener('window:resize')
@@ -405,6 +407,22 @@ export class VideoPlayer {
       }
       document.exitFullscreen();
     }
+  }
+
+  /**
+   * Aktiválni a jelenelgi elemet.
+   */
+  activate(): void {
+    this.videoService.setIsActive(true);
+    document.addEventListener('pointerdown', this.outsideListener, { capture: true });
+  }
+
+  /**
+   * Deaktiválni a jelenlegi elemet.
+   */
+  deactivate(): void {
+    this.videoService.setIsActive(false);
+    document.removeEventListener('pointerdown', this.outsideListener, { capture: true });
   }
 
   /**
@@ -544,7 +562,7 @@ export class VideoPlayer {
    * @param lang - A rövidített nyelv a lang-hoz.
    * @returns - Az átalakított nyelv a label-hez.
    */
-  getLanguageLabel(lang: string): string {
+  private getLanguageLabel(lang: string): string {
     try {
       return new Intl.DisplayNames(['en'], { type: 'language' }).of(lang) || '';
     }
@@ -553,14 +571,23 @@ export class VideoPlayer {
     }
   }
 
-  activate(): void {
-    this.videoService.setIsActive(true);
+  /**
+   * A kattintás ellenőrzése, hogy az elemen belül vagy kívül történt.
+   * @param e - Esemény a kattintásról.
+   */
+  private onGlobalPointer(e: Event): void {
+    const path = (e as any).composedPath?.() || (e as any).path || [];
+    const clickedInside = path.length ? path.includes(this.el.nativeElement) : this.el.nativeElement.contains(e.target as Node);
+    if (!clickedInside)
+    {
+      this.deactivate();
+    }
   }
 
-  deactivate(): void {
-    this.videoService.setIsActive(false);
-  }
-
+  /**
+   * A beállított téma átállítása.
+   * @param name - Téma neve.
+   */
   private applyThemeToHost(name: string): void {
     const host = this.el.nativeElement as HTMLElement;
     Array.from(host.classList)
