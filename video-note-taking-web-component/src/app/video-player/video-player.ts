@@ -280,6 +280,10 @@ export class VideoPlayer {
     this.setVideoHeight();
   }
 
+  /**
+   * A videó indítása és megállítása.
+   * @param isPlaying - A videó lejátszásának állapota.
+   */
   setPlay(isPlaying: boolean): void {
     const video: HTMLVideoElement = (this.el.nativeElement as HTMLElement).shadowRoot!.querySelector('video')!;
     if (isPlaying)

@@ -19,6 +19,10 @@ export class VideoNote {
     this.arrayEntry$ = this.entryService.getArrayEntry();
   }
 
+  /**
+   * A tömörített és bővített nézetek közötti kapcsolás.
+   * @param entryId - A jelenlegi bejegyzés ID-je.
+   */
   toggleView(entryId: string): void {
     const currentState = this.isExtendedViews.get(entryId) || false;
     this.isExtendedViews.set(entryId, !currentState);

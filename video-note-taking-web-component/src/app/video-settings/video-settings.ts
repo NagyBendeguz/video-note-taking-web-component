@@ -483,6 +483,7 @@ export class VideoSettings {
 
   // SHORTCUTS
 
+  // A gyorsbillentyű mezők.
   shortcutFields: ShortcutField[] = [
     { key: 'note', label: 'edit.note', help: 'settings.help.shortcuts.note' },
     { key: 'settings', label: 'settings.settings', help: 'settings.help.shortcuts.settings' },
@@ -497,6 +498,7 @@ export class VideoSettings {
     { key: 'unorderedList', label: 'settings.shortcuts.unorderedList', help: 'settings.help.shortcuts.unorderedList' }
   ];
 
+  // Az alapértelmezett gyorsbillentyűk.
   private defaultShortcuts: Record<ShortcutKey, string> = {
     note: 'n',
     settings: 'q',
@@ -511,6 +513,11 @@ export class VideoSettings {
     unorderedList: 'u'
   };
 
+  /**
+   * Egy gyorsbillentyű beállítása.
+   * @param key - Gyorsbillentyű.
+   * @param event - Esemény.
+   */
   setShortcut(key: ShortcutKey, event: Event): void {
     const raw = (event.target as HTMLInputElement).value || '';
     const sanitized = DOMPurify.sanitize(raw) as string;

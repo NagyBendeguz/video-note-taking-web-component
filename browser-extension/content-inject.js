@@ -2,7 +2,7 @@
 
 (function() {
   const pageScriptUrl = chrome.runtime.getURL('page-replacer.js');
-  const moduleUrl = chrome.runtime.getURL('main-6TKFQ2YJ.js');
+  const moduleUrl = chrome.runtime.getURL('main-TA3URN73.js');
   const styleUrl = chrome.runtime.getURL('styles-IRV2JRNT.css');
 
   // 1) Inject stylesheet into page.

@@ -89,7 +89,7 @@ Create a new Angular project:
 ng new project-name --standalone=false
 ```
 
-In the following command adjust the path to be the .tgz file that you just built and install the video note-taking web component to your project.
+In the following command adjust the path to be the .tgz file that you just built and install the video note-taking web component to your project. If you build a new version of the library then you need the rerun this command.
 
 ```
 npm install video-note-taking-web-component-1.0.0.tgz
