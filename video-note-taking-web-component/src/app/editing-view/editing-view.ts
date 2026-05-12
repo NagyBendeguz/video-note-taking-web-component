@@ -167,9 +167,10 @@ export class EditingView {
    * A leendő bejegyzés elvetésének kezdése, a megerősítő modal megnyitása beállítástól függően.
    */
   cancelEntry(): void {
-    if (this.settings.confirmCancel)
+    if (this.settings.confirmCancel && (this.entry.title != '' || this.entry.note != ''))
     {
       this.showModal = true;
+      this.inputTitle.nativeElement.click();
     }
     else
     {
@@ -436,7 +437,6 @@ export class EditingView {
       // A bejegyzés törlése vagy szerkesztői módban a módosítások visszavonása.
       else if (e.shiftKey && e.key?.toLowerCase() === this.settings.shortcuts.cancel)
       {
-        // TODO: megjavítani ha a gyorsbillentyűvel lesz aktiválva a mégse funkció
         this.setKeyboardEvent(e);
         this.cancelEntry();
       }
