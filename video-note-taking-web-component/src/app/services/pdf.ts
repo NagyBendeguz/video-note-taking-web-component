@@ -8,13 +8,13 @@ export class PdfService {
 
   constructor() {}
 
-  // TODO: ne csússzon át és vágódjanak le a túl hosszú bejegyzések
-  // TODO: a jegyzet formázottan történő elmentésére is legyen lehetőség
+  // TODO: felhasználói élmény: a jegyzet formázottan történő elmentésére is legyen lehetőség
   /**
    * Egy PDF fájl generálása a jegyzetből.
    * @param jsonData - A jegyzet JSON fájl formátumban.
    */
-  async generatePDF(jsonData: any[]) {
+  async generatePDF(jsonData: any[])
+  {
     const doc = new jsPDF();
 
     // A dokumentum magassága és szélessége.
@@ -30,8 +30,11 @@ export class PdfService {
     // Végigmenni a bejegyzéseken.
     for (const entry of jsonData)
     {
+      // A szükséges magasság kiszámítása a bejegyzéshez.
+      const requiredHeight = this.getTextHeight(doc, entry.note, pageWidth);
+
       // Ellenőrizni, hogy van-e elég hely a következő bejegyzéshez.
-      if (yPosition + 50 > pageHeight)
+      if (yPosition + requiredHeight > pageHeight)
       {
         // Ha nincs akkor adjon hozzá egy új oldalt a dokumentumhoz.
         doc.addPage();
@@ -116,5 +119,20 @@ export class PdfService {
 
     // A PDF fájl mentése.
     doc.save('note.pdf');
+  }
+
+  private getTextHeight(doc: any, text: any, maxWidth: any, lineHeightFactor = 1.15, padding = 4)
+  {
+    // A szöveget a rendelkezésre álló szélességhez igazítja.
+    const lines = doc.splitTextToSize(text, maxWidth);
+
+    // Betűméret pontokban.
+    const fontSize = doc.getFontSize();
+
+    // Hozzávetőleges sortávolság (a jsPDF nem adja meg közvetlenül a magasságot képpontban; az 1,15 egy általános szorzó).
+    const lineHeight = fontSize * lineHeightFactor;
+
+    // A teljes magasság a dokumentummal megegyező mértékegységben (a beállításoktól függően alapértelmezés szerint "pt" vagy "mm").
+    return lines.length * lineHeight + padding;
   }
 }
