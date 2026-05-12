@@ -379,7 +379,6 @@ export class VideoPlayer {
     video.currentTime = time;
   }
 
-  // TODO: az ESC billentyűvel a navbar offset beállítás az nem marad meg
   /**
    * A teljes képernyős módba való belépés és kilépés.
    */
@@ -426,7 +425,7 @@ export class VideoPlayer {
   }
 
   /**
-   * Annak érzékelésére ha nem a fullscreen gombra kattintással lép ki a teljes képernyős módból, akkor is váltson át a gomb funkciója.
+   * Annak érzékelésére ha nem a fullscreen gombra kattintással lép ki a teljes képernyős módból, akkor is váltson át a gomb funkciója és a videó vezérlősáv eltolása.
    */
   private checkFullscreen(): void {
     document.addEventListener('fullscreenchange', () =>
@@ -434,6 +433,11 @@ export class VideoPlayer {
       if (!document.fullscreenElement)
       {
         this.videoService.setFullscreen(false);
+        if (this.navbarOffsetState)
+        {
+          this.settingsService.toggleVideoNavbarOffset();
+          this.navbarOffsetState = false;
+        }
       }
     });
   }
