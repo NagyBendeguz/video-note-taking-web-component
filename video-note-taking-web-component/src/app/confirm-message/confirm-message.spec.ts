@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ConfirmMessage } from './confirm-message';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 import { MockTranslateService } from '../../test-utils/mock-translate.service';
@@ -18,14 +17,12 @@ describe('ConfirmMessage', () => {
     await TestBed.configureTestingModule({
       declarations: [ConfirmMessage],
       imports: [TranslateModule.forRoot()],
-      providers: [{ provide: TranslateService, useValue: mockTranslate }],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      providers: [{ provide: TranslateService, useValue: mockTranslate }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ConfirmMessage);
     component = fixture.componentInstance;
 
-    // input
     component.message = 'Delete';
     component.type = 'cancel';
 

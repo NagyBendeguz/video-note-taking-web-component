@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CompressedView } from './compressed-view';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 import { VideoService } from '../services/video';
 import { SettingsService } from '../services/settings';
@@ -23,8 +22,7 @@ describe('CompressedView', () => {
       providers: [
         { provide: VideoService, useValue: videoServiceSpy },
         { provide: SettingsService, useValue: settingsServiceSpy },
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CompressedView);
@@ -57,7 +55,6 @@ describe('CompressedView', () => {
   });
 
   it('jumpToTimestamp() should call setTimestamp and emitJumpToTimestamp', () => {
-    // Az alapértelmezett időbélyeg: 00:00:00.000
     component.entry = new Entry();
 
     component.jumpToTimestamp();

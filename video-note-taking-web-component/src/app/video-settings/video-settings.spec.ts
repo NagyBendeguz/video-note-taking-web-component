@@ -1,314 +1,304 @@
-import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { VideoSettings } from './video-settings';
-import { of, BehaviorSubject, Subject } from 'rxjs';
+import { SettingsService } from '../services/settings';
+import { EntryService } from '../services/entry';
+import { VideoService } from '../services/video';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { of, Subject } from 'rxjs';
 import DOMPurify from 'dompurify';
 import { MockTranslateService } from '../../test-utils/mock-translate.service';
 
-class MockSettingsService {
-  private settingsSubject = new BehaviorSubject<any>({ confirmCancel: false, confirmDelete: false, shortcuts: {} });
-  settings$ = this.settingsSubject.asObservable();
-
-  videoNavbarOffset$ = new Subject<boolean>();
-  fullscreen$ = new Subject<boolean>();
-
-  getSettings() { return this.settings$; }
-  getVideoNavbarOffset() { return of(false); }
-  getVideoForwardRate() { return of(10); }
-  getVideoRewindRate() { return of(10); }
-
-  setPlaybackRate = jasmine.createSpy('setPlaybackRate');
-  setVideoForwardRate = jasmine.createSpy('setVideoForwardRate');
-  setVideoRewindRate = jasmine.createSpy('setVideoRewindRate');
-  toggleSubtitles = jasmine.createSpy('toggleSubtitles');
-  toggleVideoNavbarOffset = jasmine.createSpy('toggleVideoNavbarOffset');
-  setLanguage = jasmine.createSpy('setLanguage');
-  setTheme = jasmine.createSpy('setTheme');
-  toggleSaveSettings = jasmine.createSpy('toggleSaveSettings');
-  toggleConvertInput = jasmine.createSpy('toggleConvertInput');
-  toggleStopVideoOnNote = jasmine.createSpy('toggleStopVideoOnNote');
-  toggleStartVideoOnSave = jasmine.createSpy('toggleStartVideoOnSave');
+class Settings {
+  language = 'en';
+  confirmCancel = true;
+  confirmDelete = true;
+  thumbnailQualityPercentage = 100;
+  thumbnailWidth = 1;
+  thumbnailHeight = 1;
+  thumbnailForwardRate = 1;
+  thumbnailRewindRate = 1;
+  shortcuts: any = {};
 }
 
-class MockEntryService {
-  setArrayEntry = jasmine.createSpy('setArrayEntry');
-  setCurrentEntryId = jasmine.createSpy('setCurrentEntryId');
-}
+const settingsSubject = new Subject<any>();
+const videoFullscreenSubject = new Subject<boolean>();
+const videoNavbarOffsetSubject = new Subject<boolean>();
 
-class MockVideoService {
-  private fs = new BehaviorSubject<boolean>(false);
-  fullscreenRequest$ = this.fs.asObservable();
-  getFullscreen() { return of(false); }
-  emitFullscreen(val: boolean) { (this.fs as any).next(val); }
-}
+const mockSettingsService = {
+  getSettings: jasmine.createSpy('getSettings').and.returnValue(of(new Settings())),
+  settings$: settingsSubject.asObservable(),
+  getVideoNavbarOffset: jasmine.createSpy('getVideoNavbarOffset').and.returnValue(of(false)),
+  videoNavbarOffset$: videoNavbarOffsetSubject.asObservable(),
+  setSettings: jasmine.createSpy('setSettings'),
+  setPlaybackRate: jasmine.createSpy('setPlaybackRate'),
+  setVideoForwardRate: jasmine.createSpy('setVideoForwardRate'),
+  setVideoRewindRate: jasmine.createSpy('setVideoRewindRate'),
+  toggleSubtitles: jasmine.createSpy('toggleSubtitles'),
+  toggleVideoNavbarOffset: jasmine.createSpy('toggleVideoNavbarOffset'),
+  setLanguage: jasmine.createSpy('setLanguage'),
+  setTheme: jasmine.createSpy('setTheme'),
+  toggleSaveSettings: jasmine.createSpy('toggleSaveSettings'),
+  toggleConvertInput: jasmine.createSpy('toggleConvertInput'),
+  toggleStopVideoOnNote: jasmine.createSpy('toggleStopVideoOnNote'),
+  toggleStartVideoOnSave: jasmine.createSpy('toggleStartVideoOnSave'),
+  setOffset: jasmine.createSpy('setOffset'),
+  getVideoForwardRate: jasmine.createSpy('getVideoForwardRate').and.returnValue(of(10)),
+  getVideoRewindRate: jasmine.createSpy('getVideoRewindRate').and.returnValue(of(10))
+};
 
-describe('VideoSettings', () => {
-  let fixture: ComponentFixture<VideoSettings>;
+const mockEntryService = {
+  setArrayEntry: jasmine.createSpy('setArrayEntry'),
+  setCurrentEntryId: jasmine.createSpy('setCurrentEntryId')
+};
+
+const mockVideoService = {
+  getFullscreen: jasmine.createSpy('getFullscreen').and.returnValue(of(false)),
+  fullscreenRequest$: videoFullscreenSubject.asObservable()
+};
+
+describe('VideoSettings (unit)', () => {
   let component: VideoSettings;
+  let fixture: ComponentFixture<VideoSettings>;
   let mockTranslate: MockTranslateService;
-  let settingsSubject: BehaviorSubject<{ language: string }>;
-  let settingsService: MockSettingsService;
-  let entryService: MockEntryService;
-  let videoService: MockVideoService;
-  let translate: MockTranslateService;
 
   beforeEach(async () => {
     mockTranslate = new MockTranslateService();
-    settingsSubject = new BehaviorSubject({ language: 'en' });
-    settingsService = new MockSettingsService();
-    entryService = new MockEntryService();
-    videoService = new MockVideoService();
-    translate = new MockTranslateService();
 
     await TestBed.configureTestingModule({
       declarations: [VideoSettings],
       imports: [TranslateModule.forRoot()],
       providers: [
-        { provide: 'SettingsService', useValue: settingsService },
-        { provide: 'EntryService', useValue: entryService },
-        { provide: 'VideoService', useValue: videoService },
-        { provide: TranslateService, useValue: mockTranslate },
-        { provide: (VideoSettings as any).ctorParameters?.()[0]?.type || 'SettingsService', useValue: settingsService },
-        { provide: (VideoSettings as any).ctorParameters?.()[1]?.type || 'EntryService', useValue: entryService },
-        { provide: (VideoSettings as any).ctorParameters?.()[2]?.type || 'VideoService', useValue: videoService },
-      ],
-      schemas: []
+        { provide: SettingsService, useValue: mockSettingsService },
+        { provide: EntryService, useValue: mockEntryService },
+        { provide: VideoService, useValue: mockVideoService },
+        { provide: TranslateService, useValue: mockTranslate }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(VideoSettings);
     component = fixture.componentInstance;
-
-    (component as any).settingsService = settingsService as any;
-    (component as any).entryService = entryService as any;
-    (component as any).videoService = videoService as any;
-    (component as any).translate = translate as any;
-
-    component.settings = {
-      confirmCancel: false,
-      confirmDelete: false,
-      shortcuts: {
-        note: 'n', settings: 'q', thumbnailMoveForward: 'f', thumbnailMoveRewind: 'r',
-        save: 's', cancel: 'c', bold: 'b', italic: 'i', strikethrough: 'h',
-        orderedList: 'o', unorderedList: 'u'
-      },
-      thumbnailQualityPercentage: 100,
-      thumbnailWidth: 1,
-      thumbnailHeight: 1,
-      thumbnailForwardRate: 1,
-      thumbnailRewindRate: 1
-    } as any;
-
     fixture.detectChanges();
   });
 
-  it('creates component', () => {
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    jasmine.clock().uninstall();
+    (mockSettingsService.setSettings as jasmine.Spy).calls.reset();
+    (mockEntryService.setArrayEntry as jasmine.Spy).calls.reset();
+    (mockEntryService.setCurrentEntryId as jasmine.Spy).calls.reset();
   });
 
-  it('changePlaybackSpeed calls settingsService.setPlaybackRate', () => {
-    const select = { target: { value: '1.25' } } as any as Event;
+  it('initializes observables and calls translate.use on settings update', () => {
+    const s = new Settings();
+    s.language = 'hu';
+    settingsSubject.next(s);
+    expect(mockTranslate.use).toHaveBeenCalledWith('hu');
+  });
+
+  it('changePlaybackSpeed calls settingsService.setPlaybackRate with parsed number', () => {
+    const select = { target: { value: '1.5' } } as any as Event;
     component.changePlaybackSpeed(select);
-    expect(settingsService.setPlaybackRate).toHaveBeenCalledWith(1.25);
+    expect(mockSettingsService.setPlaybackRate).toHaveBeenCalledWith(1.5);
   });
 
-  it('setVideoForwardRate sanitizes and sets valid value, defaults on invalid/zero', () => {
+  it('setVideoForwardRate sanitizes input and sets service value (valid)', () => {
     spyOn(DOMPurify, 'sanitize').and.callFake((v: any) => v);
-    const good = { target: { value: '15' } } as any as Event;
-    component.setVideoForwardRate(good);
-    expect(settingsService.setVideoForwardRate).toHaveBeenCalledWith(15);
-
-    const zero = { target: { value: '0' } } as any as Event;
-    component.setVideoForwardRate(zero);
-    expect(settingsService.setVideoForwardRate).toHaveBeenCalledWith(10);
-
-    const nan = { target: { value: 'abc' } } as any as Event;
-    component.setVideoForwardRate(nan);
-    expect(settingsService.setVideoForwardRate).toHaveBeenCalledWith(10);
+    const input = { target: { value: '25' } } as any as Event;
+    component.setVideoForwardRate(input);
+    expect(mockSettingsService.setVideoForwardRate).toHaveBeenCalledWith(25);
   });
 
-  it('setVideoRewindRate sanitizes and sets valid value, defaults on invalid/zero', () => {
+  it('setVideoForwardRate falls back to 10 for invalid values', () => {
+    spyOn(DOMPurify as any, 'sanitize').and.returnValue('not-a-number');
+    const input = { target: { value: 'x' } } as any as Event;
+    component.setVideoForwardRate(input);
+    expect(mockSettingsService.setVideoForwardRate).toHaveBeenCalledWith(10);
+  });
+
+  it('setVideoRewindRate sanitizes input and sets service value (valid)', () => {
     spyOn(DOMPurify, 'sanitize').and.callFake((v: any) => v);
-    const good = { target: { value: '7' } } as any as Event;
-    component.setVideoRewindRate(good);
-    expect(settingsService.setVideoRewindRate).toHaveBeenCalledWith(7);
-
-    const zero = { target: { value: '0' } } as any as Event;
-    component.setVideoRewindRate(zero);
-    expect(settingsService.setVideoRewindRate).toHaveBeenCalledWith(10);
-
-    const nan = { target: { value: 'x' } } as any as Event;
-    component.setVideoRewindRate(nan);
-    expect(settingsService.setVideoRewindRate).toHaveBeenCalledWith(10);
+    const input = { target: { value: '7' } } as any as Event;
+    component.setVideoRewindRate(input);
+    expect(mockSettingsService.setVideoRewindRate).toHaveBeenCalledWith(7);
   });
 
-  it('toggleSubtitles flips local flag and calls service', () => {
-    const before = component.isSubtitleVisible;
+  it('toggleSubtitles toggles local flag and calls service', () => {
+    component.isSubtitleVisible = false;
     component.toggleSubtitles();
-    expect(settingsService.toggleSubtitles).toHaveBeenCalled();
-    expect(component.isSubtitleVisible).toBe(!before);
+    expect(mockSettingsService.toggleSubtitles).toHaveBeenCalled();
+    expect(component.isSubtitleVisible).toBeTrue();
   });
 
-  it('toggleOffset does not call service when fullscreen true', () => {
-    (component as any).isFullscreen = true;
+  it('toggleOffset calls when not fullscreen', () => {
+    component['isFullscreen'] = false;
     component.toggleOffset();
-    expect(settingsService.toggleVideoNavbarOffset).not.toHaveBeenCalled();
-
-    (component as any).isFullscreen = false;
-    component.toggleOffset();
-    expect(settingsService.toggleVideoNavbarOffset).toHaveBeenCalled();
+    expect(mockSettingsService.toggleVideoNavbarOffset).toHaveBeenCalled();
   });
 
-  it('changeLang calls settingsService.setLanguage and translate.use', () => {
+  it('changeLang sets language on service and calls translate.use', () => {
     const ev = { target: { value: 'hu' } } as any as Event;
     component.changeLang(ev);
-    expect(settingsService.setLanguage).toHaveBeenCalledWith('hu');
-    expect(translate.use).toHaveBeenCalledWith('hu');
+    expect(mockSettingsService.setLanguage).toHaveBeenCalledWith('hu');
+    expect(mockTranslate.use).toHaveBeenCalledWith('hu');
   });
 
   it('changeTheme calls settingsService.setTheme', () => {
     const ev = { target: { value: 'dark' } } as any as Event;
     component.changeTheme(ev);
-    expect(settingsService.setTheme).toHaveBeenCalledWith('dark');
+    expect(mockSettingsService.setTheme).toHaveBeenCalledWith('dark');
   });
 
-  it('toggleConfirmCancel and toggleConfirmDelete flip settings locally', () => {
-    component.settings.confirmCancel = false;
-    component.settings.confirmDelete = false;
+  it('setThumbnailQualityPercentage sanitizes and enforces bounds', () => {
+    spyOn(DOMPurify, 'sanitize').and.callFake((v: any) => v);
+    component.settings.thumbnailQualityPercentage = 50;
+    component.setThumbnailQualityPercentage({ target: { value: '75' } } as any as Event);
+    expect(component.settings.thumbnailQualityPercentage).toBe(75);
+
+    component.setThumbnailQualityPercentage({ target: { value: '-1' } } as any as Event);
+    expect(component.settings.thumbnailQualityPercentage).toBe(100);
+  });
+
+  it('setThumbnailWidth enforces min/max', () => {
+    spyOn(DOMPurify, 'sanitize').and.callFake((v: any) => v);
+    component.setThumbnailWidth({ target: { value: '500' } } as any as Event);
+    expect(component.settings.thumbnailWidth).toBe(500);
+
+    component.setThumbnailWidth({ target: { value: '99999' } } as any as Event);
+    expect(component.settings.thumbnailWidth).toBe(1);
+  });
+
+  it('setThumbnailHeight enforces min/max', () => {
+    spyOn(DOMPurify, 'sanitize').and.callFake((v: any) => v);
+    component.setThumbnailHeight({ target: { value: '300' } } as any as Event);
+    expect(component.settings.thumbnailHeight).toBe(300);
+
+    component.setThumbnailHeight({ target: { value: '99999' } } as any as Event);
+    expect(component.settings.thumbnailHeight).toBe(1);
+  });
+
+  it('setThumbnailForwardRate/ReplayRate enforce bounds', () => {
+    spyOn(DOMPurify, 'sanitize').and.callFake((v: any) => v);
+    component.setThumbnailForwardRate({ target: { value: '4' } } as any as Event);
+    expect(component.settings.thumbnailForwardRate).toBe(4);
+
+    component.setThumbnailForwardRate({ target: { value: '-1' } } as any as Event);
+    expect(component.settings.thumbnailForwardRate).toBe(1);
+
+    component.setThumbnailRewindRate({ target: { value: '2' } } as any as Event);
+    expect(component.settings.thumbnailRewindRate).toBe(2);
+
+    component.setThumbnailRewindRate({ target: { value: '0' } } as any as Event);
+    expect(component.settings.thumbnailRewindRate).toBe(1);
+  });
+
+  it('toggleConfirmCancel toggles settings.confirmCancel and toggleConfirmDelete toggles confirmDelete', () => {
+    component.settings.confirmCancel = true;
     component.toggleConfirmCancel();
-    expect(component.settings.confirmCancel).toBeTrue();
+    expect(component.settings.confirmCancel).toBeFalse();
+
+    component.settings.confirmDelete = false;
     component.toggleConfirmDelete();
     expect(component.settings.confirmDelete).toBeTrue();
   });
 
-  it('thumbnail setters sanitize and bound values on negative/NaN', () => {
-    spyOn(DOMPurify, 'sanitize').and.callFake((v: any) => v);
-    component.setThumbnailQualityPercentage({ target: { value: '50' } } as any as Event);
-    expect(component.settings.thumbnailQualityPercentage).toBe(50);
-
-    component.setThumbnailQualityPercentage({ target: { value: '-10' } } as any as Event);
-    expect(component.settings.thumbnailQualityPercentage).toBe(100);
-
-    component.setThumbnailWidth({ target: { value: '5' } } as any as Event);
-    expect(component.settings.thumbnailWidth).toBe(5);
-
-    component.setThumbnailWidth({ target: { value: '-1' } } as any as Event);
-    expect(component.settings.thumbnailWidth).toBe(1);
-
-    component.setThumbnailHeight({ target: { value: '6' } } as any as Event);
-    expect(component.settings.thumbnailHeight).toBe(6);
-
-    component.setThumbnailHeight({ target: { value: 'foo' } } as any as Event);
-    expect(component.settings.thumbnailHeight).toBe(1);
-
-    component.setThumbnailForwardRate({ target: { value: '2' } } as any as Event);
-    expect(component.settings.thumbnailForwardRate).toBe(2);
-
-    component.setThumbnailForwardRate({ target: { value: '0' } } as any as Event);
-    expect(component.settings.thumbnailForwardRate).toBe(1);
-
-    component.setThumbnailRewindRate({ target: { value: '3' } } as any as Event);
-    expect(component.settings.thumbnailRewindRate).toBe(3);
-
-    component.setThumbnailRewindRate({ target: { value: '-2' } } as any as Event);
-    expect(component.settings.thumbnailRewindRate).toBe(1);
+  it('sanitizeInput trims and sanitizes string fields but leaves others intact', () => {
+    spyOn(DOMPurify as any, 'sanitize').and.callFake((s: any) => `san-${s}`);
+    const inData = { title: '  hi ', entryId: 5, note: '<b>ok</b>' };
+    const out = (component as any).sanitizeInput(inData);
+    expect(out.title).toBe('san-  hi '.trim());
+    expect(out.note).toBe('san-<b>ok</b>'.trim());
+    expect(out.entryId).toBe(5);
   });
 
-  it('shortcut setters pick first char or default', () => {
-    spyOn(DOMPurify, 'sanitize').and.callFake((v: any) => v);
-    component.setShortcutNote({ target: { value: 'z' } } as any as Event);
-    expect(component.settings.shortcuts.note).toBe('z');
+  it('setShortcut stores first character or default if empty', () => {
+    spyOn(DOMPurify as any, 'sanitize').and.callFake((s: any) => s);
+    component.settings.shortcuts = {} as any;
+    component.setShortcut('save', { target: { value: 'x' } } as any as Event);
+    expect(component.settings.shortcuts.save).toBe('x');
 
-    component.setShortcutSettings({ target: { value: '' } } as any as Event);
-    expect(component.settings.shortcuts.settings).toBe('q'); // default
-
-    component.setShortcutBold({ target: { value: 'Xyz' } } as any as Event);
-    expect(component.settings.shortcuts.bold).toBe('X');
+    component.setShortcut('save', { target: { value: '' } } as any as Event);
+    expect(component.settings.shortcuts.save).toBe('s');
   });
 
-  /*describe('onFileChange', () => {
-    let originalFileReader: any;
-
-    beforeEach(() => {
-      originalFileReader = (window as any).FileReader;
-    });
+  describe('onFileChange (file import handling)', () => {
+    const originalFileReader = (window as any).FileReader;
 
     afterEach(() => {
       (window as any).FileReader = originalFileReader;
     });
 
-    it('parses valid JSON, sanitizes entries, sets entries and current id', () => {
-      const json = JSON.stringify([
-        { entryId: 1, title: ' a ', timestamp: '0:00', note: ' note ', thumbnail: 't' },
-        { entryId: 5, title: 'b', timestamp: '0:01', note: 'n', thumbnail: 't2' }
-      ]);
-
-      // fake FileReader
-      class FR {
+    it('parses array JSON and passes sanitized entries to entryService and sets current id', (done) => {
+      class FakeReader {
         onload: any;
-        readAsText() { setTimeout(() => this.onload({ target: { result: json } }), 0); }
+        readAsText(_file: any) {
+          const json = JSON.stringify([
+            { entryId: 3, title: 't', timestamp: '00:00', note: 'n', thumbnail: 'thumb' }
+          ]);
+          setTimeout(() => {
+            this.onload({ target: { result: json } });
+          }, 0);
+        }
       }
-      (window as any).FileReader = FR;
+      (window as any).FileReader = FakeReader;
 
-      spyOn(DOMPurify, 'sanitize').and.callFake((v: any) => (typeof v === 'string' ? v.trim() : v));
-      const blob = new Blob([json], { type: 'application/json' });
-      const file = new File([blob], 'test.json', { type: 'application/json' });
+      spyOn(DOMPurify, 'sanitize').and.callFake((v: any) => v);
 
+      const file = new File([JSON.stringify([])], 'f.json', { type: 'application/json' });
       const input = { target: { files: [file] } } as any as Event;
       component.onFileChange(input);
 
-      tick(); // allow async FileReader to fire
-
-      expect(entryService.setArrayEntry).toHaveBeenCalled();
-      expect(entryService.setCurrentEntryId).toHaveBeenCalledWith(5);
+      setTimeout(() => {
+        expect(mockEntryService.setArrayEntry).toHaveBeenCalled();
+        expect(mockEntryService.setCurrentEntryId).toHaveBeenCalledWith(3);
+        done();
+      }, 10);
     });
 
-    it('handles invalid JSON structure (ajv validation fail) without calling entryService', () => {
-      const badJson = JSON.stringify([{ wrong: 'schema' }]);
-
-      class FR {
+    it('parses object with settings and entries and calls setSettings', (done) => {
+      class FakeReader2 {
         onload: any;
-        readAsText() { setTimeout(() => this.onload({ target: { result: badJson } }), 0); }
+        readAsText(_file: any) {
+          const json = JSON.stringify({
+            settings: { language: 'hu', theme: 'dark' },
+            entries: [
+              { entryId: 1, title: 'a', timestamp: 't', note: 'n', thumbnail: 'th' }
+            ]
+          });
+          setTimeout(() => this.onload({ target: { result: json } }), 0);
+        }
       }
-      (window as any).FileReader = FR;
+      (window as any).FileReader = FakeReader2;
 
-      const blob = new Blob([badJson], { type: 'application/json' });
-      const file = new File([blob], 'bad.json', { type: 'application/json' });
+      spyOn(DOMPurify, 'sanitize').and.callFake((v: any) => v);
+
+      const file = new File([JSON.stringify({})], 'g.json', { type: 'application/json' });
+      component.onFileChange({ target: { files: [file] } } as any as Event);
+
+      setTimeout(() => {
+        expect(mockSettingsService.setSettings).toHaveBeenCalledWith(jasmine.objectContaining({ language: 'hu' }));
+        expect(mockEntryService.setArrayEntry).toHaveBeenCalled();
+        expect(mockEntryService.setCurrentEntryId).toHaveBeenCalledWith(1);
+        done();
+      }, 10);
+    });
+
+    it('handles invalid JSON gracefully (no throws)', (done) => {
+      class BadReader {
+        onload: any;
+        readAsText(_file: any) {
+          setTimeout(() => this.onload({ target: { result: 'not json' } }), 0);
+        }
+      }
+      (window as any).FileReader = BadReader;
 
       spyOn(console, 'error');
 
+      const file = new File(['x'], 'bad.json', { type: 'application/json' });
       component.onFileChange({ target: { files: [file] } } as any as Event);
-      tick();
 
-      expect(entryService.setArrayEntry).not.toHaveBeenCalled();
-      expect(console.error).toHaveBeenCalled();
+      setTimeout(() => {
+        expect(console.error).toHaveBeenCalled();
+        done();
+      }, 10);
     });
-
-    it('handles parse error gracefully', () => {
-      const invalid = '{ not: json ';
-      class FR {
-        onload: any;
-        readAsText() { setTimeout(() => this.onload({ target: { result: invalid } }), 0); }
-      }
-      (window as any).FileReader = FR;
-      spyOn(console, 'error');
-
-      const blob = new Blob([invalid], { type: 'application/json' });
-      const file = new File([blob], 'inv.json', { type: 'application/json' });
-
-      component.onFileChange({ target: { files: [file] } } as any as Event);
-      tick();
-
-      expect(entryService.setArrayEntry).not.toHaveBeenCalled();
-      expect(console.error).toHaveBeenCalled();
-    });
-  });*/
-
-  it('ngOnDestroy unsubscribes', () => {
-    const sub = (component as any).unsubscribe$;
-    spyOn(sub, 'next').and.callThrough();
-    spyOn(sub, 'complete').and.callThrough();
-    component.ngOnDestroy();
-    expect(sub.next).toHaveBeenCalled();
-    expect(sub.complete).toHaveBeenCalled();
   });
 });

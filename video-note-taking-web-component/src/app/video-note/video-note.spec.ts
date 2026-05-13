@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { VideoNote } from './video-note';
-import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
+import { DebugElement } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { By } from '@angular/platform-browser';
 
@@ -22,8 +22,7 @@ describe('VideoNote', () => {
 
     await TestBed.configureTestingModule({
       declarations: [VideoNote],
-      providers: [{ provide: (VideoNote as any).ɵprov ? (VideoNote as any).ɵprov : VideoNote, useValue: VideoNote }],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      providers: [{ provide: (VideoNote as any).ɵprov ? (VideoNote as any).ɵprov : VideoNote, useValue: VideoNote }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(VideoNote);
