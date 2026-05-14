@@ -208,17 +208,38 @@ export class VideoNavbar {
    * @returns - Az aktív elem az egy bemeneti mező-e vagy sem.
    */
   private isTypingInField(): boolean {
-    const activeElement = document.activeElement as HTMLElement | null;
+    const activeElement = this.getDeepActiveElement();
     if (!activeElement)
     {
       return false;
     }
-    const tag = activeElement.tagName?.toLowerCase();
-    if (tag === 'input' || tag === 'textarea' || activeElement.isContentEditable)
+  
+    const el = activeElement as HTMLElement;
+    const tag = el.tagName?.toLowerCase();
+
+    if (tag === 'input' || tag === 'textarea' || el.isContentEditable)
     {
       return true;
     }
-    return false;
+
+    return !!el.querySelector('input, textarea, [contenteditable="true"], [contenteditable=""]');
+  }
+
+  /**
+   * Megkeresi a legalsó aktív elemet a ShadowRoot-on belül.
+   * @param root - A gyökér elem.
+   * @returns - Visszaadja az aktív element vagy null-t.
+   */
+  getDeepActiveElement(root: Document | ShadowRoot = document): Element | null {
+    let active = root.activeElement as Element | null;
+
+    while (active && (active as HTMLElement).shadowRoot != null)
+    {
+      root = (active as HTMLElement).shadowRoot as ShadowRoot;
+      active = root.activeElement as Element | null;
+    }
+
+    return active;
   }
 
   /**

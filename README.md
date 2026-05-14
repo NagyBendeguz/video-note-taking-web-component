@@ -43,7 +43,7 @@ http://localhost:4200
 
 ## Deploy project
 
-You can deploy the project with `ng deploy` if your git repo it set up correctly.
+There is an option to deploy the project with `ng deploy` if your git repo it set up correctly.
 
 More info about deploying projects: https://github.com/angular-schule/angular-cli-ghpages
 
